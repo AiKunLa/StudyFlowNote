@@ -13,6 +13,7 @@ import { CreateProjectDto } from './dto/create-project.dto';
 import { ListProjectQueryDto } from './dto/list-project-query.dto';
 import { UpdateProjectDto } from './dto/update-project.dto';
 import { ProjectService } from './project.service';
+import { ResponseDto } from '../../common/dto/response.dto';
 
 /**
  * Project Controller
@@ -31,9 +32,9 @@ export class ProjectController {
    */
   @Post()
   @ApiOperation({ summary: 'Create project' })
-  async create(@Body() dto: CreateProjectDto) {
+  async create(@Body() dto: CreateProjectDto): Promise<ResponseDto> {
     const data = await this.projectService.create(dto);
-    return { code: 0, message: 'ok', data };
+    return ResponseDto.success(data);
   }
 
   /**
@@ -44,13 +45,13 @@ export class ProjectController {
    */
   @Get()
   @ApiOperation({ summary: 'List projects' })
-  async list(@Query() query: ListProjectQueryDto) {
+  async list(@Query() query: ListProjectQueryDto): Promise<ResponseDto> {
     const data = await this.projectService.list(
       query.userId,
       query.page,
       query.pageSize,
     );
-    return { code: 0, message: 'ok', data };
+    return ResponseDto.success(data);
   }
 
   /**
@@ -61,9 +62,9 @@ export class ProjectController {
    */
   @Get(':projectId')
   @ApiOperation({ summary: 'Get project detail' })
-  async detail(@Param('projectId') projectId: string) {
+  async detail(@Param('projectId') projectId: string): Promise<ResponseDto> {
     const data = await this.projectService.findOne(projectId);
-    return { code: 0, message: 'ok', data };
+    return ResponseDto.success(data);
   }
 
   /**
@@ -78,9 +79,9 @@ export class ProjectController {
   async update(
     @Param('projectId') projectId: string,
     @Body() dto: UpdateProjectDto,
-  ) {
+  ): Promise<ResponseDto> {
     const data = await this.projectService.update(projectId, dto);
-    return { code: 0, message: 'ok', data };
+    return ResponseDto.success(data);
   }
 
   /**
@@ -91,8 +92,8 @@ export class ProjectController {
    */
   @Delete(':projectId')
   @ApiOperation({ summary: 'Delete project' })
-  async remove(@Param('projectId') projectId: string) {
+  async remove(@Param('projectId') projectId: string): Promise<ResponseDto> {
     const data = await this.projectService.remove(projectId);
-    return { code: 0, message: 'ok', data };
+    return ResponseDto.success(data);
   }
 }
