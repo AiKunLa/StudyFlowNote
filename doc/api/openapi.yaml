@@ -1,0 +1,1256 @@
+﻿openapi: 3.0.3
+info:
+  title: StudyFlow API (MVP P0)
+  version: 1.0.0
+  description: |
+    基于 PRD（MVP P0）生成的 StudyFlow OpenAPI 规范。
+    统一响应结构：{ code, message, data }。
+servers:
+  - url: http://localhost:3000
+    description: Local Dev
+
+tags:
+  - name: Projects
+    description: 学习项目管理
+  - name: Materials
+    description: 资料中心
+  - name: Plans
+    description: 学习计划
+  - name: Tasks
+    description: 任务与学习空间
+  - name: Chat
+    description: 任务内问答
+  - name: Notes
+    description: 学习笔记
+  - name: Quizzes
+    description: 学后测验
+  - name: Reviews
+    description: 复习与回流
+
+paths:
+  /projects:
+    post:
+      tags: [Projects]
+      summary: 创建学习项目
+      operationId: createProject
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ProjectCreateRequest'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProjectResponse'
+  /projects/{projectId}:
+    get:
+      tags: [Projects]
+      summary: 获取项目详情
+      operationId: getProjectDetail
+      parameters:
+        - $ref: '#/components/parameters/ProjectId'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProjectDetailResponse'
+    put:
+      tags: [Projects]
+      summary: 更新项目
+      operationId: updateProject
+      parameters:
+        - $ref: '#/components/parameters/ProjectId'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ProjectUpdateRequest'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProjectResponse'
+    delete:
+      tags: [Projects]
+      summary: 删除项目
+      operationId: deleteProject
+      parameters:
+        - $ref: '#/components/parameters/ProjectId'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SuccessResponse'
+
+  /materials:
+    post:
+      tags: [Materials]
+      summary: 上传资料
+      operationId: uploadMaterial
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/MaterialUploadRequest'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MaterialResponse'
+    get:
+      tags: [Materials]
+      summary: 获取资料列表
+      operationId: listMaterials
+      parameters:
+        - $ref: '#/components/parameters/ProjectIdQuery'
+        - $ref: '#/components/parameters/MaterialStatusQuery'
+        - $ref: '#/components/parameters/Page'
+        - $ref: '#/components/parameters/PageSize'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MaterialListResponse'
+  /materials/{materialId}:
+    delete:
+      tags: [Materials]
+      summary: 删除资料
+      operationId: deleteMaterial
+      parameters:
+        - $ref: '#/components/parameters/MaterialId'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SuccessResponse'
+  /materials/{materialId}/status:
+    get:
+      tags: [Materials]
+      summary: 查询资料解析状态
+      operationId: getMaterialStatus
+      parameters:
+        - $ref: '#/components/parameters/MaterialId'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MaterialStatusResponse'
+  /materials/{materialId}/structure:
+    get:
+      tags: [Materials]
+      summary: 获取解析结构预览
+      operationId: getMaterialStructure
+      parameters:
+        - $ref: '#/components/parameters/MaterialId'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MaterialStructureResponse'
+  /materials/{materialId}/assign:
+    post:
+      tags: [Materials]
+      summary: 绑定资料到项目
+      operationId: assignMaterial
+      parameters:
+        - $ref: '#/components/parameters/MaterialId'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/MaterialAssignRequest'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MaterialResponse'
+
+  /plans/generate:
+    post:
+      tags: [Plans]
+      summary: 生成学习计划
+      operationId: generatePlan
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PlanGenerateRequest'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PlanResponse'
+  /plans/{planId}:
+    get:
+      tags: [Plans]
+      summary: 获取学习计划详情
+      operationId: getPlanDetail
+      parameters:
+        - $ref: '#/components/parameters/PlanId'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PlanDetailResponse'
+
+  /tasks/today:
+    get:
+      tags: [Tasks]
+      summary: 获取今日任务列表
+      operationId: getTodayTasks
+      parameters:
+        - $ref: '#/components/parameters/ProjectIdQuery'
+        - $ref: '#/components/parameters/DateQuery'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TaskListResponse'
+  /tasks/{taskId}:
+    get:
+      tags: [Tasks]
+      summary: 获取任务详情
+      operationId: getTaskDetail
+      parameters:
+        - $ref: '#/components/parameters/TaskId'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TaskResponse'
+  /tasks/{taskId}/content:
+    get:
+      tags: [Tasks]
+      summary: 获取任务资料片段
+      operationId: getTaskContent
+      parameters:
+        - $ref: '#/components/parameters/TaskId'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TaskContentResponse'
+  /tasks/{taskId}/status:
+    post:
+      tags: [Tasks]
+      summary: 更新任务状态
+      operationId: updateTaskStatus
+      parameters:
+        - $ref: '#/components/parameters/TaskId'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TaskStatusUpdateRequest'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TaskResponse'
+
+  /chat/ask:
+    post:
+      tags: [Chat]
+      summary: 任务内问答
+      operationId: askChat
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ChatAskRequest'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ChatAskResponse'
+
+  /notes:
+    post:
+      tags: [Notes]
+      summary: 保存笔记
+      operationId: saveNote
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/NoteCreateRequest'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NoteResponse'
+
+  /quizzes/generate:
+    post:
+      tags: [Quizzes]
+      summary: 生成测验
+      operationId: generateQuiz
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/QuizGenerateRequest'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/QuizResponse'
+  /quizzes/{quizId}/submit:
+    post:
+      tags: [Quizzes]
+      summary: 提交测验答案
+      operationId: submitQuiz
+      parameters:
+        - $ref: '#/components/parameters/QuizId'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/QuizSubmitRequest'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/QuizResultResponse'
+  /quizzes/{quizId}/result:
+    get:
+      tags: [Quizzes]
+      summary: 获取测验结果
+      operationId: getQuizResult
+      parameters:
+        - $ref: '#/components/parameters/QuizId'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/QuizResultResponse'
+
+  /reviews:
+    get:
+      tags: [Reviews]
+      summary: 获取待复习任务列表
+      operationId: listReviews
+      parameters:
+        - $ref: '#/components/parameters/ProjectIdQuery'
+        - $ref: '#/components/parameters/DateQuery'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ReviewListResponse'
+  /reviews/submit:
+    post:
+      tags: [Reviews]
+      summary: 提交复习结果
+      operationId: submitReview
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ReviewSubmitRequest'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ReviewRecordResponse'
+
+components:
+  parameters:
+    ProjectId:
+      name: projectId
+      in: path
+      required: true
+      schema:
+        type: string
+    MaterialId:
+      name: materialId
+      in: path
+      required: true
+      schema:
+        type: string
+    PlanId:
+      name: planId
+      in: path
+      required: true
+      schema:
+        type: string
+    TaskId:
+      name: taskId
+      in: path
+      required: true
+      schema:
+        type: string
+    QuizId:
+      name: quizId
+      in: path
+      required: true
+      schema:
+        type: string
+    ProjectIdQuery:
+      name: projectId
+      in: query
+      required: true
+      schema:
+        type: string
+    MaterialStatusQuery:
+      name: status
+      in: query
+      required: false
+      schema:
+        $ref: '#/components/schemas/MaterialStatus'
+    DateQuery:
+      name: date
+      in: query
+      required: false
+      schema:
+        type: string
+        format: date
+    Page:
+      name: page
+      in: query
+      required: false
+      schema:
+        type: integer
+        minimum: 1
+        default: 1
+    PageSize:
+      name: pageSize
+      in: query
+      required: false
+      schema:
+        type: integer
+        minimum: 1
+        maximum: 100
+        default: 20
+
+  schemas:
+    BaseResponse:
+      type: object
+      properties:
+        code:
+          type: integer
+          example: 0
+        message:
+          type: string
+          example: ok
+      required: [code, message]
+
+    SuccessResponse:
+      allOf:
+        - $ref: '#/components/schemas/BaseResponse'
+        - type: object
+          properties:
+            data:
+              type: boolean
+              example: true
+
+    ErrorResponse:
+      allOf:
+        - $ref: '#/components/schemas/BaseResponse'
+        - type: object
+          properties:
+            details:
+              type: object
+              additionalProperties: true
+
+    Project:
+      type: object
+      properties:
+        id:
+          type: string
+        userId:
+          type: string
+        name:
+          type: string
+        description:
+          type: string
+          nullable: true
+        goal:
+          type: string
+          nullable: true
+        examDate:
+          type: string
+          format: date-time
+          nullable: true
+        dailyTimeBudget:
+          type: integer
+          nullable: true
+        mode:
+          type: string
+          nullable: true
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+      required: [id, userId, name, createdAt, updatedAt]
+
+    ProjectCreateRequest:
+      type: object
+      properties:
+        name:
+          type: string
+        goal:
+          type: string
+          nullable: true
+        examDate:
+          type: string
+          format: date-time
+          nullable: true
+        dailyTimeBudget:
+          type: integer
+          nullable: true
+        mode:
+          type: string
+          nullable: true
+      required: [name]
+
+    ProjectUpdateRequest:
+      type: object
+      properties:
+        name:
+          type: string
+        goal:
+          type: string
+          nullable: true
+        examDate:
+          type: string
+          format: date-time
+          nullable: true
+        dailyTimeBudget:
+          type: integer
+          nullable: true
+        mode:
+          type: string
+          nullable: true
+
+    ProjectResponse:
+      allOf:
+        - $ref: '#/components/schemas/BaseResponse'
+        - type: object
+          properties:
+            data:
+              $ref: '#/components/schemas/Project'
+
+    ProjectDetail:
+      allOf:
+        - $ref: '#/components/schemas/Project'
+        - type: object
+          properties:
+            progress:
+              type: object
+              nullable: true
+            taskStats:
+              type: object
+              nullable: true
+
+    ProjectDetailResponse:
+      allOf:
+        - $ref: '#/components/schemas/BaseResponse'
+        - type: object
+          properties:
+            data:
+              $ref: '#/components/schemas/ProjectDetail'
+
+    MaterialType:
+      type: string
+      enum: [PDF, MARKDOWN, TEXT]
+
+    MaterialStatus:
+      type: string
+      enum: [UPLOADING, PARSING, READY, FAILED]
+
+    Material:
+      type: object
+      properties:
+        id:
+          type: string
+        projectId:
+          type: string
+        title:
+          type: string
+        type:
+          $ref: '#/components/schemas/MaterialType'
+        sourcePath:
+          type: string
+          nullable: true
+        rawText:
+          type: string
+          nullable: true
+        status:
+          $ref: '#/components/schemas/MaterialStatus'
+        parseError:
+          type: string
+          nullable: true
+        metadata:
+          type: object
+          additionalProperties: true
+          nullable: true
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+      required: [id, projectId, title, type, status, createdAt, updatedAt]
+
+    MaterialUploadRequest:
+      type: object
+      properties:
+        projectId:
+          type: string
+        title:
+          type: string
+        type:
+          $ref: '#/components/schemas/MaterialType'
+        file:
+          type: string
+          format: binary
+        rawText:
+          type: string
+      required: [projectId, title, type]
+      description: file 与 rawText 二选一
+
+    MaterialAssignRequest:
+      type: object
+      properties:
+        projectId:
+          type: string
+      required: [projectId]
+
+    MaterialResponse:
+      allOf:
+        - $ref: '#/components/schemas/BaseResponse'
+        - type: object
+          properties:
+            data:
+              $ref: '#/components/schemas/Material'
+
+    MaterialListResponse:
+      allOf:
+        - $ref: '#/components/schemas/BaseResponse'
+        - type: object
+          properties:
+            data:
+              type: object
+              properties:
+                items:
+                  type: array
+                  items:
+                    $ref: '#/components/schemas/Material'
+                page:
+                  type: integer
+                pageSize:
+                  type: integer
+                total:
+                  type: integer
+
+    MaterialStatusResponse:
+      allOf:
+        - $ref: '#/components/schemas/BaseResponse'
+        - type: object
+          properties:
+            data:
+              type: object
+              properties:
+                status:
+                  $ref: '#/components/schemas/MaterialStatus'
+                parseError:
+                  type: string
+                  nullable: true
+
+    MaterialChunk:
+      type: object
+      properties:
+        id:
+          type: string
+        materialId:
+          type: string
+        chunkIndex:
+          type: integer
+        title:
+          type: string
+          nullable: true
+        content:
+          type: string
+        summary:
+          type: string
+          nullable: true
+        sourcePage:
+          type: integer
+          nullable: true
+        sourceSection:
+          type: string
+          nullable: true
+        metadata:
+          type: object
+          additionalProperties: true
+          nullable: true
+      required: [id, materialId, chunkIndex, content]
+
+    KnowledgeUnit:
+      type: object
+      properties:
+        id:
+          type: string
+        materialId:
+          type: string
+        title:
+          type: string
+        summary:
+          type: string
+          nullable: true
+        topic:
+          type: string
+          nullable: true
+        difficulty:
+          type: integer
+          nullable: true
+        importance:
+          type: integer
+          nullable: true
+        estimatedMinutes:
+          type: integer
+          nullable: true
+        prerequisiteIds:
+          type: array
+          items:
+            type: string
+        sourceRefs:
+          type: object
+          additionalProperties: true
+          nullable: true
+      required: [id, materialId, title]
+
+    MaterialStructure:
+      type: object
+      properties:
+        chunks:
+          type: array
+          items:
+            $ref: '#/components/schemas/MaterialChunk'
+        knowledgeUnits:
+          type: array
+          items:
+            $ref: '#/components/schemas/KnowledgeUnit'
+
+    MaterialStructureResponse:
+      allOf:
+        - $ref: '#/components/schemas/BaseResponse'
+        - type: object
+          properties:
+            data:
+              $ref: '#/components/schemas/MaterialStructure'
+
+    PlanStatus:
+      type: string
+      enum: [DRAFT, ACTIVE, COMPLETED, ARCHIVED]
+
+    StudyPlan:
+      type: object
+      properties:
+        id:
+          type: string
+        projectId:
+          type: string
+        title:
+          type: string
+        startDate:
+          type: string
+          format: date-time
+        endDate:
+          type: string
+          format: date-time
+        totalDays:
+          type: integer
+        status:
+          $ref: '#/components/schemas/PlanStatus'
+        config:
+          type: object
+          additionalProperties: true
+          nullable: true
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+      required: [id, projectId, title, startDate, endDate, totalDays, status]
+
+    PlanGenerateRequest:
+      type: object
+      properties:
+        projectId:
+          type: string
+        startDate:
+          type: string
+          format: date
+          nullable: true
+        endDate:
+          type: string
+          format: date
+          nullable: true
+        totalDays:
+          type: integer
+          nullable: true
+        dailyTimeBudget:
+          type: integer
+          nullable: true
+        mode:
+          type: string
+          nullable: true
+      required: [projectId]
+
+    PlanResponse:
+      allOf:
+        - $ref: '#/components/schemas/BaseResponse'
+        - type: object
+          properties:
+            data:
+              $ref: '#/components/schemas/StudyPlan'
+
+    PlanDetail:
+      allOf:
+        - $ref: '#/components/schemas/StudyPlan'
+        - type: object
+          properties:
+            tasks:
+              type: array
+              items:
+                $ref: '#/components/schemas/Task'
+
+    PlanDetailResponse:
+      allOf:
+        - $ref: '#/components/schemas/BaseResponse'
+        - type: object
+          properties:
+            data:
+              $ref: '#/components/schemas/PlanDetail'
+
+    TaskType:
+      type: string
+      enum: [LEARN, REVIEW, REINFORCE, QUIZ]
+
+    TaskStatus:
+      type: string
+      enum: [TODO, IN_PROGRESS, DONE, SKIPPED, OVERDUE]
+
+    Task:
+      type: object
+      properties:
+        id:
+          type: string
+        studyPlanId:
+          type: string
+        title:
+          type: string
+        description:
+          type: string
+          nullable: true
+        taskType:
+          $ref: '#/components/schemas/TaskType'
+        status:
+          $ref: '#/components/schemas/TaskStatus'
+        scheduledDate:
+          type: string
+          format: date-time
+        estimatedMinutes:
+          type: integer
+          nullable: true
+        difficulty:
+          type: integer
+          nullable: true
+        priority:
+          type: integer
+          nullable: true
+        masteryScore:
+          type: number
+          format: float
+          nullable: true
+        nextReviewDate:
+          type: string
+          format: date-time
+          nullable: true
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+        completedAt:
+          type: string
+          format: date-time
+          nullable: true
+      required: [id, studyPlanId, title, taskType, status, scheduledDate]
+
+    TaskStatusUpdateRequest:
+      type: object
+      properties:
+        status:
+          $ref: '#/components/schemas/TaskStatus'
+      required: [status]
+
+    TaskResponse:
+      allOf:
+        - $ref: '#/components/schemas/BaseResponse'
+        - type: object
+          properties:
+            data:
+              $ref: '#/components/schemas/Task'
+
+    TaskListResponse:
+      allOf:
+        - $ref: '#/components/schemas/BaseResponse'
+        - type: object
+          properties:
+            data:
+              type: array
+              items:
+                $ref: '#/components/schemas/Task'
+
+    TaskContentBlock:
+      type: object
+      properties:
+        title:
+          type: string
+          nullable: true
+        content:
+          type: string
+        sourcePage:
+          type: integer
+          nullable: true
+        sourceSection:
+          type: string
+          nullable: true
+
+    TaskContentResponse:
+      allOf:
+        - $ref: '#/components/schemas/BaseResponse'
+        - type: object
+          properties:
+            data:
+              type: object
+              properties:
+                taskId:
+                  type: string
+                blocks:
+                  type: array
+                  items:
+                    $ref: '#/components/schemas/TaskContentBlock'
+
+    Note:
+      type: object
+      properties:
+        id:
+          type: string
+        taskId:
+          type: string
+        content:
+          type: string
+        isImportant:
+          type: boolean
+        isConfusing:
+          type: boolean
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+      required: [id, taskId, content]
+
+    NoteCreateRequest:
+      type: object
+      properties:
+        taskId:
+          type: string
+        content:
+          type: string
+        isImportant:
+          type: boolean
+          nullable: true
+        isConfusing:
+          type: boolean
+          nullable: true
+      required: [taskId, content]
+
+    NoteResponse:
+      allOf:
+        - $ref: '#/components/schemas/BaseResponse'
+        - type: object
+          properties:
+            data:
+              $ref: '#/components/schemas/Note'
+
+    QuizStatus:
+      type: string
+      enum: [GENERATED, SUBMITTED, GRADED]
+
+    Quiz:
+      type: object
+      properties:
+        id:
+          type: string
+        taskId:
+          type: string
+        title:
+          type: string
+          nullable: true
+        status:
+          $ref: '#/components/schemas/QuizStatus'
+        score:
+          type: number
+          format: float
+          nullable: true
+        feedback:
+          type: object
+          additionalProperties: true
+          nullable: true
+        generatedAt:
+          type: string
+          format: date-time
+        submittedAt:
+          type: string
+          format: date-time
+          nullable: true
+        gradedAt:
+          type: string
+          format: date-time
+          nullable: true
+      required: [id, taskId, status]
+
+    QuizQuestion:
+      type: object
+      properties:
+        index:
+          type: integer
+        questionType:
+          type: string
+          description: recall / understanding / application / transfer
+        questionText:
+          type: string
+        referenceAnswer:
+          type: string
+          nullable: true
+
+    QuizGenerateRequest:
+      type: object
+      properties:
+        taskId:
+          type: string
+      required: [taskId]
+
+    QuizSubmitRequest:
+      type: object
+      properties:
+        answers:
+          type: array
+          items:
+            $ref: '#/components/schemas/QuizAnswerInput'
+      required: [answers]
+
+    QuizAnswerInput:
+      type: object
+      properties:
+        questionIndex:
+          type: integer
+        userAnswer:
+          type: string
+      required: [questionIndex, userAnswer]
+
+    QuizResponse:
+      allOf:
+        - $ref: '#/components/schemas/BaseResponse'
+        - type: object
+          properties:
+            data:
+              type: object
+              properties:
+                quiz:
+                  $ref: '#/components/schemas/Quiz'
+                questions:
+                  type: array
+                  items:
+                    $ref: '#/components/schemas/QuizQuestion'
+
+    QuizResultResponse:
+      allOf:
+        - $ref: '#/components/schemas/BaseResponse'
+        - type: object
+          properties:
+            data:
+              type: object
+              properties:
+                quiz:
+                  $ref: '#/components/schemas/Quiz'
+                answers:
+                  type: array
+                  items:
+                    $ref: '#/components/schemas/QuizAnswer'
+                summary:
+                  type: object
+                  additionalProperties: true
+
+    QuizAnswer:
+      type: object
+      properties:
+        id:
+          type: string
+        quizId:
+          type: string
+        questionIndex:
+          type: integer
+        questionType:
+          type: string
+        questionText:
+          type: string
+        referenceAnswer:
+          type: string
+          nullable: true
+        userAnswer:
+          type: string
+          nullable: true
+        isCorrect:
+          type: boolean
+          nullable: true
+        score:
+          type: number
+          format: float
+          nullable: true
+        analysis:
+          type: string
+          nullable: true
+        errorType:
+          type: string
+          nullable: true
+        createdAt:
+          type: string
+          format: date-time
+
+    ReviewResult:
+      type: string
+      enum: [POOR, FAIR, GOOD, EXCELLENT]
+
+    ReviewRecord:
+      type: object
+      properties:
+        id:
+          type: string
+        taskId:
+          type: string
+        reviewDate:
+          type: string
+          format: date-time
+        result:
+          $ref: '#/components/schemas/ReviewResult'
+        score:
+          type: number
+          format: float
+          nullable: true
+        intervalDays:
+          type: integer
+          nullable: true
+        nextReviewDate:
+          type: string
+          format: date-time
+          nullable: true
+        notes:
+          type: string
+          nullable: true
+        createdAt:
+          type: string
+          format: date-time
+      required: [id, taskId, reviewDate, result]
+
+    ReviewSubmitRequest:
+      type: object
+      properties:
+        taskId:
+          type: string
+        result:
+          $ref: '#/components/schemas/ReviewResult'
+        score:
+          type: number
+          format: float
+          nullable: true
+        notes:
+          type: string
+          nullable: true
+      required: [taskId, result]
+
+    ReviewRecordResponse:
+      allOf:
+        - $ref: '#/components/schemas/BaseResponse'
+        - type: object
+          properties:
+            data:
+              $ref: '#/components/schemas/ReviewRecord'
+
+    ReviewListResponse:
+      allOf:
+        - $ref: '#/components/schemas/BaseResponse'
+        - type: object
+          properties:
+            data:
+              type: array
+              items:
+                $ref: '#/components/schemas/Task'
