@@ -1,4 +1,4 @@
-import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
+import { BadRequestException, Injectable, Logger, NotFoundException } from '@nestjs/common';
 import { PrismaService } from '../../prisma/prisma.service';
 import { CreateProjectDto } from './dto/create-project.dto';
 import { UpdateProjectDto } from './dto/update-project.dto';
@@ -9,6 +9,8 @@ import { UpdateProjectDto } from './dto/update-project.dto';
  */
 @Injectable()
 export class ProjectService {
+  private readonly logger = new Logger(ProjectService.name);
+
   constructor(private readonly prisma: PrismaService) {}
 
   /**
@@ -30,8 +32,9 @@ export class ProjectService {
    * @throws BadRequestException 用户不存在时抛出
    */
   async create(dto: CreateProjectDto) {
+    this.logger.log(`Creating project: ${dto.name} for user: ${dto.userId}`);
     await this.ensureUserExists(dto.userId);
-    return this.prisma.project.create({
+    const project = await this.prisma.project.create({
       data: {
         userId: dto.userId,
         name: dto.name,
@@ -42,6 +45,8 @@ export class ProjectService {
         mode: dto.mode ?? null,
       },
     });
+    this.logger.log(`Project created: ${project.id}`);
+    return project;
   }
 
   /**
@@ -53,6 +58,7 @@ export class ProjectService {
    * @throws BadRequestException 用户不存在时抛出
    */
   async list(userId: string, page = 1, pageSize = 20) {
+    this.logger.log(`Listing projects for user: ${userId}, page: ${page}, pageSize: ${pageSize}`);
     await this.ensureUserExists(userId);
     const skip = (page - 1) * pageSize;
     const [items, total] = await Promise.all([
@@ -64,6 +70,7 @@ export class ProjectService {
       }),
       this.prisma.project.count({ where: { userId } }),
     ]);
+    this.logger.log(`Found ${total} projects for user: ${userId}`);
     return { items, total, page, pageSize };
   }
 
@@ -74,8 +81,10 @@ export class ProjectService {
    * @throws NotFoundException 项目不存在时抛出
    */
   async findOne(projectId: string) {
+    this.logger.log(`Finding project: ${projectId}`);
     const project = await this.prisma.project.findUnique({ where: { id: projectId } });
     if (!project) {
+      this.logger.warn(`Project not found: ${projectId}`);
       throw new NotFoundException('project not found');
     }
     return project;
@@ -89,8 +98,9 @@ export class ProjectService {
    * @throws NotFoundException 项目不存在时抛出
    */
   async update(projectId: string, dto: UpdateProjectDto) {
+    this.logger.log(`Updating project: ${projectId}`);
     await this.findOne(projectId);
-    return this.prisma.project.update({
+    const project = await this.prisma.project.update({
       where: { id: projectId },
       data: {
         name: dto.name,
@@ -101,6 +111,8 @@ export class ProjectService {
         mode: dto.mode ?? null,
       },
     });
+    this.logger.log(`Project updated: ${project.id}`);
+    return project;
   }
 
   /**
@@ -110,8 +122,10 @@ export class ProjectService {
    * @throws NotFoundException 项目不存在时抛出
    */
   async remove(projectId: string) {
+    this.logger.log(`Deleting project: ${projectId}`);
     await this.findOne(projectId);
     await this.prisma.project.delete({ where: { id: projectId } });
+    this.logger.log(`Project deleted: ${projectId}`);
     return true;
   }
 }

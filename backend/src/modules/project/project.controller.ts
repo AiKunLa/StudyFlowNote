@@ -33,6 +33,8 @@ export class ProjectController {
   @Post()
   @ApiOperation({ summary: 'Create project' })
   async create(@Body() dto: CreateProjectDto): Promise<ResponseDto> {
+    // 输出日志以便调试
+    console.log('Creating project with data:', dto);
     const data = await this.projectService.create(dto);
     return ResponseDto.success(data);
   }
