@@ -18,10 +18,14 @@ export class HttpExceptionFilter implements ExceptionFilter {
   catch(exception: unknown, host: ArgumentsHost): void {
     const ctx = host.switchToHttp();
     const response = ctx.getResponse<Response>();
+    const request = ctx.getRequest();
 
     let status = HttpStatus.INTERNAL_SERVER_ERROR;
     let code = ErrorCode.INTERNAL_SERVER_ERROR;
     let message = 'Internal server error';
+
+    // 打印错误日志
+    this.logError(exception, request, status);
 
     // 处理 HttpException
     if (exception instanceof HttpException) {
@@ -55,12 +59,29 @@ export class HttpExceptionFilter implements ExceptionFilter {
     // 处理其他异常
     else if (exception instanceof Error) {
       message = exception.message;
-      this.logger.error(`Unhandled exception: ${exception.message}`, exception.stack);
     }
 
     const responseBody = ResponseDto.error(code, message);
 
     response.status(status).json(responseBody);
+  }
+
+  /**
+   * 打印错误日志
+   */
+  private logError(exception: unknown, request: Record<string, unknown>, status: number): void {
+    const requestInfo = `${request.method} ${request.url}`;
+    const errorType = exception?.constructor?.name || 'Unknown';
+
+    if (exception instanceof HttpException) {
+      this.logger.warn(`[${status}] ${requestInfo} - ${errorType}: ${exception.message}`);
+    } else if (exception instanceof Prisma.PrismaClientKnownRequestError) {
+      this.logger.error(`Database Error - ${requestInfo} - ${errorType}: ${exception.message}`, exception.stack);
+    } else if (exception instanceof Error) {
+      this.logger.error(`Server Error - ${requestInfo} - ${errorType}: ${exception.message}`, exception.stack);
+    } else {
+      this.logger.error(`Unknown Error - ${requestInfo}`, '');
+    }
   }
 
   /**
