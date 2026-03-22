@@ -2144,13 +2144,13 @@ export namespace Prisma {
    */
 
   export type MaterialCountOutputType = {
-    chunks: number
     knowledgeUnits: number
+    chunks: number
   }
 
   export type MaterialCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    chunks?: boolean | MaterialCountOutputTypeCountChunksArgs
     knowledgeUnits?: boolean | MaterialCountOutputTypeCountKnowledgeUnitsArgs
+    chunks?: boolean | MaterialCountOutputTypeCountChunksArgs
   }
 
   // Custom InputTypes
@@ -2167,15 +2167,15 @@ export namespace Prisma {
   /**
    * MaterialCountOutputType without action
    */
-  export type MaterialCountOutputTypeCountChunksArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    where?: MaterialChunkWhereInput
+  export type MaterialCountOutputTypeCountKnowledgeUnitsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: KnowledgeUnitWhereInput
   }
 
   /**
    * MaterialCountOutputType without action
    */
-  export type MaterialCountOutputTypeCountKnowledgeUnitsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    where?: KnowledgeUnitWhereInput
+  export type MaterialCountOutputTypeCountChunksArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: MaterialChunkWhereInput
   }
 
 
@@ -2246,19 +2246,19 @@ export namespace Prisma {
    */
 
   export type TaskCountOutputType = {
-    knowledgeLinks: number
     sessions: number
     notes: number
     quizzes: number
     reviewRecords: number
+    knowledgeLinks: number
   }
 
   export type TaskCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    knowledgeLinks?: boolean | TaskCountOutputTypeCountKnowledgeLinksArgs
     sessions?: boolean | TaskCountOutputTypeCountSessionsArgs
     notes?: boolean | TaskCountOutputTypeCountNotesArgs
     quizzes?: boolean | TaskCountOutputTypeCountQuizzesArgs
     reviewRecords?: boolean | TaskCountOutputTypeCountReviewRecordsArgs
+    knowledgeLinks?: boolean | TaskCountOutputTypeCountKnowledgeLinksArgs
   }
 
   // Custom InputTypes
@@ -2270,13 +2270,6 @@ export namespace Prisma {
      * Select specific fields to fetch from the TaskCountOutputType
      */
     select?: TaskCountOutputTypeSelect<ExtArgs> | null
-  }
-
-  /**
-   * TaskCountOutputType without action
-   */
-  export type TaskCountOutputTypeCountKnowledgeLinksArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    where?: TaskKnowledgeUnitWhereInput
   }
 
   /**
@@ -2305,6 +2298,13 @@ export namespace Prisma {
    */
   export type TaskCountOutputTypeCountReviewRecordsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: ReviewRecordWhereInput
+  }
+
+  /**
+   * TaskCountOutputType without action
+   */
+  export type TaskCountOutputTypeCountKnowledgeLinksArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: TaskKnowledgeUnitWhereInput
   }
 
 
@@ -3669,8 +3669,8 @@ export namespace Prisma {
     mode?: boolean
     createdAt?: boolean
     updatedAt?: boolean
-    user?: boolean | UserDefaultArgs<ExtArgs>
     materials?: boolean | Project$materialsArgs<ExtArgs>
+    user?: boolean | UserDefaultArgs<ExtArgs>
     studyPlans?: boolean | Project$studyPlansArgs<ExtArgs>
     _count?: boolean | ProjectCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["project"]>
@@ -3718,8 +3718,8 @@ export namespace Prisma {
 
   export type ProjectOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "userId" | "name" | "description" | "goal" | "examDate" | "dailyTimeBudget" | "mode" | "createdAt" | "updatedAt", ExtArgs["result"]["project"]>
   export type ProjectInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    user?: boolean | UserDefaultArgs<ExtArgs>
     materials?: boolean | Project$materialsArgs<ExtArgs>
+    user?: boolean | UserDefaultArgs<ExtArgs>
     studyPlans?: boolean | Project$studyPlansArgs<ExtArgs>
     _count?: boolean | ProjectCountOutputTypeDefaultArgs<ExtArgs>
   }
@@ -3733,8 +3733,8 @@ export namespace Prisma {
   export type $ProjectPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     name: "Project"
     objects: {
-      user: Prisma.$UserPayload<ExtArgs>
       materials: Prisma.$MaterialPayload<ExtArgs>[]
+      user: Prisma.$UserPayload<ExtArgs>
       studyPlans: Prisma.$StudyPlanPayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
@@ -4142,8 +4142,8 @@ export namespace Prisma {
    */
   export interface Prisma__ProjectClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
     readonly [Symbol.toStringTag]: "PrismaPromise"
-    user<T extends UserDefaultArgs<ExtArgs> = {}>(args?: Subset<T, UserDefaultArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
     materials<T extends Project$materialsArgs<ExtArgs> = {}>(args?: Subset<T, Project$materialsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$MaterialPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    user<T extends UserDefaultArgs<ExtArgs> = {}>(args?: Subset<T, UserDefaultArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
     studyPlans<T extends Project$studyPlansArgs<ExtArgs> = {}>(args?: Subset<T, Project$studyPlansArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$StudyPlanPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
@@ -4859,9 +4859,9 @@ export namespace Prisma {
     metadata?: boolean
     createdAt?: boolean
     updatedAt?: boolean
+    knowledgeUnits?: boolean | Material$knowledgeUnitsArgs<ExtArgs>
     project?: boolean | ProjectDefaultArgs<ExtArgs>
     chunks?: boolean | Material$chunksArgs<ExtArgs>
-    knowledgeUnits?: boolean | Material$knowledgeUnitsArgs<ExtArgs>
     _count?: boolean | MaterialCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["material"]>
 
@@ -4911,9 +4911,9 @@ export namespace Prisma {
 
   export type MaterialOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "projectId" | "title" | "type" | "sourcePath" | "rawText" | "status" | "parseError" | "metadata" | "createdAt" | "updatedAt", ExtArgs["result"]["material"]>
   export type MaterialInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    knowledgeUnits?: boolean | Material$knowledgeUnitsArgs<ExtArgs>
     project?: boolean | ProjectDefaultArgs<ExtArgs>
     chunks?: boolean | Material$chunksArgs<ExtArgs>
-    knowledgeUnits?: boolean | Material$knowledgeUnitsArgs<ExtArgs>
     _count?: boolean | MaterialCountOutputTypeDefaultArgs<ExtArgs>
   }
   export type MaterialIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -4926,9 +4926,9 @@ export namespace Prisma {
   export type $MaterialPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     name: "Material"
     objects: {
+      knowledgeUnits: Prisma.$KnowledgeUnitPayload<ExtArgs>[]
       project: Prisma.$ProjectPayload<ExtArgs>
       chunks: Prisma.$MaterialChunkPayload<ExtArgs>[]
-      knowledgeUnits: Prisma.$KnowledgeUnitPayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
@@ -5336,9 +5336,9 @@ export namespace Prisma {
    */
   export interface Prisma__MaterialClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
     readonly [Symbol.toStringTag]: "PrismaPromise"
+    knowledgeUnits<T extends Material$knowledgeUnitsArgs<ExtArgs> = {}>(args?: Subset<T, Material$knowledgeUnitsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$KnowledgeUnitPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     project<T extends ProjectDefaultArgs<ExtArgs> = {}>(args?: Subset<T, ProjectDefaultArgs<ExtArgs>>): Prisma__ProjectClient<$Result.GetResult<Prisma.$ProjectPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
     chunks<T extends Material$chunksArgs<ExtArgs> = {}>(args?: Subset<T, Material$chunksArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$MaterialChunkPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
-    knowledgeUnits<T extends Material$knowledgeUnitsArgs<ExtArgs> = {}>(args?: Subset<T, Material$knowledgeUnitsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$KnowledgeUnitPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -5780,30 +5780,6 @@ export namespace Prisma {
   }
 
   /**
-   * Material.chunks
-   */
-  export type Material$chunksArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the MaterialChunk
-     */
-    select?: MaterialChunkSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the MaterialChunk
-     */
-    omit?: MaterialChunkOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: MaterialChunkInclude<ExtArgs> | null
-    where?: MaterialChunkWhereInput
-    orderBy?: MaterialChunkOrderByWithRelationInput | MaterialChunkOrderByWithRelationInput[]
-    cursor?: MaterialChunkWhereUniqueInput
-    take?: number
-    skip?: number
-    distinct?: MaterialChunkScalarFieldEnum | MaterialChunkScalarFieldEnum[]
-  }
-
-  /**
    * Material.knowledgeUnits
    */
   export type Material$knowledgeUnitsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -5825,6 +5801,30 @@ export namespace Prisma {
     take?: number
     skip?: number
     distinct?: KnowledgeUnitScalarFieldEnum | KnowledgeUnitScalarFieldEnum[]
+  }
+
+  /**
+   * Material.chunks
+   */
+  export type Material$chunksArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the MaterialChunk
+     */
+    select?: MaterialChunkSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the MaterialChunk
+     */
+    omit?: MaterialChunkOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: MaterialChunkInclude<ExtArgs> | null
+    where?: MaterialChunkWhereInput
+    orderBy?: MaterialChunkOrderByWithRelationInput | MaterialChunkOrderByWithRelationInput[]
+    cursor?: MaterialChunkWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: MaterialChunkScalarFieldEnum | MaterialChunkScalarFieldEnum[]
   }
 
   /**
@@ -9704,12 +9704,12 @@ export namespace Prisma {
     createdAt?: boolean
     updatedAt?: boolean
     completedAt?: boolean
-    studyPlan?: boolean | StudyPlanDefaultArgs<ExtArgs>
-    knowledgeLinks?: boolean | Task$knowledgeLinksArgs<ExtArgs>
     sessions?: boolean | Task$sessionsArgs<ExtArgs>
     notes?: boolean | Task$notesArgs<ExtArgs>
     quizzes?: boolean | Task$quizzesArgs<ExtArgs>
     reviewRecords?: boolean | Task$reviewRecordsArgs<ExtArgs>
+    studyPlan?: boolean | StudyPlanDefaultArgs<ExtArgs>
+    knowledgeLinks?: boolean | Task$knowledgeLinksArgs<ExtArgs>
     _count?: boolean | TaskCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["task"]>
 
@@ -9771,12 +9771,12 @@ export namespace Prisma {
 
   export type TaskOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "studyPlanId" | "title" | "description" | "taskType" | "status" | "scheduledDate" | "estimatedMinutes" | "difficulty" | "priority" | "masteryScore" | "nextReviewDate" | "createdAt" | "updatedAt" | "completedAt", ExtArgs["result"]["task"]>
   export type TaskInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    studyPlan?: boolean | StudyPlanDefaultArgs<ExtArgs>
-    knowledgeLinks?: boolean | Task$knowledgeLinksArgs<ExtArgs>
     sessions?: boolean | Task$sessionsArgs<ExtArgs>
     notes?: boolean | Task$notesArgs<ExtArgs>
     quizzes?: boolean | Task$quizzesArgs<ExtArgs>
     reviewRecords?: boolean | Task$reviewRecordsArgs<ExtArgs>
+    studyPlan?: boolean | StudyPlanDefaultArgs<ExtArgs>
+    knowledgeLinks?: boolean | Task$knowledgeLinksArgs<ExtArgs>
     _count?: boolean | TaskCountOutputTypeDefaultArgs<ExtArgs>
   }
   export type TaskIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -9789,12 +9789,12 @@ export namespace Prisma {
   export type $TaskPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     name: "Task"
     objects: {
-      studyPlan: Prisma.$StudyPlanPayload<ExtArgs>
-      knowledgeLinks: Prisma.$TaskKnowledgeUnitPayload<ExtArgs>[]
       sessions: Prisma.$LearningSessionPayload<ExtArgs>[]
       notes: Prisma.$NotePayload<ExtArgs>[]
       quizzes: Prisma.$QuizPayload<ExtArgs>[]
       reviewRecords: Prisma.$ReviewRecordPayload<ExtArgs>[]
+      studyPlan: Prisma.$StudyPlanPayload<ExtArgs>
+      knowledgeLinks: Prisma.$TaskKnowledgeUnitPayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
@@ -10206,12 +10206,12 @@ export namespace Prisma {
    */
   export interface Prisma__TaskClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
     readonly [Symbol.toStringTag]: "PrismaPromise"
-    studyPlan<T extends StudyPlanDefaultArgs<ExtArgs> = {}>(args?: Subset<T, StudyPlanDefaultArgs<ExtArgs>>): Prisma__StudyPlanClient<$Result.GetResult<Prisma.$StudyPlanPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
-    knowledgeLinks<T extends Task$knowledgeLinksArgs<ExtArgs> = {}>(args?: Subset<T, Task$knowledgeLinksArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$TaskKnowledgeUnitPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     sessions<T extends Task$sessionsArgs<ExtArgs> = {}>(args?: Subset<T, Task$sessionsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$LearningSessionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     notes<T extends Task$notesArgs<ExtArgs> = {}>(args?: Subset<T, Task$notesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$NotePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     quizzes<T extends Task$quizzesArgs<ExtArgs> = {}>(args?: Subset<T, Task$quizzesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$QuizPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     reviewRecords<T extends Task$reviewRecordsArgs<ExtArgs> = {}>(args?: Subset<T, Task$reviewRecordsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ReviewRecordPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    studyPlan<T extends StudyPlanDefaultArgs<ExtArgs> = {}>(args?: Subset<T, StudyPlanDefaultArgs<ExtArgs>>): Prisma__StudyPlanClient<$Result.GetResult<Prisma.$StudyPlanPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    knowledgeLinks<T extends Task$knowledgeLinksArgs<ExtArgs> = {}>(args?: Subset<T, Task$knowledgeLinksArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$TaskKnowledgeUnitPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -10657,30 +10657,6 @@ export namespace Prisma {
   }
 
   /**
-   * Task.knowledgeLinks
-   */
-  export type Task$knowledgeLinksArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the TaskKnowledgeUnit
-     */
-    select?: TaskKnowledgeUnitSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the TaskKnowledgeUnit
-     */
-    omit?: TaskKnowledgeUnitOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: TaskKnowledgeUnitInclude<ExtArgs> | null
-    where?: TaskKnowledgeUnitWhereInput
-    orderBy?: TaskKnowledgeUnitOrderByWithRelationInput | TaskKnowledgeUnitOrderByWithRelationInput[]
-    cursor?: TaskKnowledgeUnitWhereUniqueInput
-    take?: number
-    skip?: number
-    distinct?: TaskKnowledgeUnitScalarFieldEnum | TaskKnowledgeUnitScalarFieldEnum[]
-  }
-
-  /**
    * Task.sessions
    */
   export type Task$sessionsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -10774,6 +10750,30 @@ export namespace Prisma {
     take?: number
     skip?: number
     distinct?: ReviewRecordScalarFieldEnum | ReviewRecordScalarFieldEnum[]
+  }
+
+  /**
+   * Task.knowledgeLinks
+   */
+  export type Task$knowledgeLinksArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the TaskKnowledgeUnit
+     */
+    select?: TaskKnowledgeUnitSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the TaskKnowledgeUnit
+     */
+    omit?: TaskKnowledgeUnitOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TaskKnowledgeUnitInclude<ExtArgs> | null
+    where?: TaskKnowledgeUnitWhereInput
+    orderBy?: TaskKnowledgeUnitOrderByWithRelationInput | TaskKnowledgeUnitOrderByWithRelationInput[]
+    cursor?: TaskKnowledgeUnitWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: TaskKnowledgeUnitScalarFieldEnum | TaskKnowledgeUnitScalarFieldEnum[]
   }
 
   /**
@@ -10943,24 +10943,24 @@ export namespace Prisma {
     id?: boolean
     taskId?: boolean
     knowledgeUnitId?: boolean
-    task?: boolean | TaskDefaultArgs<ExtArgs>
     knowledgeUnit?: boolean | KnowledgeUnitDefaultArgs<ExtArgs>
+    task?: boolean | TaskDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["taskKnowledgeUnit"]>
 
   export type TaskKnowledgeUnitSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
     taskId?: boolean
     knowledgeUnitId?: boolean
-    task?: boolean | TaskDefaultArgs<ExtArgs>
     knowledgeUnit?: boolean | KnowledgeUnitDefaultArgs<ExtArgs>
+    task?: boolean | TaskDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["taskKnowledgeUnit"]>
 
   export type TaskKnowledgeUnitSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
     taskId?: boolean
     knowledgeUnitId?: boolean
-    task?: boolean | TaskDefaultArgs<ExtArgs>
     knowledgeUnit?: boolean | KnowledgeUnitDefaultArgs<ExtArgs>
+    task?: boolean | TaskDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["taskKnowledgeUnit"]>
 
   export type TaskKnowledgeUnitSelectScalar = {
@@ -10971,23 +10971,23 @@ export namespace Prisma {
 
   export type TaskKnowledgeUnitOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "taskId" | "knowledgeUnitId", ExtArgs["result"]["taskKnowledgeUnit"]>
   export type TaskKnowledgeUnitInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    task?: boolean | TaskDefaultArgs<ExtArgs>
     knowledgeUnit?: boolean | KnowledgeUnitDefaultArgs<ExtArgs>
+    task?: boolean | TaskDefaultArgs<ExtArgs>
   }
   export type TaskKnowledgeUnitIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    task?: boolean | TaskDefaultArgs<ExtArgs>
     knowledgeUnit?: boolean | KnowledgeUnitDefaultArgs<ExtArgs>
+    task?: boolean | TaskDefaultArgs<ExtArgs>
   }
   export type TaskKnowledgeUnitIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    task?: boolean | TaskDefaultArgs<ExtArgs>
     knowledgeUnit?: boolean | KnowledgeUnitDefaultArgs<ExtArgs>
+    task?: boolean | TaskDefaultArgs<ExtArgs>
   }
 
   export type $TaskKnowledgeUnitPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     name: "TaskKnowledgeUnit"
     objects: {
-      task: Prisma.$TaskPayload<ExtArgs>
       knowledgeUnit: Prisma.$KnowledgeUnitPayload<ExtArgs>
+      task: Prisma.$TaskPayload<ExtArgs>
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
@@ -11387,8 +11387,8 @@ export namespace Prisma {
    */
   export interface Prisma__TaskKnowledgeUnitClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
     readonly [Symbol.toStringTag]: "PrismaPromise"
-    task<T extends TaskDefaultArgs<ExtArgs> = {}>(args?: Subset<T, TaskDefaultArgs<ExtArgs>>): Prisma__TaskClient<$Result.GetResult<Prisma.$TaskPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
     knowledgeUnit<T extends KnowledgeUnitDefaultArgs<ExtArgs> = {}>(args?: Subset<T, KnowledgeUnitDefaultArgs<ExtArgs>>): Prisma__KnowledgeUnitClient<$Result.GetResult<Prisma.$KnowledgeUnitPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    task<T extends TaskDefaultArgs<ExtArgs> = {}>(args?: Subset<T, TaskDefaultArgs<ExtArgs>>): Prisma__TaskClient<$Result.GetResult<Prisma.$TaskPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -18115,8 +18115,8 @@ export namespace Prisma {
     mode?: StringNullableFilter<"Project"> | string | null
     createdAt?: DateTimeFilter<"Project"> | Date | string
     updatedAt?: DateTimeFilter<"Project"> | Date | string
-    user?: XOR<UserScalarRelationFilter, UserWhereInput>
     materials?: MaterialListRelationFilter
+    user?: XOR<UserScalarRelationFilter, UserWhereInput>
     studyPlans?: StudyPlanListRelationFilter
   }
 
@@ -18131,8 +18131,8 @@ export namespace Prisma {
     mode?: SortOrderInput | SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
-    user?: UserOrderByWithRelationInput
     materials?: MaterialOrderByRelationAggregateInput
+    user?: UserOrderByWithRelationInput
     studyPlans?: StudyPlanOrderByRelationAggregateInput
   }
 
@@ -18150,8 +18150,8 @@ export namespace Prisma {
     mode?: StringNullableFilter<"Project"> | string | null
     createdAt?: DateTimeFilter<"Project"> | Date | string
     updatedAt?: DateTimeFilter<"Project"> | Date | string
-    user?: XOR<UserScalarRelationFilter, UserWhereInput>
     materials?: MaterialListRelationFilter
+    user?: XOR<UserScalarRelationFilter, UserWhereInput>
     studyPlans?: StudyPlanListRelationFilter
   }, "id">
 
@@ -18204,9 +18204,9 @@ export namespace Prisma {
     metadata?: JsonNullableFilter<"Material">
     createdAt?: DateTimeFilter<"Material"> | Date | string
     updatedAt?: DateTimeFilter<"Material"> | Date | string
+    knowledgeUnits?: KnowledgeUnitListRelationFilter
     project?: XOR<ProjectScalarRelationFilter, ProjectWhereInput>
     chunks?: MaterialChunkListRelationFilter
-    knowledgeUnits?: KnowledgeUnitListRelationFilter
   }
 
   export type MaterialOrderByWithRelationInput = {
@@ -18221,9 +18221,9 @@ export namespace Prisma {
     metadata?: SortOrderInput | SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
+    knowledgeUnits?: KnowledgeUnitOrderByRelationAggregateInput
     project?: ProjectOrderByWithRelationInput
     chunks?: MaterialChunkOrderByRelationAggregateInput
-    knowledgeUnits?: KnowledgeUnitOrderByRelationAggregateInput
   }
 
   export type MaterialWhereUniqueInput = Prisma.AtLeast<{
@@ -18241,9 +18241,9 @@ export namespace Prisma {
     metadata?: JsonNullableFilter<"Material">
     createdAt?: DateTimeFilter<"Material"> | Date | string
     updatedAt?: DateTimeFilter<"Material"> | Date | string
+    knowledgeUnits?: KnowledgeUnitListRelationFilter
     project?: XOR<ProjectScalarRelationFilter, ProjectWhereInput>
     chunks?: MaterialChunkListRelationFilter
-    knowledgeUnits?: KnowledgeUnitListRelationFilter
   }, "id">
 
   export type MaterialOrderByWithAggregationInput = {
@@ -18562,12 +18562,12 @@ export namespace Prisma {
     createdAt?: DateTimeFilter<"Task"> | Date | string
     updatedAt?: DateTimeFilter<"Task"> | Date | string
     completedAt?: DateTimeNullableFilter<"Task"> | Date | string | null
-    studyPlan?: XOR<StudyPlanScalarRelationFilter, StudyPlanWhereInput>
-    knowledgeLinks?: TaskKnowledgeUnitListRelationFilter
     sessions?: LearningSessionListRelationFilter
     notes?: NoteListRelationFilter
     quizzes?: QuizListRelationFilter
     reviewRecords?: ReviewRecordListRelationFilter
+    studyPlan?: XOR<StudyPlanScalarRelationFilter, StudyPlanWhereInput>
+    knowledgeLinks?: TaskKnowledgeUnitListRelationFilter
   }
 
   export type TaskOrderByWithRelationInput = {
@@ -18586,12 +18586,12 @@ export namespace Prisma {
     createdAt?: SortOrder
     updatedAt?: SortOrder
     completedAt?: SortOrderInput | SortOrder
-    studyPlan?: StudyPlanOrderByWithRelationInput
-    knowledgeLinks?: TaskKnowledgeUnitOrderByRelationAggregateInput
     sessions?: LearningSessionOrderByRelationAggregateInput
     notes?: NoteOrderByRelationAggregateInput
     quizzes?: QuizOrderByRelationAggregateInput
     reviewRecords?: ReviewRecordOrderByRelationAggregateInput
+    studyPlan?: StudyPlanOrderByWithRelationInput
+    knowledgeLinks?: TaskKnowledgeUnitOrderByRelationAggregateInput
   }
 
   export type TaskWhereUniqueInput = Prisma.AtLeast<{
@@ -18613,12 +18613,12 @@ export namespace Prisma {
     createdAt?: DateTimeFilter<"Task"> | Date | string
     updatedAt?: DateTimeFilter<"Task"> | Date | string
     completedAt?: DateTimeNullableFilter<"Task"> | Date | string | null
-    studyPlan?: XOR<StudyPlanScalarRelationFilter, StudyPlanWhereInput>
-    knowledgeLinks?: TaskKnowledgeUnitListRelationFilter
     sessions?: LearningSessionListRelationFilter
     notes?: NoteListRelationFilter
     quizzes?: QuizListRelationFilter
     reviewRecords?: ReviewRecordListRelationFilter
+    studyPlan?: XOR<StudyPlanScalarRelationFilter, StudyPlanWhereInput>
+    knowledgeLinks?: TaskKnowledgeUnitListRelationFilter
   }, "id">
 
   export type TaskOrderByWithAggregationInput = {
@@ -18672,16 +18672,16 @@ export namespace Prisma {
     id?: StringFilter<"TaskKnowledgeUnit"> | string
     taskId?: StringFilter<"TaskKnowledgeUnit"> | string
     knowledgeUnitId?: StringFilter<"TaskKnowledgeUnit"> | string
-    task?: XOR<TaskScalarRelationFilter, TaskWhereInput>
     knowledgeUnit?: XOR<KnowledgeUnitScalarRelationFilter, KnowledgeUnitWhereInput>
+    task?: XOR<TaskScalarRelationFilter, TaskWhereInput>
   }
 
   export type TaskKnowledgeUnitOrderByWithRelationInput = {
     id?: SortOrder
     taskId?: SortOrder
     knowledgeUnitId?: SortOrder
-    task?: TaskOrderByWithRelationInput
     knowledgeUnit?: KnowledgeUnitOrderByWithRelationInput
+    task?: TaskOrderByWithRelationInput
   }
 
   export type TaskKnowledgeUnitWhereUniqueInput = Prisma.AtLeast<{
@@ -18692,8 +18692,8 @@ export namespace Prisma {
     NOT?: TaskKnowledgeUnitWhereInput | TaskKnowledgeUnitWhereInput[]
     taskId?: StringFilter<"TaskKnowledgeUnit"> | string
     knowledgeUnitId?: StringFilter<"TaskKnowledgeUnit"> | string
-    task?: XOR<TaskScalarRelationFilter, TaskWhereInput>
     knowledgeUnit?: XOR<KnowledgeUnitScalarRelationFilter, KnowledgeUnitWhereInput>
+    task?: XOR<TaskScalarRelationFilter, TaskWhereInput>
   }, "id" | "taskId_knowledgeUnitId">
 
   export type TaskKnowledgeUnitOrderByWithAggregationInput = {
@@ -19178,8 +19178,8 @@ export namespace Prisma {
     mode?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
-    user: UserCreateNestedOneWithoutProjectsInput
     materials?: MaterialCreateNestedManyWithoutProjectInput
+    user: UserCreateNestedOneWithoutProjectsInput
     studyPlans?: StudyPlanCreateNestedManyWithoutProjectInput
   }
 
@@ -19208,8 +19208,8 @@ export namespace Prisma {
     mode?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    user?: UserUpdateOneRequiredWithoutProjectsNestedInput
     materials?: MaterialUpdateManyWithoutProjectNestedInput
+    user?: UserUpdateOneRequiredWithoutProjectsNestedInput
     studyPlans?: StudyPlanUpdateManyWithoutProjectNestedInput
   }
 
@@ -19277,9 +19277,9 @@ export namespace Prisma {
     metadata?: NullableJsonNullValueInput | InputJsonValue
     createdAt?: Date | string
     updatedAt?: Date | string
+    knowledgeUnits?: KnowledgeUnitCreateNestedManyWithoutMaterialInput
     project: ProjectCreateNestedOneWithoutMaterialsInput
     chunks?: MaterialChunkCreateNestedManyWithoutMaterialInput
-    knowledgeUnits?: KnowledgeUnitCreateNestedManyWithoutMaterialInput
   }
 
   export type MaterialUncheckedCreateInput = {
@@ -19294,8 +19294,8 @@ export namespace Prisma {
     metadata?: NullableJsonNullValueInput | InputJsonValue
     createdAt?: Date | string
     updatedAt?: Date | string
-    chunks?: MaterialChunkUncheckedCreateNestedManyWithoutMaterialInput
     knowledgeUnits?: KnowledgeUnitUncheckedCreateNestedManyWithoutMaterialInput
+    chunks?: MaterialChunkUncheckedCreateNestedManyWithoutMaterialInput
   }
 
   export type MaterialUpdateInput = {
@@ -19309,9 +19309,9 @@ export namespace Prisma {
     metadata?: NullableJsonNullValueInput | InputJsonValue
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    knowledgeUnits?: KnowledgeUnitUpdateManyWithoutMaterialNestedInput
     project?: ProjectUpdateOneRequiredWithoutMaterialsNestedInput
     chunks?: MaterialChunkUpdateManyWithoutMaterialNestedInput
-    knowledgeUnits?: KnowledgeUnitUpdateManyWithoutMaterialNestedInput
   }
 
   export type MaterialUncheckedUpdateInput = {
@@ -19326,8 +19326,8 @@ export namespace Prisma {
     metadata?: NullableJsonNullValueInput | InputJsonValue
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    chunks?: MaterialChunkUncheckedUpdateManyWithoutMaterialNestedInput
     knowledgeUnits?: KnowledgeUnitUncheckedUpdateManyWithoutMaterialNestedInput
+    chunks?: MaterialChunkUncheckedUpdateManyWithoutMaterialNestedInput
   }
 
   export type MaterialCreateManyInput = {
@@ -19678,12 +19678,12 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     completedAt?: Date | string | null
-    studyPlan: StudyPlanCreateNestedOneWithoutTasksInput
-    knowledgeLinks?: TaskKnowledgeUnitCreateNestedManyWithoutTaskInput
     sessions?: LearningSessionCreateNestedManyWithoutTaskInput
     notes?: NoteCreateNestedManyWithoutTaskInput
     quizzes?: QuizCreateNestedManyWithoutTaskInput
     reviewRecords?: ReviewRecordCreateNestedManyWithoutTaskInput
+    studyPlan: StudyPlanCreateNestedOneWithoutTasksInput
+    knowledgeLinks?: TaskKnowledgeUnitCreateNestedManyWithoutTaskInput
   }
 
   export type TaskUncheckedCreateInput = {
@@ -19702,11 +19702,11 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     completedAt?: Date | string | null
-    knowledgeLinks?: TaskKnowledgeUnitUncheckedCreateNestedManyWithoutTaskInput
     sessions?: LearningSessionUncheckedCreateNestedManyWithoutTaskInput
     notes?: NoteUncheckedCreateNestedManyWithoutTaskInput
     quizzes?: QuizUncheckedCreateNestedManyWithoutTaskInput
     reviewRecords?: ReviewRecordUncheckedCreateNestedManyWithoutTaskInput
+    knowledgeLinks?: TaskKnowledgeUnitUncheckedCreateNestedManyWithoutTaskInput
   }
 
   export type TaskUpdateInput = {
@@ -19724,12 +19724,12 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    studyPlan?: StudyPlanUpdateOneRequiredWithoutTasksNestedInput
-    knowledgeLinks?: TaskKnowledgeUnitUpdateManyWithoutTaskNestedInput
     sessions?: LearningSessionUpdateManyWithoutTaskNestedInput
     notes?: NoteUpdateManyWithoutTaskNestedInput
     quizzes?: QuizUpdateManyWithoutTaskNestedInput
     reviewRecords?: ReviewRecordUpdateManyWithoutTaskNestedInput
+    studyPlan?: StudyPlanUpdateOneRequiredWithoutTasksNestedInput
+    knowledgeLinks?: TaskKnowledgeUnitUpdateManyWithoutTaskNestedInput
   }
 
   export type TaskUncheckedUpdateInput = {
@@ -19748,11 +19748,11 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    knowledgeLinks?: TaskKnowledgeUnitUncheckedUpdateManyWithoutTaskNestedInput
     sessions?: LearningSessionUncheckedUpdateManyWithoutTaskNestedInput
     notes?: NoteUncheckedUpdateManyWithoutTaskNestedInput
     quizzes?: QuizUncheckedUpdateManyWithoutTaskNestedInput
     reviewRecords?: ReviewRecordUncheckedUpdateManyWithoutTaskNestedInput
+    knowledgeLinks?: TaskKnowledgeUnitUncheckedUpdateManyWithoutTaskNestedInput
   }
 
   export type TaskCreateManyInput = {
@@ -19810,8 +19810,8 @@ export namespace Prisma {
 
   export type TaskKnowledgeUnitCreateInput = {
     id?: string
-    task: TaskCreateNestedOneWithoutKnowledgeLinksInput
     knowledgeUnit: KnowledgeUnitCreateNestedOneWithoutTaskLinksInput
+    task: TaskCreateNestedOneWithoutKnowledgeLinksInput
   }
 
   export type TaskKnowledgeUnitUncheckedCreateInput = {
@@ -19822,8 +19822,8 @@ export namespace Prisma {
 
   export type TaskKnowledgeUnitUpdateInput = {
     id?: StringFieldUpdateOperationsInput | string
-    task?: TaskUpdateOneRequiredWithoutKnowledgeLinksNestedInput
     knowledgeUnit?: KnowledgeUnitUpdateOneRequiredWithoutTaskLinksNestedInput
+    task?: TaskUpdateOneRequiredWithoutKnowledgeLinksNestedInput
   }
 
   export type TaskKnowledgeUnitUncheckedUpdateInput = {
@@ -20422,15 +20422,15 @@ export namespace Prisma {
     not?: NestedIntNullableFilter<$PrismaModel> | number | null
   }
 
-  export type UserScalarRelationFilter = {
-    is?: UserWhereInput
-    isNot?: UserWhereInput
-  }
-
   export type MaterialListRelationFilter = {
     every?: MaterialWhereInput
     some?: MaterialWhereInput
     none?: MaterialWhereInput
+  }
+
+  export type UserScalarRelationFilter = {
+    is?: UserWhereInput
+    isNot?: UserWhereInput
   }
 
   export type StudyPlanListRelationFilter = {
@@ -20561,6 +20561,12 @@ export namespace Prisma {
     not?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | JsonNullValueFilter
   }
 
+  export type KnowledgeUnitListRelationFilter = {
+    every?: KnowledgeUnitWhereInput
+    some?: KnowledgeUnitWhereInput
+    none?: KnowledgeUnitWhereInput
+  }
+
   export type ProjectScalarRelationFilter = {
     is?: ProjectWhereInput
     isNot?: ProjectWhereInput
@@ -20572,17 +20578,11 @@ export namespace Prisma {
     none?: MaterialChunkWhereInput
   }
 
-  export type KnowledgeUnitListRelationFilter = {
-    every?: KnowledgeUnitWhereInput
-    some?: KnowledgeUnitWhereInput
-    none?: KnowledgeUnitWhereInput
-  }
-
-  export type MaterialChunkOrderByRelationAggregateInput = {
+  export type KnowledgeUnitOrderByRelationAggregateInput = {
     _count?: SortOrder
   }
 
-  export type KnowledgeUnitOrderByRelationAggregateInput = {
+  export type MaterialChunkOrderByRelationAggregateInput = {
     _count?: SortOrder
   }
 
@@ -20924,11 +20924,6 @@ export namespace Prisma {
     not?: NestedFloatNullableFilter<$PrismaModel> | number | null
   }
 
-  export type StudyPlanScalarRelationFilter = {
-    is?: StudyPlanWhereInput
-    isNot?: StudyPlanWhereInput
-  }
-
   export type LearningSessionListRelationFilter = {
     every?: LearningSessionWhereInput
     some?: LearningSessionWhereInput
@@ -20951,6 +20946,11 @@ export namespace Prisma {
     every?: ReviewRecordWhereInput
     some?: ReviewRecordWhereInput
     none?: ReviewRecordWhereInput
+  }
+
+  export type StudyPlanScalarRelationFilter = {
+    is?: StudyPlanWhereInput
+    isNot?: StudyPlanWhereInput
   }
 
   export type LearningSessionOrderByRelationAggregateInput = {
@@ -21073,14 +21073,14 @@ export namespace Prisma {
     _max?: NestedFloatNullableFilter<$PrismaModel>
   }
 
-  export type TaskScalarRelationFilter = {
-    is?: TaskWhereInput
-    isNot?: TaskWhereInput
-  }
-
   export type KnowledgeUnitScalarRelationFilter = {
     is?: KnowledgeUnitWhereInput
     isNot?: KnowledgeUnitWhereInput
+  }
+
+  export type TaskScalarRelationFilter = {
+    is?: TaskWhereInput
+    isNot?: TaskWhereInput
   }
 
   export type TaskKnowledgeUnitTaskIdKnowledgeUnitIdCompoundUniqueInput = {
@@ -21473,17 +21473,17 @@ export namespace Prisma {
     deleteMany?: ProjectScalarWhereInput | ProjectScalarWhereInput[]
   }
 
-  export type UserCreateNestedOneWithoutProjectsInput = {
-    create?: XOR<UserCreateWithoutProjectsInput, UserUncheckedCreateWithoutProjectsInput>
-    connectOrCreate?: UserCreateOrConnectWithoutProjectsInput
-    connect?: UserWhereUniqueInput
-  }
-
   export type MaterialCreateNestedManyWithoutProjectInput = {
     create?: XOR<MaterialCreateWithoutProjectInput, MaterialUncheckedCreateWithoutProjectInput> | MaterialCreateWithoutProjectInput[] | MaterialUncheckedCreateWithoutProjectInput[]
     connectOrCreate?: MaterialCreateOrConnectWithoutProjectInput | MaterialCreateOrConnectWithoutProjectInput[]
     createMany?: MaterialCreateManyProjectInputEnvelope
     connect?: MaterialWhereUniqueInput | MaterialWhereUniqueInput[]
+  }
+
+  export type UserCreateNestedOneWithoutProjectsInput = {
+    create?: XOR<UserCreateWithoutProjectsInput, UserUncheckedCreateWithoutProjectsInput>
+    connectOrCreate?: UserCreateOrConnectWithoutProjectsInput
+    connect?: UserWhereUniqueInput
   }
 
   export type StudyPlanCreateNestedManyWithoutProjectInput = {
@@ -21519,14 +21519,6 @@ export namespace Prisma {
     divide?: number
   }
 
-  export type UserUpdateOneRequiredWithoutProjectsNestedInput = {
-    create?: XOR<UserCreateWithoutProjectsInput, UserUncheckedCreateWithoutProjectsInput>
-    connectOrCreate?: UserCreateOrConnectWithoutProjectsInput
-    upsert?: UserUpsertWithoutProjectsInput
-    connect?: UserWhereUniqueInput
-    update?: XOR<XOR<UserUpdateToOneWithWhereWithoutProjectsInput, UserUpdateWithoutProjectsInput>, UserUncheckedUpdateWithoutProjectsInput>
-  }
-
   export type MaterialUpdateManyWithoutProjectNestedInput = {
     create?: XOR<MaterialCreateWithoutProjectInput, MaterialUncheckedCreateWithoutProjectInput> | MaterialCreateWithoutProjectInput[] | MaterialUncheckedCreateWithoutProjectInput[]
     connectOrCreate?: MaterialCreateOrConnectWithoutProjectInput | MaterialCreateOrConnectWithoutProjectInput[]
@@ -21539,6 +21531,14 @@ export namespace Prisma {
     update?: MaterialUpdateWithWhereUniqueWithoutProjectInput | MaterialUpdateWithWhereUniqueWithoutProjectInput[]
     updateMany?: MaterialUpdateManyWithWhereWithoutProjectInput | MaterialUpdateManyWithWhereWithoutProjectInput[]
     deleteMany?: MaterialScalarWhereInput | MaterialScalarWhereInput[]
+  }
+
+  export type UserUpdateOneRequiredWithoutProjectsNestedInput = {
+    create?: XOR<UserCreateWithoutProjectsInput, UserUncheckedCreateWithoutProjectsInput>
+    connectOrCreate?: UserCreateOrConnectWithoutProjectsInput
+    upsert?: UserUpsertWithoutProjectsInput
+    connect?: UserWhereUniqueInput
+    update?: XOR<XOR<UserUpdateToOneWithWhereWithoutProjectsInput, UserUpdateWithoutProjectsInput>, UserUncheckedUpdateWithoutProjectsInput>
   }
 
   export type StudyPlanUpdateManyWithoutProjectNestedInput = {
@@ -21583,6 +21583,13 @@ export namespace Prisma {
     deleteMany?: StudyPlanScalarWhereInput | StudyPlanScalarWhereInput[]
   }
 
+  export type KnowledgeUnitCreateNestedManyWithoutMaterialInput = {
+    create?: XOR<KnowledgeUnitCreateWithoutMaterialInput, KnowledgeUnitUncheckedCreateWithoutMaterialInput> | KnowledgeUnitCreateWithoutMaterialInput[] | KnowledgeUnitUncheckedCreateWithoutMaterialInput[]
+    connectOrCreate?: KnowledgeUnitCreateOrConnectWithoutMaterialInput | KnowledgeUnitCreateOrConnectWithoutMaterialInput[]
+    createMany?: KnowledgeUnitCreateManyMaterialInputEnvelope
+    connect?: KnowledgeUnitWhereUniqueInput | KnowledgeUnitWhereUniqueInput[]
+  }
+
   export type ProjectCreateNestedOneWithoutMaterialsInput = {
     create?: XOR<ProjectCreateWithoutMaterialsInput, ProjectUncheckedCreateWithoutMaterialsInput>
     connectOrCreate?: ProjectCreateOrConnectWithoutMaterialsInput
@@ -21596,7 +21603,7 @@ export namespace Prisma {
     connect?: MaterialChunkWhereUniqueInput | MaterialChunkWhereUniqueInput[]
   }
 
-  export type KnowledgeUnitCreateNestedManyWithoutMaterialInput = {
+  export type KnowledgeUnitUncheckedCreateNestedManyWithoutMaterialInput = {
     create?: XOR<KnowledgeUnitCreateWithoutMaterialInput, KnowledgeUnitUncheckedCreateWithoutMaterialInput> | KnowledgeUnitCreateWithoutMaterialInput[] | KnowledgeUnitUncheckedCreateWithoutMaterialInput[]
     connectOrCreate?: KnowledgeUnitCreateOrConnectWithoutMaterialInput | KnowledgeUnitCreateOrConnectWithoutMaterialInput[]
     createMany?: KnowledgeUnitCreateManyMaterialInputEnvelope
@@ -21610,41 +21617,12 @@ export namespace Prisma {
     connect?: MaterialChunkWhereUniqueInput | MaterialChunkWhereUniqueInput[]
   }
 
-  export type KnowledgeUnitUncheckedCreateNestedManyWithoutMaterialInput = {
-    create?: XOR<KnowledgeUnitCreateWithoutMaterialInput, KnowledgeUnitUncheckedCreateWithoutMaterialInput> | KnowledgeUnitCreateWithoutMaterialInput[] | KnowledgeUnitUncheckedCreateWithoutMaterialInput[]
-    connectOrCreate?: KnowledgeUnitCreateOrConnectWithoutMaterialInput | KnowledgeUnitCreateOrConnectWithoutMaterialInput[]
-    createMany?: KnowledgeUnitCreateManyMaterialInputEnvelope
-    connect?: KnowledgeUnitWhereUniqueInput | KnowledgeUnitWhereUniqueInput[]
-  }
-
   export type EnumMaterialTypeFieldUpdateOperationsInput = {
     set?: $Enums.MaterialType
   }
 
   export type EnumMaterialStatusFieldUpdateOperationsInput = {
     set?: $Enums.MaterialStatus
-  }
-
-  export type ProjectUpdateOneRequiredWithoutMaterialsNestedInput = {
-    create?: XOR<ProjectCreateWithoutMaterialsInput, ProjectUncheckedCreateWithoutMaterialsInput>
-    connectOrCreate?: ProjectCreateOrConnectWithoutMaterialsInput
-    upsert?: ProjectUpsertWithoutMaterialsInput
-    connect?: ProjectWhereUniqueInput
-    update?: XOR<XOR<ProjectUpdateToOneWithWhereWithoutMaterialsInput, ProjectUpdateWithoutMaterialsInput>, ProjectUncheckedUpdateWithoutMaterialsInput>
-  }
-
-  export type MaterialChunkUpdateManyWithoutMaterialNestedInput = {
-    create?: XOR<MaterialChunkCreateWithoutMaterialInput, MaterialChunkUncheckedCreateWithoutMaterialInput> | MaterialChunkCreateWithoutMaterialInput[] | MaterialChunkUncheckedCreateWithoutMaterialInput[]
-    connectOrCreate?: MaterialChunkCreateOrConnectWithoutMaterialInput | MaterialChunkCreateOrConnectWithoutMaterialInput[]
-    upsert?: MaterialChunkUpsertWithWhereUniqueWithoutMaterialInput | MaterialChunkUpsertWithWhereUniqueWithoutMaterialInput[]
-    createMany?: MaterialChunkCreateManyMaterialInputEnvelope
-    set?: MaterialChunkWhereUniqueInput | MaterialChunkWhereUniqueInput[]
-    disconnect?: MaterialChunkWhereUniqueInput | MaterialChunkWhereUniqueInput[]
-    delete?: MaterialChunkWhereUniqueInput | MaterialChunkWhereUniqueInput[]
-    connect?: MaterialChunkWhereUniqueInput | MaterialChunkWhereUniqueInput[]
-    update?: MaterialChunkUpdateWithWhereUniqueWithoutMaterialInput | MaterialChunkUpdateWithWhereUniqueWithoutMaterialInput[]
-    updateMany?: MaterialChunkUpdateManyWithWhereWithoutMaterialInput | MaterialChunkUpdateManyWithWhereWithoutMaterialInput[]
-    deleteMany?: MaterialChunkScalarWhereInput | MaterialChunkScalarWhereInput[]
   }
 
   export type KnowledgeUnitUpdateManyWithoutMaterialNestedInput = {
@@ -21661,7 +21639,15 @@ export namespace Prisma {
     deleteMany?: KnowledgeUnitScalarWhereInput | KnowledgeUnitScalarWhereInput[]
   }
 
-  export type MaterialChunkUncheckedUpdateManyWithoutMaterialNestedInput = {
+  export type ProjectUpdateOneRequiredWithoutMaterialsNestedInput = {
+    create?: XOR<ProjectCreateWithoutMaterialsInput, ProjectUncheckedCreateWithoutMaterialsInput>
+    connectOrCreate?: ProjectCreateOrConnectWithoutMaterialsInput
+    upsert?: ProjectUpsertWithoutMaterialsInput
+    connect?: ProjectWhereUniqueInput
+    update?: XOR<XOR<ProjectUpdateToOneWithWhereWithoutMaterialsInput, ProjectUpdateWithoutMaterialsInput>, ProjectUncheckedUpdateWithoutMaterialsInput>
+  }
+
+  export type MaterialChunkUpdateManyWithoutMaterialNestedInput = {
     create?: XOR<MaterialChunkCreateWithoutMaterialInput, MaterialChunkUncheckedCreateWithoutMaterialInput> | MaterialChunkCreateWithoutMaterialInput[] | MaterialChunkUncheckedCreateWithoutMaterialInput[]
     connectOrCreate?: MaterialChunkCreateOrConnectWithoutMaterialInput | MaterialChunkCreateOrConnectWithoutMaterialInput[]
     upsert?: MaterialChunkUpsertWithWhereUniqueWithoutMaterialInput | MaterialChunkUpsertWithWhereUniqueWithoutMaterialInput[]
@@ -21687,6 +21673,20 @@ export namespace Prisma {
     update?: KnowledgeUnitUpdateWithWhereUniqueWithoutMaterialInput | KnowledgeUnitUpdateWithWhereUniqueWithoutMaterialInput[]
     updateMany?: KnowledgeUnitUpdateManyWithWhereWithoutMaterialInput | KnowledgeUnitUpdateManyWithWhereWithoutMaterialInput[]
     deleteMany?: KnowledgeUnitScalarWhereInput | KnowledgeUnitScalarWhereInput[]
+  }
+
+  export type MaterialChunkUncheckedUpdateManyWithoutMaterialNestedInput = {
+    create?: XOR<MaterialChunkCreateWithoutMaterialInput, MaterialChunkUncheckedCreateWithoutMaterialInput> | MaterialChunkCreateWithoutMaterialInput[] | MaterialChunkUncheckedCreateWithoutMaterialInput[]
+    connectOrCreate?: MaterialChunkCreateOrConnectWithoutMaterialInput | MaterialChunkCreateOrConnectWithoutMaterialInput[]
+    upsert?: MaterialChunkUpsertWithWhereUniqueWithoutMaterialInput | MaterialChunkUpsertWithWhereUniqueWithoutMaterialInput[]
+    createMany?: MaterialChunkCreateManyMaterialInputEnvelope
+    set?: MaterialChunkWhereUniqueInput | MaterialChunkWhereUniqueInput[]
+    disconnect?: MaterialChunkWhereUniqueInput | MaterialChunkWhereUniqueInput[]
+    delete?: MaterialChunkWhereUniqueInput | MaterialChunkWhereUniqueInput[]
+    connect?: MaterialChunkWhereUniqueInput | MaterialChunkWhereUniqueInput[]
+    update?: MaterialChunkUpdateWithWhereUniqueWithoutMaterialInput | MaterialChunkUpdateWithWhereUniqueWithoutMaterialInput[]
+    updateMany?: MaterialChunkUpdateManyWithWhereWithoutMaterialInput | MaterialChunkUpdateManyWithWhereWithoutMaterialInput[]
+    deleteMany?: MaterialChunkScalarWhereInput | MaterialChunkScalarWhereInput[]
   }
 
   export type MaterialCreateNestedOneWithoutChunksInput = {
@@ -21836,19 +21836,6 @@ export namespace Prisma {
     deleteMany?: TaskScalarWhereInput | TaskScalarWhereInput[]
   }
 
-  export type StudyPlanCreateNestedOneWithoutTasksInput = {
-    create?: XOR<StudyPlanCreateWithoutTasksInput, StudyPlanUncheckedCreateWithoutTasksInput>
-    connectOrCreate?: StudyPlanCreateOrConnectWithoutTasksInput
-    connect?: StudyPlanWhereUniqueInput
-  }
-
-  export type TaskKnowledgeUnitCreateNestedManyWithoutTaskInput = {
-    create?: XOR<TaskKnowledgeUnitCreateWithoutTaskInput, TaskKnowledgeUnitUncheckedCreateWithoutTaskInput> | TaskKnowledgeUnitCreateWithoutTaskInput[] | TaskKnowledgeUnitUncheckedCreateWithoutTaskInput[]
-    connectOrCreate?: TaskKnowledgeUnitCreateOrConnectWithoutTaskInput | TaskKnowledgeUnitCreateOrConnectWithoutTaskInput[]
-    createMany?: TaskKnowledgeUnitCreateManyTaskInputEnvelope
-    connect?: TaskKnowledgeUnitWhereUniqueInput | TaskKnowledgeUnitWhereUniqueInput[]
-  }
-
   export type LearningSessionCreateNestedManyWithoutTaskInput = {
     create?: XOR<LearningSessionCreateWithoutTaskInput, LearningSessionUncheckedCreateWithoutTaskInput> | LearningSessionCreateWithoutTaskInput[] | LearningSessionUncheckedCreateWithoutTaskInput[]
     connectOrCreate?: LearningSessionCreateOrConnectWithoutTaskInput | LearningSessionCreateOrConnectWithoutTaskInput[]
@@ -21877,7 +21864,13 @@ export namespace Prisma {
     connect?: ReviewRecordWhereUniqueInput | ReviewRecordWhereUniqueInput[]
   }
 
-  export type TaskKnowledgeUnitUncheckedCreateNestedManyWithoutTaskInput = {
+  export type StudyPlanCreateNestedOneWithoutTasksInput = {
+    create?: XOR<StudyPlanCreateWithoutTasksInput, StudyPlanUncheckedCreateWithoutTasksInput>
+    connectOrCreate?: StudyPlanCreateOrConnectWithoutTasksInput
+    connect?: StudyPlanWhereUniqueInput
+  }
+
+  export type TaskKnowledgeUnitCreateNestedManyWithoutTaskInput = {
     create?: XOR<TaskKnowledgeUnitCreateWithoutTaskInput, TaskKnowledgeUnitUncheckedCreateWithoutTaskInput> | TaskKnowledgeUnitCreateWithoutTaskInput[] | TaskKnowledgeUnitUncheckedCreateWithoutTaskInput[]
     connectOrCreate?: TaskKnowledgeUnitCreateOrConnectWithoutTaskInput | TaskKnowledgeUnitCreateOrConnectWithoutTaskInput[]
     createMany?: TaskKnowledgeUnitCreateManyTaskInputEnvelope
@@ -21912,6 +21905,13 @@ export namespace Prisma {
     connect?: ReviewRecordWhereUniqueInput | ReviewRecordWhereUniqueInput[]
   }
 
+  export type TaskKnowledgeUnitUncheckedCreateNestedManyWithoutTaskInput = {
+    create?: XOR<TaskKnowledgeUnitCreateWithoutTaskInput, TaskKnowledgeUnitUncheckedCreateWithoutTaskInput> | TaskKnowledgeUnitCreateWithoutTaskInput[] | TaskKnowledgeUnitUncheckedCreateWithoutTaskInput[]
+    connectOrCreate?: TaskKnowledgeUnitCreateOrConnectWithoutTaskInput | TaskKnowledgeUnitCreateOrConnectWithoutTaskInput[]
+    createMany?: TaskKnowledgeUnitCreateManyTaskInputEnvelope
+    connect?: TaskKnowledgeUnitWhereUniqueInput | TaskKnowledgeUnitWhereUniqueInput[]
+  }
+
   export type EnumTaskTypeFieldUpdateOperationsInput = {
     set?: $Enums.TaskType
   }
@@ -21926,28 +21926,6 @@ export namespace Prisma {
     decrement?: number
     multiply?: number
     divide?: number
-  }
-
-  export type StudyPlanUpdateOneRequiredWithoutTasksNestedInput = {
-    create?: XOR<StudyPlanCreateWithoutTasksInput, StudyPlanUncheckedCreateWithoutTasksInput>
-    connectOrCreate?: StudyPlanCreateOrConnectWithoutTasksInput
-    upsert?: StudyPlanUpsertWithoutTasksInput
-    connect?: StudyPlanWhereUniqueInput
-    update?: XOR<XOR<StudyPlanUpdateToOneWithWhereWithoutTasksInput, StudyPlanUpdateWithoutTasksInput>, StudyPlanUncheckedUpdateWithoutTasksInput>
-  }
-
-  export type TaskKnowledgeUnitUpdateManyWithoutTaskNestedInput = {
-    create?: XOR<TaskKnowledgeUnitCreateWithoutTaskInput, TaskKnowledgeUnitUncheckedCreateWithoutTaskInput> | TaskKnowledgeUnitCreateWithoutTaskInput[] | TaskKnowledgeUnitUncheckedCreateWithoutTaskInput[]
-    connectOrCreate?: TaskKnowledgeUnitCreateOrConnectWithoutTaskInput | TaskKnowledgeUnitCreateOrConnectWithoutTaskInput[]
-    upsert?: TaskKnowledgeUnitUpsertWithWhereUniqueWithoutTaskInput | TaskKnowledgeUnitUpsertWithWhereUniqueWithoutTaskInput[]
-    createMany?: TaskKnowledgeUnitCreateManyTaskInputEnvelope
-    set?: TaskKnowledgeUnitWhereUniqueInput | TaskKnowledgeUnitWhereUniqueInput[]
-    disconnect?: TaskKnowledgeUnitWhereUniqueInput | TaskKnowledgeUnitWhereUniqueInput[]
-    delete?: TaskKnowledgeUnitWhereUniqueInput | TaskKnowledgeUnitWhereUniqueInput[]
-    connect?: TaskKnowledgeUnitWhereUniqueInput | TaskKnowledgeUnitWhereUniqueInput[]
-    update?: TaskKnowledgeUnitUpdateWithWhereUniqueWithoutTaskInput | TaskKnowledgeUnitUpdateWithWhereUniqueWithoutTaskInput[]
-    updateMany?: TaskKnowledgeUnitUpdateManyWithWhereWithoutTaskInput | TaskKnowledgeUnitUpdateManyWithWhereWithoutTaskInput[]
-    deleteMany?: TaskKnowledgeUnitScalarWhereInput | TaskKnowledgeUnitScalarWhereInput[]
   }
 
   export type LearningSessionUpdateManyWithoutTaskNestedInput = {
@@ -22006,7 +21984,15 @@ export namespace Prisma {
     deleteMany?: ReviewRecordScalarWhereInput | ReviewRecordScalarWhereInput[]
   }
 
-  export type TaskKnowledgeUnitUncheckedUpdateManyWithoutTaskNestedInput = {
+  export type StudyPlanUpdateOneRequiredWithoutTasksNestedInput = {
+    create?: XOR<StudyPlanCreateWithoutTasksInput, StudyPlanUncheckedCreateWithoutTasksInput>
+    connectOrCreate?: StudyPlanCreateOrConnectWithoutTasksInput
+    upsert?: StudyPlanUpsertWithoutTasksInput
+    connect?: StudyPlanWhereUniqueInput
+    update?: XOR<XOR<StudyPlanUpdateToOneWithWhereWithoutTasksInput, StudyPlanUpdateWithoutTasksInput>, StudyPlanUncheckedUpdateWithoutTasksInput>
+  }
+
+  export type TaskKnowledgeUnitUpdateManyWithoutTaskNestedInput = {
     create?: XOR<TaskKnowledgeUnitCreateWithoutTaskInput, TaskKnowledgeUnitUncheckedCreateWithoutTaskInput> | TaskKnowledgeUnitCreateWithoutTaskInput[] | TaskKnowledgeUnitUncheckedCreateWithoutTaskInput[]
     connectOrCreate?: TaskKnowledgeUnitCreateOrConnectWithoutTaskInput | TaskKnowledgeUnitCreateOrConnectWithoutTaskInput[]
     upsert?: TaskKnowledgeUnitUpsertWithWhereUniqueWithoutTaskInput | TaskKnowledgeUnitUpsertWithWhereUniqueWithoutTaskInput[]
@@ -22076,10 +22062,18 @@ export namespace Prisma {
     deleteMany?: ReviewRecordScalarWhereInput | ReviewRecordScalarWhereInput[]
   }
 
-  export type TaskCreateNestedOneWithoutKnowledgeLinksInput = {
-    create?: XOR<TaskCreateWithoutKnowledgeLinksInput, TaskUncheckedCreateWithoutKnowledgeLinksInput>
-    connectOrCreate?: TaskCreateOrConnectWithoutKnowledgeLinksInput
-    connect?: TaskWhereUniqueInput
+  export type TaskKnowledgeUnitUncheckedUpdateManyWithoutTaskNestedInput = {
+    create?: XOR<TaskKnowledgeUnitCreateWithoutTaskInput, TaskKnowledgeUnitUncheckedCreateWithoutTaskInput> | TaskKnowledgeUnitCreateWithoutTaskInput[] | TaskKnowledgeUnitUncheckedCreateWithoutTaskInput[]
+    connectOrCreate?: TaskKnowledgeUnitCreateOrConnectWithoutTaskInput | TaskKnowledgeUnitCreateOrConnectWithoutTaskInput[]
+    upsert?: TaskKnowledgeUnitUpsertWithWhereUniqueWithoutTaskInput | TaskKnowledgeUnitUpsertWithWhereUniqueWithoutTaskInput[]
+    createMany?: TaskKnowledgeUnitCreateManyTaskInputEnvelope
+    set?: TaskKnowledgeUnitWhereUniqueInput | TaskKnowledgeUnitWhereUniqueInput[]
+    disconnect?: TaskKnowledgeUnitWhereUniqueInput | TaskKnowledgeUnitWhereUniqueInput[]
+    delete?: TaskKnowledgeUnitWhereUniqueInput | TaskKnowledgeUnitWhereUniqueInput[]
+    connect?: TaskKnowledgeUnitWhereUniqueInput | TaskKnowledgeUnitWhereUniqueInput[]
+    update?: TaskKnowledgeUnitUpdateWithWhereUniqueWithoutTaskInput | TaskKnowledgeUnitUpdateWithWhereUniqueWithoutTaskInput[]
+    updateMany?: TaskKnowledgeUnitUpdateManyWithWhereWithoutTaskInput | TaskKnowledgeUnitUpdateManyWithWhereWithoutTaskInput[]
+    deleteMany?: TaskKnowledgeUnitScalarWhereInput | TaskKnowledgeUnitScalarWhereInput[]
   }
 
   export type KnowledgeUnitCreateNestedOneWithoutTaskLinksInput = {
@@ -22088,12 +22082,10 @@ export namespace Prisma {
     connect?: KnowledgeUnitWhereUniqueInput
   }
 
-  export type TaskUpdateOneRequiredWithoutKnowledgeLinksNestedInput = {
+  export type TaskCreateNestedOneWithoutKnowledgeLinksInput = {
     create?: XOR<TaskCreateWithoutKnowledgeLinksInput, TaskUncheckedCreateWithoutKnowledgeLinksInput>
     connectOrCreate?: TaskCreateOrConnectWithoutKnowledgeLinksInput
-    upsert?: TaskUpsertWithoutKnowledgeLinksInput
     connect?: TaskWhereUniqueInput
-    update?: XOR<XOR<TaskUpdateToOneWithWhereWithoutKnowledgeLinksInput, TaskUpdateWithoutKnowledgeLinksInput>, TaskUncheckedUpdateWithoutKnowledgeLinksInput>
   }
 
   export type KnowledgeUnitUpdateOneRequiredWithoutTaskLinksNestedInput = {
@@ -22102,6 +22094,14 @@ export namespace Prisma {
     upsert?: KnowledgeUnitUpsertWithoutTaskLinksInput
     connect?: KnowledgeUnitWhereUniqueInput
     update?: XOR<XOR<KnowledgeUnitUpdateToOneWithWhereWithoutTaskLinksInput, KnowledgeUnitUpdateWithoutTaskLinksInput>, KnowledgeUnitUncheckedUpdateWithoutTaskLinksInput>
+  }
+
+  export type TaskUpdateOneRequiredWithoutKnowledgeLinksNestedInput = {
+    create?: XOR<TaskCreateWithoutKnowledgeLinksInput, TaskUncheckedCreateWithoutKnowledgeLinksInput>
+    connectOrCreate?: TaskCreateOrConnectWithoutKnowledgeLinksInput
+    upsert?: TaskUpsertWithoutKnowledgeLinksInput
+    connect?: TaskWhereUniqueInput
+    update?: XOR<XOR<TaskUpdateToOneWithWhereWithoutKnowledgeLinksInput, TaskUpdateWithoutKnowledgeLinksInput>, TaskUncheckedUpdateWithoutKnowledgeLinksInput>
   }
 
   export type TaskCreateNestedOneWithoutSessionsInput = {
@@ -22695,6 +22695,46 @@ export namespace Prisma {
     updatedAt?: DateTimeFilter<"Project"> | Date | string
   }
 
+  export type MaterialCreateWithoutProjectInput = {
+    id?: string
+    title: string
+    type: $Enums.MaterialType
+    sourcePath?: string | null
+    rawText?: string | null
+    status?: $Enums.MaterialStatus
+    parseError?: string | null
+    metadata?: NullableJsonNullValueInput | InputJsonValue
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    knowledgeUnits?: KnowledgeUnitCreateNestedManyWithoutMaterialInput
+    chunks?: MaterialChunkCreateNestedManyWithoutMaterialInput
+  }
+
+  export type MaterialUncheckedCreateWithoutProjectInput = {
+    id?: string
+    title: string
+    type: $Enums.MaterialType
+    sourcePath?: string | null
+    rawText?: string | null
+    status?: $Enums.MaterialStatus
+    parseError?: string | null
+    metadata?: NullableJsonNullValueInput | InputJsonValue
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    knowledgeUnits?: KnowledgeUnitUncheckedCreateNestedManyWithoutMaterialInput
+    chunks?: MaterialChunkUncheckedCreateNestedManyWithoutMaterialInput
+  }
+
+  export type MaterialCreateOrConnectWithoutProjectInput = {
+    where: MaterialWhereUniqueInput
+    create: XOR<MaterialCreateWithoutProjectInput, MaterialUncheckedCreateWithoutProjectInput>
+  }
+
+  export type MaterialCreateManyProjectInputEnvelope = {
+    data: MaterialCreateManyProjectInput | MaterialCreateManyProjectInput[]
+    skipDuplicates?: boolean
+  }
+
   export type UserCreateWithoutProjectsInput = {
     id?: string
     email: string
@@ -22716,46 +22756,6 @@ export namespace Prisma {
   export type UserCreateOrConnectWithoutProjectsInput = {
     where: UserWhereUniqueInput
     create: XOR<UserCreateWithoutProjectsInput, UserUncheckedCreateWithoutProjectsInput>
-  }
-
-  export type MaterialCreateWithoutProjectInput = {
-    id?: string
-    title: string
-    type: $Enums.MaterialType
-    sourcePath?: string | null
-    rawText?: string | null
-    status?: $Enums.MaterialStatus
-    parseError?: string | null
-    metadata?: NullableJsonNullValueInput | InputJsonValue
-    createdAt?: Date | string
-    updatedAt?: Date | string
-    chunks?: MaterialChunkCreateNestedManyWithoutMaterialInput
-    knowledgeUnits?: KnowledgeUnitCreateNestedManyWithoutMaterialInput
-  }
-
-  export type MaterialUncheckedCreateWithoutProjectInput = {
-    id?: string
-    title: string
-    type: $Enums.MaterialType
-    sourcePath?: string | null
-    rawText?: string | null
-    status?: $Enums.MaterialStatus
-    parseError?: string | null
-    metadata?: NullableJsonNullValueInput | InputJsonValue
-    createdAt?: Date | string
-    updatedAt?: Date | string
-    chunks?: MaterialChunkUncheckedCreateNestedManyWithoutMaterialInput
-    knowledgeUnits?: KnowledgeUnitUncheckedCreateNestedManyWithoutMaterialInput
-  }
-
-  export type MaterialCreateOrConnectWithoutProjectInput = {
-    where: MaterialWhereUniqueInput
-    create: XOR<MaterialCreateWithoutProjectInput, MaterialUncheckedCreateWithoutProjectInput>
-  }
-
-  export type MaterialCreateManyProjectInputEnvelope = {
-    data: MaterialCreateManyProjectInput | MaterialCreateManyProjectInput[]
-    skipDuplicates?: boolean
   }
 
   export type StudyPlanCreateWithoutProjectInput = {
@@ -22794,35 +22794,6 @@ export namespace Prisma {
     skipDuplicates?: boolean
   }
 
-  export type UserUpsertWithoutProjectsInput = {
-    update: XOR<UserUpdateWithoutProjectsInput, UserUncheckedUpdateWithoutProjectsInput>
-    create: XOR<UserCreateWithoutProjectsInput, UserUncheckedCreateWithoutProjectsInput>
-    where?: UserWhereInput
-  }
-
-  export type UserUpdateToOneWithWhereWithoutProjectsInput = {
-    where?: UserWhereInput
-    data: XOR<UserUpdateWithoutProjectsInput, UserUncheckedUpdateWithoutProjectsInput>
-  }
-
-  export type UserUpdateWithoutProjectsInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    email?: StringFieldUpdateOperationsInput | string
-    password?: StringFieldUpdateOperationsInput | string
-    name?: NullableStringFieldUpdateOperationsInput | string | null
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-  }
-
-  export type UserUncheckedUpdateWithoutProjectsInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    email?: StringFieldUpdateOperationsInput | string
-    password?: StringFieldUpdateOperationsInput | string
-    name?: NullableStringFieldUpdateOperationsInput | string | null
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-  }
-
   export type MaterialUpsertWithWhereUniqueWithoutProjectInput = {
     where: MaterialWhereUniqueInput
     update: XOR<MaterialUpdateWithoutProjectInput, MaterialUncheckedUpdateWithoutProjectInput>
@@ -22856,6 +22827,35 @@ export namespace Prisma {
     updatedAt?: DateTimeFilter<"Material"> | Date | string
   }
 
+  export type UserUpsertWithoutProjectsInput = {
+    update: XOR<UserUpdateWithoutProjectsInput, UserUncheckedUpdateWithoutProjectsInput>
+    create: XOR<UserCreateWithoutProjectsInput, UserUncheckedCreateWithoutProjectsInput>
+    where?: UserWhereInput
+  }
+
+  export type UserUpdateToOneWithWhereWithoutProjectsInput = {
+    where?: UserWhereInput
+    data: XOR<UserUpdateWithoutProjectsInput, UserUncheckedUpdateWithoutProjectsInput>
+  }
+
+  export type UserUpdateWithoutProjectsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    password?: StringFieldUpdateOperationsInput | string
+    name?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type UserUncheckedUpdateWithoutProjectsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    password?: StringFieldUpdateOperationsInput | string
+    name?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
   export type StudyPlanUpsertWithWhereUniqueWithoutProjectInput = {
     where: StudyPlanWhereUniqueInput
     update: XOR<StudyPlanUpdateWithoutProjectInput, StudyPlanUncheckedUpdateWithoutProjectInput>
@@ -22886,6 +22886,46 @@ export namespace Prisma {
     config?: JsonNullableFilter<"StudyPlan">
     createdAt?: DateTimeFilter<"StudyPlan"> | Date | string
     updatedAt?: DateTimeFilter<"StudyPlan"> | Date | string
+  }
+
+  export type KnowledgeUnitCreateWithoutMaterialInput = {
+    id?: string
+    title: string
+    summary?: string | null
+    topic?: string | null
+    difficulty?: number | null
+    importance?: number | null
+    estimatedMinutes?: number | null
+    prerequisiteIds?: KnowledgeUnitCreateprerequisiteIdsInput | string[]
+    sourceRefs?: NullableJsonNullValueInput | InputJsonValue
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    taskLinks?: TaskKnowledgeUnitCreateNestedManyWithoutKnowledgeUnitInput
+  }
+
+  export type KnowledgeUnitUncheckedCreateWithoutMaterialInput = {
+    id?: string
+    title: string
+    summary?: string | null
+    topic?: string | null
+    difficulty?: number | null
+    importance?: number | null
+    estimatedMinutes?: number | null
+    prerequisiteIds?: KnowledgeUnitCreateprerequisiteIdsInput | string[]
+    sourceRefs?: NullableJsonNullValueInput | InputJsonValue
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    taskLinks?: TaskKnowledgeUnitUncheckedCreateNestedManyWithoutKnowledgeUnitInput
+  }
+
+  export type KnowledgeUnitCreateOrConnectWithoutMaterialInput = {
+    where: KnowledgeUnitWhereUniqueInput
+    create: XOR<KnowledgeUnitCreateWithoutMaterialInput, KnowledgeUnitUncheckedCreateWithoutMaterialInput>
+  }
+
+  export type KnowledgeUnitCreateManyMaterialInputEnvelope = {
+    data: KnowledgeUnitCreateManyMaterialInput | KnowledgeUnitCreateManyMaterialInput[]
+    skipDuplicates?: boolean
   }
 
   export type ProjectCreateWithoutMaterialsInput = {
@@ -22955,44 +22995,38 @@ export namespace Prisma {
     skipDuplicates?: boolean
   }
 
-  export type KnowledgeUnitCreateWithoutMaterialInput = {
-    id?: string
-    title: string
-    summary?: string | null
-    topic?: string | null
-    difficulty?: number | null
-    importance?: number | null
-    estimatedMinutes?: number | null
-    prerequisiteIds?: KnowledgeUnitCreateprerequisiteIdsInput | string[]
-    sourceRefs?: NullableJsonNullValueInput | InputJsonValue
-    createdAt?: Date | string
-    updatedAt?: Date | string
-    taskLinks?: TaskKnowledgeUnitCreateNestedManyWithoutKnowledgeUnitInput
-  }
-
-  export type KnowledgeUnitUncheckedCreateWithoutMaterialInput = {
-    id?: string
-    title: string
-    summary?: string | null
-    topic?: string | null
-    difficulty?: number | null
-    importance?: number | null
-    estimatedMinutes?: number | null
-    prerequisiteIds?: KnowledgeUnitCreateprerequisiteIdsInput | string[]
-    sourceRefs?: NullableJsonNullValueInput | InputJsonValue
-    createdAt?: Date | string
-    updatedAt?: Date | string
-    taskLinks?: TaskKnowledgeUnitUncheckedCreateNestedManyWithoutKnowledgeUnitInput
-  }
-
-  export type KnowledgeUnitCreateOrConnectWithoutMaterialInput = {
+  export type KnowledgeUnitUpsertWithWhereUniqueWithoutMaterialInput = {
     where: KnowledgeUnitWhereUniqueInput
+    update: XOR<KnowledgeUnitUpdateWithoutMaterialInput, KnowledgeUnitUncheckedUpdateWithoutMaterialInput>
     create: XOR<KnowledgeUnitCreateWithoutMaterialInput, KnowledgeUnitUncheckedCreateWithoutMaterialInput>
   }
 
-  export type KnowledgeUnitCreateManyMaterialInputEnvelope = {
-    data: KnowledgeUnitCreateManyMaterialInput | KnowledgeUnitCreateManyMaterialInput[]
-    skipDuplicates?: boolean
+  export type KnowledgeUnitUpdateWithWhereUniqueWithoutMaterialInput = {
+    where: KnowledgeUnitWhereUniqueInput
+    data: XOR<KnowledgeUnitUpdateWithoutMaterialInput, KnowledgeUnitUncheckedUpdateWithoutMaterialInput>
+  }
+
+  export type KnowledgeUnitUpdateManyWithWhereWithoutMaterialInput = {
+    where: KnowledgeUnitScalarWhereInput
+    data: XOR<KnowledgeUnitUpdateManyMutationInput, KnowledgeUnitUncheckedUpdateManyWithoutMaterialInput>
+  }
+
+  export type KnowledgeUnitScalarWhereInput = {
+    AND?: KnowledgeUnitScalarWhereInput | KnowledgeUnitScalarWhereInput[]
+    OR?: KnowledgeUnitScalarWhereInput[]
+    NOT?: KnowledgeUnitScalarWhereInput | KnowledgeUnitScalarWhereInput[]
+    id?: StringFilter<"KnowledgeUnit"> | string
+    materialId?: StringFilter<"KnowledgeUnit"> | string
+    title?: StringFilter<"KnowledgeUnit"> | string
+    summary?: StringNullableFilter<"KnowledgeUnit"> | string | null
+    topic?: StringNullableFilter<"KnowledgeUnit"> | string | null
+    difficulty?: IntNullableFilter<"KnowledgeUnit"> | number | null
+    importance?: IntNullableFilter<"KnowledgeUnit"> | number | null
+    estimatedMinutes?: IntNullableFilter<"KnowledgeUnit"> | number | null
+    prerequisiteIds?: StringNullableListFilter<"KnowledgeUnit">
+    sourceRefs?: JsonNullableFilter<"KnowledgeUnit">
+    createdAt?: DateTimeFilter<"KnowledgeUnit"> | Date | string
+    updatedAt?: DateTimeFilter<"KnowledgeUnit"> | Date | string
   }
 
   export type ProjectUpsertWithoutMaterialsInput = {
@@ -23066,40 +23100,6 @@ export namespace Prisma {
     createdAt?: DateTimeFilter<"MaterialChunk"> | Date | string
   }
 
-  export type KnowledgeUnitUpsertWithWhereUniqueWithoutMaterialInput = {
-    where: KnowledgeUnitWhereUniqueInput
-    update: XOR<KnowledgeUnitUpdateWithoutMaterialInput, KnowledgeUnitUncheckedUpdateWithoutMaterialInput>
-    create: XOR<KnowledgeUnitCreateWithoutMaterialInput, KnowledgeUnitUncheckedCreateWithoutMaterialInput>
-  }
-
-  export type KnowledgeUnitUpdateWithWhereUniqueWithoutMaterialInput = {
-    where: KnowledgeUnitWhereUniqueInput
-    data: XOR<KnowledgeUnitUpdateWithoutMaterialInput, KnowledgeUnitUncheckedUpdateWithoutMaterialInput>
-  }
-
-  export type KnowledgeUnitUpdateManyWithWhereWithoutMaterialInput = {
-    where: KnowledgeUnitScalarWhereInput
-    data: XOR<KnowledgeUnitUpdateManyMutationInput, KnowledgeUnitUncheckedUpdateManyWithoutMaterialInput>
-  }
-
-  export type KnowledgeUnitScalarWhereInput = {
-    AND?: KnowledgeUnitScalarWhereInput | KnowledgeUnitScalarWhereInput[]
-    OR?: KnowledgeUnitScalarWhereInput[]
-    NOT?: KnowledgeUnitScalarWhereInput | KnowledgeUnitScalarWhereInput[]
-    id?: StringFilter<"KnowledgeUnit"> | string
-    materialId?: StringFilter<"KnowledgeUnit"> | string
-    title?: StringFilter<"KnowledgeUnit"> | string
-    summary?: StringNullableFilter<"KnowledgeUnit"> | string | null
-    topic?: StringNullableFilter<"KnowledgeUnit"> | string | null
-    difficulty?: IntNullableFilter<"KnowledgeUnit"> | number | null
-    importance?: IntNullableFilter<"KnowledgeUnit"> | number | null
-    estimatedMinutes?: IntNullableFilter<"KnowledgeUnit"> | number | null
-    prerequisiteIds?: StringNullableListFilter<"KnowledgeUnit">
-    sourceRefs?: JsonNullableFilter<"KnowledgeUnit">
-    createdAt?: DateTimeFilter<"KnowledgeUnit"> | Date | string
-    updatedAt?: DateTimeFilter<"KnowledgeUnit"> | Date | string
-  }
-
   export type MaterialCreateWithoutChunksInput = {
     id?: string
     title: string
@@ -23111,8 +23111,8 @@ export namespace Prisma {
     metadata?: NullableJsonNullValueInput | InputJsonValue
     createdAt?: Date | string
     updatedAt?: Date | string
-    project: ProjectCreateNestedOneWithoutMaterialsInput
     knowledgeUnits?: KnowledgeUnitCreateNestedManyWithoutMaterialInput
+    project: ProjectCreateNestedOneWithoutMaterialsInput
   }
 
   export type MaterialUncheckedCreateWithoutChunksInput = {
@@ -23157,8 +23157,8 @@ export namespace Prisma {
     metadata?: NullableJsonNullValueInput | InputJsonValue
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    project?: ProjectUpdateOneRequiredWithoutMaterialsNestedInput
     knowledgeUnits?: KnowledgeUnitUpdateManyWithoutMaterialNestedInput
+    project?: ProjectUpdateOneRequiredWithoutMaterialsNestedInput
   }
 
   export type MaterialUncheckedUpdateWithoutChunksInput = {
@@ -23307,8 +23307,8 @@ export namespace Prisma {
     mode?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
-    user: UserCreateNestedOneWithoutProjectsInput
     materials?: MaterialCreateNestedManyWithoutProjectInput
+    user: UserCreateNestedOneWithoutProjectsInput
   }
 
   export type ProjectUncheckedCreateWithoutStudyPlansInput = {
@@ -23345,11 +23345,11 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     completedAt?: Date | string | null
-    knowledgeLinks?: TaskKnowledgeUnitCreateNestedManyWithoutTaskInput
     sessions?: LearningSessionCreateNestedManyWithoutTaskInput
     notes?: NoteCreateNestedManyWithoutTaskInput
     quizzes?: QuizCreateNestedManyWithoutTaskInput
     reviewRecords?: ReviewRecordCreateNestedManyWithoutTaskInput
+    knowledgeLinks?: TaskKnowledgeUnitCreateNestedManyWithoutTaskInput
   }
 
   export type TaskUncheckedCreateWithoutStudyPlanInput = {
@@ -23367,11 +23367,11 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     completedAt?: Date | string | null
-    knowledgeLinks?: TaskKnowledgeUnitUncheckedCreateNestedManyWithoutTaskInput
     sessions?: LearningSessionUncheckedCreateNestedManyWithoutTaskInput
     notes?: NoteUncheckedCreateNestedManyWithoutTaskInput
     quizzes?: QuizUncheckedCreateNestedManyWithoutTaskInput
     reviewRecords?: ReviewRecordUncheckedCreateNestedManyWithoutTaskInput
+    knowledgeLinks?: TaskKnowledgeUnitUncheckedCreateNestedManyWithoutTaskInput
   }
 
   export type TaskCreateOrConnectWithoutStudyPlanInput = {
@@ -23405,8 +23405,8 @@ export namespace Prisma {
     mode?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    user?: UserUpdateOneRequiredWithoutProjectsNestedInput
     materials?: MaterialUpdateManyWithoutProjectNestedInput
+    user?: UserUpdateOneRequiredWithoutProjectsNestedInput
   }
 
   export type ProjectUncheckedUpdateWithoutStudyPlansInput = {
@@ -23458,57 +23458,6 @@ export namespace Prisma {
     createdAt?: DateTimeFilter<"Task"> | Date | string
     updatedAt?: DateTimeFilter<"Task"> | Date | string
     completedAt?: DateTimeNullableFilter<"Task"> | Date | string | null
-  }
-
-  export type StudyPlanCreateWithoutTasksInput = {
-    id?: string
-    title: string
-    startDate: Date | string
-    endDate: Date | string
-    totalDays: number
-    status?: $Enums.PlanStatus
-    config?: NullableJsonNullValueInput | InputJsonValue
-    createdAt?: Date | string
-    updatedAt?: Date | string
-    project: ProjectCreateNestedOneWithoutStudyPlansInput
-  }
-
-  export type StudyPlanUncheckedCreateWithoutTasksInput = {
-    id?: string
-    projectId: string
-    title: string
-    startDate: Date | string
-    endDate: Date | string
-    totalDays: number
-    status?: $Enums.PlanStatus
-    config?: NullableJsonNullValueInput | InputJsonValue
-    createdAt?: Date | string
-    updatedAt?: Date | string
-  }
-
-  export type StudyPlanCreateOrConnectWithoutTasksInput = {
-    where: StudyPlanWhereUniqueInput
-    create: XOR<StudyPlanCreateWithoutTasksInput, StudyPlanUncheckedCreateWithoutTasksInput>
-  }
-
-  export type TaskKnowledgeUnitCreateWithoutTaskInput = {
-    id?: string
-    knowledgeUnit: KnowledgeUnitCreateNestedOneWithoutTaskLinksInput
-  }
-
-  export type TaskKnowledgeUnitUncheckedCreateWithoutTaskInput = {
-    id?: string
-    knowledgeUnitId: string
-  }
-
-  export type TaskKnowledgeUnitCreateOrConnectWithoutTaskInput = {
-    where: TaskKnowledgeUnitWhereUniqueInput
-    create: XOR<TaskKnowledgeUnitCreateWithoutTaskInput, TaskKnowledgeUnitUncheckedCreateWithoutTaskInput>
-  }
-
-  export type TaskKnowledgeUnitCreateManyTaskInputEnvelope = {
-    data: TaskKnowledgeUnitCreateManyTaskInput | TaskKnowledgeUnitCreateManyTaskInput[]
-    skipDuplicates?: boolean
   }
 
   export type LearningSessionCreateWithoutTaskInput = {
@@ -23635,57 +23584,55 @@ export namespace Prisma {
     skipDuplicates?: boolean
   }
 
-  export type StudyPlanUpsertWithoutTasksInput = {
-    update: XOR<StudyPlanUpdateWithoutTasksInput, StudyPlanUncheckedUpdateWithoutTasksInput>
+  export type StudyPlanCreateWithoutTasksInput = {
+    id?: string
+    title: string
+    startDate: Date | string
+    endDate: Date | string
+    totalDays: number
+    status?: $Enums.PlanStatus
+    config?: NullableJsonNullValueInput | InputJsonValue
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    project: ProjectCreateNestedOneWithoutStudyPlansInput
+  }
+
+  export type StudyPlanUncheckedCreateWithoutTasksInput = {
+    id?: string
+    projectId: string
+    title: string
+    startDate: Date | string
+    endDate: Date | string
+    totalDays: number
+    status?: $Enums.PlanStatus
+    config?: NullableJsonNullValueInput | InputJsonValue
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type StudyPlanCreateOrConnectWithoutTasksInput = {
+    where: StudyPlanWhereUniqueInput
     create: XOR<StudyPlanCreateWithoutTasksInput, StudyPlanUncheckedCreateWithoutTasksInput>
-    where?: StudyPlanWhereInput
   }
 
-  export type StudyPlanUpdateToOneWithWhereWithoutTasksInput = {
-    where?: StudyPlanWhereInput
-    data: XOR<StudyPlanUpdateWithoutTasksInput, StudyPlanUncheckedUpdateWithoutTasksInput>
+  export type TaskKnowledgeUnitCreateWithoutTaskInput = {
+    id?: string
+    knowledgeUnit: KnowledgeUnitCreateNestedOneWithoutTaskLinksInput
   }
 
-  export type StudyPlanUpdateWithoutTasksInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    title?: StringFieldUpdateOperationsInput | string
-    startDate?: DateTimeFieldUpdateOperationsInput | Date | string
-    endDate?: DateTimeFieldUpdateOperationsInput | Date | string
-    totalDays?: IntFieldUpdateOperationsInput | number
-    status?: EnumPlanStatusFieldUpdateOperationsInput | $Enums.PlanStatus
-    config?: NullableJsonNullValueInput | InputJsonValue
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    project?: ProjectUpdateOneRequiredWithoutStudyPlansNestedInput
+  export type TaskKnowledgeUnitUncheckedCreateWithoutTaskInput = {
+    id?: string
+    knowledgeUnitId: string
   }
 
-  export type StudyPlanUncheckedUpdateWithoutTasksInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    projectId?: StringFieldUpdateOperationsInput | string
-    title?: StringFieldUpdateOperationsInput | string
-    startDate?: DateTimeFieldUpdateOperationsInput | Date | string
-    endDate?: DateTimeFieldUpdateOperationsInput | Date | string
-    totalDays?: IntFieldUpdateOperationsInput | number
-    status?: EnumPlanStatusFieldUpdateOperationsInput | $Enums.PlanStatus
-    config?: NullableJsonNullValueInput | InputJsonValue
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-  }
-
-  export type TaskKnowledgeUnitUpsertWithWhereUniqueWithoutTaskInput = {
+  export type TaskKnowledgeUnitCreateOrConnectWithoutTaskInput = {
     where: TaskKnowledgeUnitWhereUniqueInput
-    update: XOR<TaskKnowledgeUnitUpdateWithoutTaskInput, TaskKnowledgeUnitUncheckedUpdateWithoutTaskInput>
     create: XOR<TaskKnowledgeUnitCreateWithoutTaskInput, TaskKnowledgeUnitUncheckedCreateWithoutTaskInput>
   }
 
-  export type TaskKnowledgeUnitUpdateWithWhereUniqueWithoutTaskInput = {
-    where: TaskKnowledgeUnitWhereUniqueInput
-    data: XOR<TaskKnowledgeUnitUpdateWithoutTaskInput, TaskKnowledgeUnitUncheckedUpdateWithoutTaskInput>
-  }
-
-  export type TaskKnowledgeUnitUpdateManyWithWhereWithoutTaskInput = {
-    where: TaskKnowledgeUnitScalarWhereInput
-    data: XOR<TaskKnowledgeUnitUpdateManyMutationInput, TaskKnowledgeUnitUncheckedUpdateManyWithoutTaskInput>
+  export type TaskKnowledgeUnitCreateManyTaskInputEnvelope = {
+    data: TaskKnowledgeUnitCreateManyTaskInput | TaskKnowledgeUnitCreateManyTaskInput[]
+    skipDuplicates?: boolean
   }
 
   export type LearningSessionUpsertWithWhereUniqueWithoutTaskInput = {
@@ -23809,53 +23756,57 @@ export namespace Prisma {
     createdAt?: DateTimeFilter<"ReviewRecord"> | Date | string
   }
 
-  export type TaskCreateWithoutKnowledgeLinksInput = {
-    id?: string
-    title: string
-    description?: string | null
-    taskType: $Enums.TaskType
-    status?: $Enums.TaskStatus
-    scheduledDate: Date | string
-    estimatedMinutes?: number | null
-    difficulty?: number | null
-    priority?: number | null
-    masteryScore?: number | null
-    nextReviewDate?: Date | string | null
-    createdAt?: Date | string
-    updatedAt?: Date | string
-    completedAt?: Date | string | null
-    studyPlan: StudyPlanCreateNestedOneWithoutTasksInput
-    sessions?: LearningSessionCreateNestedManyWithoutTaskInput
-    notes?: NoteCreateNestedManyWithoutTaskInput
-    quizzes?: QuizCreateNestedManyWithoutTaskInput
-    reviewRecords?: ReviewRecordCreateNestedManyWithoutTaskInput
+  export type StudyPlanUpsertWithoutTasksInput = {
+    update: XOR<StudyPlanUpdateWithoutTasksInput, StudyPlanUncheckedUpdateWithoutTasksInput>
+    create: XOR<StudyPlanCreateWithoutTasksInput, StudyPlanUncheckedCreateWithoutTasksInput>
+    where?: StudyPlanWhereInput
   }
 
-  export type TaskUncheckedCreateWithoutKnowledgeLinksInput = {
-    id?: string
-    studyPlanId: string
-    title: string
-    description?: string | null
-    taskType: $Enums.TaskType
-    status?: $Enums.TaskStatus
-    scheduledDate: Date | string
-    estimatedMinutes?: number | null
-    difficulty?: number | null
-    priority?: number | null
-    masteryScore?: number | null
-    nextReviewDate?: Date | string | null
-    createdAt?: Date | string
-    updatedAt?: Date | string
-    completedAt?: Date | string | null
-    sessions?: LearningSessionUncheckedCreateNestedManyWithoutTaskInput
-    notes?: NoteUncheckedCreateNestedManyWithoutTaskInput
-    quizzes?: QuizUncheckedCreateNestedManyWithoutTaskInput
-    reviewRecords?: ReviewRecordUncheckedCreateNestedManyWithoutTaskInput
+  export type StudyPlanUpdateToOneWithWhereWithoutTasksInput = {
+    where?: StudyPlanWhereInput
+    data: XOR<StudyPlanUpdateWithoutTasksInput, StudyPlanUncheckedUpdateWithoutTasksInput>
   }
 
-  export type TaskCreateOrConnectWithoutKnowledgeLinksInput = {
-    where: TaskWhereUniqueInput
-    create: XOR<TaskCreateWithoutKnowledgeLinksInput, TaskUncheckedCreateWithoutKnowledgeLinksInput>
+  export type StudyPlanUpdateWithoutTasksInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    title?: StringFieldUpdateOperationsInput | string
+    startDate?: DateTimeFieldUpdateOperationsInput | Date | string
+    endDate?: DateTimeFieldUpdateOperationsInput | Date | string
+    totalDays?: IntFieldUpdateOperationsInput | number
+    status?: EnumPlanStatusFieldUpdateOperationsInput | $Enums.PlanStatus
+    config?: NullableJsonNullValueInput | InputJsonValue
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    project?: ProjectUpdateOneRequiredWithoutStudyPlansNestedInput
+  }
+
+  export type StudyPlanUncheckedUpdateWithoutTasksInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    projectId?: StringFieldUpdateOperationsInput | string
+    title?: StringFieldUpdateOperationsInput | string
+    startDate?: DateTimeFieldUpdateOperationsInput | Date | string
+    endDate?: DateTimeFieldUpdateOperationsInput | Date | string
+    totalDays?: IntFieldUpdateOperationsInput | number
+    status?: EnumPlanStatusFieldUpdateOperationsInput | $Enums.PlanStatus
+    config?: NullableJsonNullValueInput | InputJsonValue
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type TaskKnowledgeUnitUpsertWithWhereUniqueWithoutTaskInput = {
+    where: TaskKnowledgeUnitWhereUniqueInput
+    update: XOR<TaskKnowledgeUnitUpdateWithoutTaskInput, TaskKnowledgeUnitUncheckedUpdateWithoutTaskInput>
+    create: XOR<TaskKnowledgeUnitCreateWithoutTaskInput, TaskKnowledgeUnitUncheckedCreateWithoutTaskInput>
+  }
+
+  export type TaskKnowledgeUnitUpdateWithWhereUniqueWithoutTaskInput = {
+    where: TaskKnowledgeUnitWhereUniqueInput
+    data: XOR<TaskKnowledgeUnitUpdateWithoutTaskInput, TaskKnowledgeUnitUncheckedUpdateWithoutTaskInput>
+  }
+
+  export type TaskKnowledgeUnitUpdateManyWithWhereWithoutTaskInput = {
+    where: TaskKnowledgeUnitScalarWhereInput
+    data: XOR<TaskKnowledgeUnitUpdateManyMutationInput, TaskKnowledgeUnitUncheckedUpdateManyWithoutTaskInput>
   }
 
   export type KnowledgeUnitCreateWithoutTaskLinksInput = {
@@ -23893,59 +23844,53 @@ export namespace Prisma {
     create: XOR<KnowledgeUnitCreateWithoutTaskLinksInput, KnowledgeUnitUncheckedCreateWithoutTaskLinksInput>
   }
 
-  export type TaskUpsertWithoutKnowledgeLinksInput = {
-    update: XOR<TaskUpdateWithoutKnowledgeLinksInput, TaskUncheckedUpdateWithoutKnowledgeLinksInput>
+  export type TaskCreateWithoutKnowledgeLinksInput = {
+    id?: string
+    title: string
+    description?: string | null
+    taskType: $Enums.TaskType
+    status?: $Enums.TaskStatus
+    scheduledDate: Date | string
+    estimatedMinutes?: number | null
+    difficulty?: number | null
+    priority?: number | null
+    masteryScore?: number | null
+    nextReviewDate?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    completedAt?: Date | string | null
+    sessions?: LearningSessionCreateNestedManyWithoutTaskInput
+    notes?: NoteCreateNestedManyWithoutTaskInput
+    quizzes?: QuizCreateNestedManyWithoutTaskInput
+    reviewRecords?: ReviewRecordCreateNestedManyWithoutTaskInput
+    studyPlan: StudyPlanCreateNestedOneWithoutTasksInput
+  }
+
+  export type TaskUncheckedCreateWithoutKnowledgeLinksInput = {
+    id?: string
+    studyPlanId: string
+    title: string
+    description?: string | null
+    taskType: $Enums.TaskType
+    status?: $Enums.TaskStatus
+    scheduledDate: Date | string
+    estimatedMinutes?: number | null
+    difficulty?: number | null
+    priority?: number | null
+    masteryScore?: number | null
+    nextReviewDate?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    completedAt?: Date | string | null
+    sessions?: LearningSessionUncheckedCreateNestedManyWithoutTaskInput
+    notes?: NoteUncheckedCreateNestedManyWithoutTaskInput
+    quizzes?: QuizUncheckedCreateNestedManyWithoutTaskInput
+    reviewRecords?: ReviewRecordUncheckedCreateNestedManyWithoutTaskInput
+  }
+
+  export type TaskCreateOrConnectWithoutKnowledgeLinksInput = {
+    where: TaskWhereUniqueInput
     create: XOR<TaskCreateWithoutKnowledgeLinksInput, TaskUncheckedCreateWithoutKnowledgeLinksInput>
-    where?: TaskWhereInput
-  }
-
-  export type TaskUpdateToOneWithWhereWithoutKnowledgeLinksInput = {
-    where?: TaskWhereInput
-    data: XOR<TaskUpdateWithoutKnowledgeLinksInput, TaskUncheckedUpdateWithoutKnowledgeLinksInput>
-  }
-
-  export type TaskUpdateWithoutKnowledgeLinksInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    title?: StringFieldUpdateOperationsInput | string
-    description?: NullableStringFieldUpdateOperationsInput | string | null
-    taskType?: EnumTaskTypeFieldUpdateOperationsInput | $Enums.TaskType
-    status?: EnumTaskStatusFieldUpdateOperationsInput | $Enums.TaskStatus
-    scheduledDate?: DateTimeFieldUpdateOperationsInput | Date | string
-    estimatedMinutes?: NullableIntFieldUpdateOperationsInput | number | null
-    difficulty?: NullableIntFieldUpdateOperationsInput | number | null
-    priority?: NullableIntFieldUpdateOperationsInput | number | null
-    masteryScore?: NullableFloatFieldUpdateOperationsInput | number | null
-    nextReviewDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    studyPlan?: StudyPlanUpdateOneRequiredWithoutTasksNestedInput
-    sessions?: LearningSessionUpdateManyWithoutTaskNestedInput
-    notes?: NoteUpdateManyWithoutTaskNestedInput
-    quizzes?: QuizUpdateManyWithoutTaskNestedInput
-    reviewRecords?: ReviewRecordUpdateManyWithoutTaskNestedInput
-  }
-
-  export type TaskUncheckedUpdateWithoutKnowledgeLinksInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    studyPlanId?: StringFieldUpdateOperationsInput | string
-    title?: StringFieldUpdateOperationsInput | string
-    description?: NullableStringFieldUpdateOperationsInput | string | null
-    taskType?: EnumTaskTypeFieldUpdateOperationsInput | $Enums.TaskType
-    status?: EnumTaskStatusFieldUpdateOperationsInput | $Enums.TaskStatus
-    scheduledDate?: DateTimeFieldUpdateOperationsInput | Date | string
-    estimatedMinutes?: NullableIntFieldUpdateOperationsInput | number | null
-    difficulty?: NullableIntFieldUpdateOperationsInput | number | null
-    priority?: NullableIntFieldUpdateOperationsInput | number | null
-    masteryScore?: NullableFloatFieldUpdateOperationsInput | number | null
-    nextReviewDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    sessions?: LearningSessionUncheckedUpdateManyWithoutTaskNestedInput
-    notes?: NoteUncheckedUpdateManyWithoutTaskNestedInput
-    quizzes?: QuizUncheckedUpdateManyWithoutTaskNestedInput
-    reviewRecords?: ReviewRecordUncheckedUpdateManyWithoutTaskNestedInput
   }
 
   export type KnowledgeUnitUpsertWithoutTaskLinksInput = {
@@ -23989,6 +23934,61 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
+  export type TaskUpsertWithoutKnowledgeLinksInput = {
+    update: XOR<TaskUpdateWithoutKnowledgeLinksInput, TaskUncheckedUpdateWithoutKnowledgeLinksInput>
+    create: XOR<TaskCreateWithoutKnowledgeLinksInput, TaskUncheckedCreateWithoutKnowledgeLinksInput>
+    where?: TaskWhereInput
+  }
+
+  export type TaskUpdateToOneWithWhereWithoutKnowledgeLinksInput = {
+    where?: TaskWhereInput
+    data: XOR<TaskUpdateWithoutKnowledgeLinksInput, TaskUncheckedUpdateWithoutKnowledgeLinksInput>
+  }
+
+  export type TaskUpdateWithoutKnowledgeLinksInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    title?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    taskType?: EnumTaskTypeFieldUpdateOperationsInput | $Enums.TaskType
+    status?: EnumTaskStatusFieldUpdateOperationsInput | $Enums.TaskStatus
+    scheduledDate?: DateTimeFieldUpdateOperationsInput | Date | string
+    estimatedMinutes?: NullableIntFieldUpdateOperationsInput | number | null
+    difficulty?: NullableIntFieldUpdateOperationsInput | number | null
+    priority?: NullableIntFieldUpdateOperationsInput | number | null
+    masteryScore?: NullableFloatFieldUpdateOperationsInput | number | null
+    nextReviewDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    sessions?: LearningSessionUpdateManyWithoutTaskNestedInput
+    notes?: NoteUpdateManyWithoutTaskNestedInput
+    quizzes?: QuizUpdateManyWithoutTaskNestedInput
+    reviewRecords?: ReviewRecordUpdateManyWithoutTaskNestedInput
+    studyPlan?: StudyPlanUpdateOneRequiredWithoutTasksNestedInput
+  }
+
+  export type TaskUncheckedUpdateWithoutKnowledgeLinksInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    studyPlanId?: StringFieldUpdateOperationsInput | string
+    title?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    taskType?: EnumTaskTypeFieldUpdateOperationsInput | $Enums.TaskType
+    status?: EnumTaskStatusFieldUpdateOperationsInput | $Enums.TaskStatus
+    scheduledDate?: DateTimeFieldUpdateOperationsInput | Date | string
+    estimatedMinutes?: NullableIntFieldUpdateOperationsInput | number | null
+    difficulty?: NullableIntFieldUpdateOperationsInput | number | null
+    priority?: NullableIntFieldUpdateOperationsInput | number | null
+    masteryScore?: NullableFloatFieldUpdateOperationsInput | number | null
+    nextReviewDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    sessions?: LearningSessionUncheckedUpdateManyWithoutTaskNestedInput
+    notes?: NoteUncheckedUpdateManyWithoutTaskNestedInput
+    quizzes?: QuizUncheckedUpdateManyWithoutTaskNestedInput
+    reviewRecords?: ReviewRecordUncheckedUpdateManyWithoutTaskNestedInput
+  }
+
   export type TaskCreateWithoutSessionsInput = {
     id?: string
     title: string
@@ -24004,11 +24004,11 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     completedAt?: Date | string | null
-    studyPlan: StudyPlanCreateNestedOneWithoutTasksInput
-    knowledgeLinks?: TaskKnowledgeUnitCreateNestedManyWithoutTaskInput
     notes?: NoteCreateNestedManyWithoutTaskInput
     quizzes?: QuizCreateNestedManyWithoutTaskInput
     reviewRecords?: ReviewRecordCreateNestedManyWithoutTaskInput
+    studyPlan: StudyPlanCreateNestedOneWithoutTasksInput
+    knowledgeLinks?: TaskKnowledgeUnitCreateNestedManyWithoutTaskInput
   }
 
   export type TaskUncheckedCreateWithoutSessionsInput = {
@@ -24027,10 +24027,10 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     completedAt?: Date | string | null
-    knowledgeLinks?: TaskKnowledgeUnitUncheckedCreateNestedManyWithoutTaskInput
     notes?: NoteUncheckedCreateNestedManyWithoutTaskInput
     quizzes?: QuizUncheckedCreateNestedManyWithoutTaskInput
     reviewRecords?: ReviewRecordUncheckedCreateNestedManyWithoutTaskInput
+    knowledgeLinks?: TaskKnowledgeUnitUncheckedCreateNestedManyWithoutTaskInput
   }
 
   export type TaskCreateOrConnectWithoutSessionsInput = {
@@ -24064,11 +24064,11 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    studyPlan?: StudyPlanUpdateOneRequiredWithoutTasksNestedInput
-    knowledgeLinks?: TaskKnowledgeUnitUpdateManyWithoutTaskNestedInput
     notes?: NoteUpdateManyWithoutTaskNestedInput
     quizzes?: QuizUpdateManyWithoutTaskNestedInput
     reviewRecords?: ReviewRecordUpdateManyWithoutTaskNestedInput
+    studyPlan?: StudyPlanUpdateOneRequiredWithoutTasksNestedInput
+    knowledgeLinks?: TaskKnowledgeUnitUpdateManyWithoutTaskNestedInput
   }
 
   export type TaskUncheckedUpdateWithoutSessionsInput = {
@@ -24087,10 +24087,10 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    knowledgeLinks?: TaskKnowledgeUnitUncheckedUpdateManyWithoutTaskNestedInput
     notes?: NoteUncheckedUpdateManyWithoutTaskNestedInput
     quizzes?: QuizUncheckedUpdateManyWithoutTaskNestedInput
     reviewRecords?: ReviewRecordUncheckedUpdateManyWithoutTaskNestedInput
+    knowledgeLinks?: TaskKnowledgeUnitUncheckedUpdateManyWithoutTaskNestedInput
   }
 
   export type TaskCreateWithoutNotesInput = {
@@ -24108,11 +24108,11 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     completedAt?: Date | string | null
-    studyPlan: StudyPlanCreateNestedOneWithoutTasksInput
-    knowledgeLinks?: TaskKnowledgeUnitCreateNestedManyWithoutTaskInput
     sessions?: LearningSessionCreateNestedManyWithoutTaskInput
     quizzes?: QuizCreateNestedManyWithoutTaskInput
     reviewRecords?: ReviewRecordCreateNestedManyWithoutTaskInput
+    studyPlan: StudyPlanCreateNestedOneWithoutTasksInput
+    knowledgeLinks?: TaskKnowledgeUnitCreateNestedManyWithoutTaskInput
   }
 
   export type TaskUncheckedCreateWithoutNotesInput = {
@@ -24131,10 +24131,10 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     completedAt?: Date | string | null
-    knowledgeLinks?: TaskKnowledgeUnitUncheckedCreateNestedManyWithoutTaskInput
     sessions?: LearningSessionUncheckedCreateNestedManyWithoutTaskInput
     quizzes?: QuizUncheckedCreateNestedManyWithoutTaskInput
     reviewRecords?: ReviewRecordUncheckedCreateNestedManyWithoutTaskInput
+    knowledgeLinks?: TaskKnowledgeUnitUncheckedCreateNestedManyWithoutTaskInput
   }
 
   export type TaskCreateOrConnectWithoutNotesInput = {
@@ -24168,11 +24168,11 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    studyPlan?: StudyPlanUpdateOneRequiredWithoutTasksNestedInput
-    knowledgeLinks?: TaskKnowledgeUnitUpdateManyWithoutTaskNestedInput
     sessions?: LearningSessionUpdateManyWithoutTaskNestedInput
     quizzes?: QuizUpdateManyWithoutTaskNestedInput
     reviewRecords?: ReviewRecordUpdateManyWithoutTaskNestedInput
+    studyPlan?: StudyPlanUpdateOneRequiredWithoutTasksNestedInput
+    knowledgeLinks?: TaskKnowledgeUnitUpdateManyWithoutTaskNestedInput
   }
 
   export type TaskUncheckedUpdateWithoutNotesInput = {
@@ -24191,10 +24191,10 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    knowledgeLinks?: TaskKnowledgeUnitUncheckedUpdateManyWithoutTaskNestedInput
     sessions?: LearningSessionUncheckedUpdateManyWithoutTaskNestedInput
     quizzes?: QuizUncheckedUpdateManyWithoutTaskNestedInput
     reviewRecords?: ReviewRecordUncheckedUpdateManyWithoutTaskNestedInput
+    knowledgeLinks?: TaskKnowledgeUnitUncheckedUpdateManyWithoutTaskNestedInput
   }
 
   export type TaskCreateWithoutQuizzesInput = {
@@ -24212,11 +24212,11 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     completedAt?: Date | string | null
-    studyPlan: StudyPlanCreateNestedOneWithoutTasksInput
-    knowledgeLinks?: TaskKnowledgeUnitCreateNestedManyWithoutTaskInput
     sessions?: LearningSessionCreateNestedManyWithoutTaskInput
     notes?: NoteCreateNestedManyWithoutTaskInput
     reviewRecords?: ReviewRecordCreateNestedManyWithoutTaskInput
+    studyPlan: StudyPlanCreateNestedOneWithoutTasksInput
+    knowledgeLinks?: TaskKnowledgeUnitCreateNestedManyWithoutTaskInput
   }
 
   export type TaskUncheckedCreateWithoutQuizzesInput = {
@@ -24235,10 +24235,10 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     completedAt?: Date | string | null
-    knowledgeLinks?: TaskKnowledgeUnitUncheckedCreateNestedManyWithoutTaskInput
     sessions?: LearningSessionUncheckedCreateNestedManyWithoutTaskInput
     notes?: NoteUncheckedCreateNestedManyWithoutTaskInput
     reviewRecords?: ReviewRecordUncheckedCreateNestedManyWithoutTaskInput
+    knowledgeLinks?: TaskKnowledgeUnitUncheckedCreateNestedManyWithoutTaskInput
   }
 
   export type TaskCreateOrConnectWithoutQuizzesInput = {
@@ -24310,11 +24310,11 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    studyPlan?: StudyPlanUpdateOneRequiredWithoutTasksNestedInput
-    knowledgeLinks?: TaskKnowledgeUnitUpdateManyWithoutTaskNestedInput
     sessions?: LearningSessionUpdateManyWithoutTaskNestedInput
     notes?: NoteUpdateManyWithoutTaskNestedInput
     reviewRecords?: ReviewRecordUpdateManyWithoutTaskNestedInput
+    studyPlan?: StudyPlanUpdateOneRequiredWithoutTasksNestedInput
+    knowledgeLinks?: TaskKnowledgeUnitUpdateManyWithoutTaskNestedInput
   }
 
   export type TaskUncheckedUpdateWithoutQuizzesInput = {
@@ -24333,10 +24333,10 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    knowledgeLinks?: TaskKnowledgeUnitUncheckedUpdateManyWithoutTaskNestedInput
     sessions?: LearningSessionUncheckedUpdateManyWithoutTaskNestedInput
     notes?: NoteUncheckedUpdateManyWithoutTaskNestedInput
     reviewRecords?: ReviewRecordUncheckedUpdateManyWithoutTaskNestedInput
+    knowledgeLinks?: TaskKnowledgeUnitUncheckedUpdateManyWithoutTaskNestedInput
   }
 
   export type QuizAnswerUpsertWithWhereUniqueWithoutQuizInput = {
@@ -24452,11 +24452,11 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     completedAt?: Date | string | null
-    studyPlan: StudyPlanCreateNestedOneWithoutTasksInput
-    knowledgeLinks?: TaskKnowledgeUnitCreateNestedManyWithoutTaskInput
     sessions?: LearningSessionCreateNestedManyWithoutTaskInput
     notes?: NoteCreateNestedManyWithoutTaskInput
     quizzes?: QuizCreateNestedManyWithoutTaskInput
+    studyPlan: StudyPlanCreateNestedOneWithoutTasksInput
+    knowledgeLinks?: TaskKnowledgeUnitCreateNestedManyWithoutTaskInput
   }
 
   export type TaskUncheckedCreateWithoutReviewRecordsInput = {
@@ -24475,10 +24475,10 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     completedAt?: Date | string | null
-    knowledgeLinks?: TaskKnowledgeUnitUncheckedCreateNestedManyWithoutTaskInput
     sessions?: LearningSessionUncheckedCreateNestedManyWithoutTaskInput
     notes?: NoteUncheckedCreateNestedManyWithoutTaskInput
     quizzes?: QuizUncheckedCreateNestedManyWithoutTaskInput
+    knowledgeLinks?: TaskKnowledgeUnitUncheckedCreateNestedManyWithoutTaskInput
   }
 
   export type TaskCreateOrConnectWithoutReviewRecordsInput = {
@@ -24512,11 +24512,11 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    studyPlan?: StudyPlanUpdateOneRequiredWithoutTasksNestedInput
-    knowledgeLinks?: TaskKnowledgeUnitUpdateManyWithoutTaskNestedInput
     sessions?: LearningSessionUpdateManyWithoutTaskNestedInput
     notes?: NoteUpdateManyWithoutTaskNestedInput
     quizzes?: QuizUpdateManyWithoutTaskNestedInput
+    studyPlan?: StudyPlanUpdateOneRequiredWithoutTasksNestedInput
+    knowledgeLinks?: TaskKnowledgeUnitUpdateManyWithoutTaskNestedInput
   }
 
   export type TaskUncheckedUpdateWithoutReviewRecordsInput = {
@@ -24535,10 +24535,10 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    knowledgeLinks?: TaskKnowledgeUnitUncheckedUpdateManyWithoutTaskNestedInput
     sessions?: LearningSessionUncheckedUpdateManyWithoutTaskNestedInput
     notes?: NoteUncheckedUpdateManyWithoutTaskNestedInput
     quizzes?: QuizUncheckedUpdateManyWithoutTaskNestedInput
+    knowledgeLinks?: TaskKnowledgeUnitUncheckedUpdateManyWithoutTaskNestedInput
   }
 
   export type ProjectCreateManyUserInput = {
@@ -24629,8 +24629,8 @@ export namespace Prisma {
     metadata?: NullableJsonNullValueInput | InputJsonValue
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    chunks?: MaterialChunkUpdateManyWithoutMaterialNestedInput
     knowledgeUnits?: KnowledgeUnitUpdateManyWithoutMaterialNestedInput
+    chunks?: MaterialChunkUpdateManyWithoutMaterialNestedInput
   }
 
   export type MaterialUncheckedUpdateWithoutProjectInput = {
@@ -24644,8 +24644,8 @@ export namespace Prisma {
     metadata?: NullableJsonNullValueInput | InputJsonValue
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    chunks?: MaterialChunkUncheckedUpdateManyWithoutMaterialNestedInput
     knowledgeUnits?: KnowledgeUnitUncheckedUpdateManyWithoutMaterialNestedInput
+    chunks?: MaterialChunkUncheckedUpdateManyWithoutMaterialNestedInput
   }
 
   export type MaterialUncheckedUpdateManyWithoutProjectInput = {
@@ -24699,18 +24699,6 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
-  export type MaterialChunkCreateManyMaterialInput = {
-    id?: string
-    chunkIndex: number
-    title?: string | null
-    content: string
-    summary?: string | null
-    sourcePage?: number | null
-    sourceSection?: string | null
-    metadata?: NullableJsonNullValueInput | InputJsonValue
-    createdAt?: Date | string
-  }
-
   export type KnowledgeUnitCreateManyMaterialInput = {
     id?: string
     title: string
@@ -24725,40 +24713,16 @@ export namespace Prisma {
     updatedAt?: Date | string
   }
 
-  export type MaterialChunkUpdateWithoutMaterialInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    chunkIndex?: IntFieldUpdateOperationsInput | number
-    title?: NullableStringFieldUpdateOperationsInput | string | null
-    content?: StringFieldUpdateOperationsInput | string
-    summary?: NullableStringFieldUpdateOperationsInput | string | null
-    sourcePage?: NullableIntFieldUpdateOperationsInput | number | null
-    sourceSection?: NullableStringFieldUpdateOperationsInput | string | null
+  export type MaterialChunkCreateManyMaterialInput = {
+    id?: string
+    chunkIndex: number
+    title?: string | null
+    content: string
+    summary?: string | null
+    sourcePage?: number | null
+    sourceSection?: string | null
     metadata?: NullableJsonNullValueInput | InputJsonValue
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-  }
-
-  export type MaterialChunkUncheckedUpdateWithoutMaterialInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    chunkIndex?: IntFieldUpdateOperationsInput | number
-    title?: NullableStringFieldUpdateOperationsInput | string | null
-    content?: StringFieldUpdateOperationsInput | string
-    summary?: NullableStringFieldUpdateOperationsInput | string | null
-    sourcePage?: NullableIntFieldUpdateOperationsInput | number | null
-    sourceSection?: NullableStringFieldUpdateOperationsInput | string | null
-    metadata?: NullableJsonNullValueInput | InputJsonValue
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-  }
-
-  export type MaterialChunkUncheckedUpdateManyWithoutMaterialInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    chunkIndex?: IntFieldUpdateOperationsInput | number
-    title?: NullableStringFieldUpdateOperationsInput | string | null
-    content?: StringFieldUpdateOperationsInput | string
-    summary?: NullableStringFieldUpdateOperationsInput | string | null
-    sourcePage?: NullableIntFieldUpdateOperationsInput | number | null
-    sourceSection?: NullableStringFieldUpdateOperationsInput | string | null
-    metadata?: NullableJsonNullValueInput | InputJsonValue
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    createdAt?: Date | string
   }
 
   export type KnowledgeUnitUpdateWithoutMaterialInput = {
@@ -24803,6 +24767,42 @@ export namespace Prisma {
     sourceRefs?: NullableJsonNullValueInput | InputJsonValue
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type MaterialChunkUpdateWithoutMaterialInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    chunkIndex?: IntFieldUpdateOperationsInput | number
+    title?: NullableStringFieldUpdateOperationsInput | string | null
+    content?: StringFieldUpdateOperationsInput | string
+    summary?: NullableStringFieldUpdateOperationsInput | string | null
+    sourcePage?: NullableIntFieldUpdateOperationsInput | number | null
+    sourceSection?: NullableStringFieldUpdateOperationsInput | string | null
+    metadata?: NullableJsonNullValueInput | InputJsonValue
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type MaterialChunkUncheckedUpdateWithoutMaterialInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    chunkIndex?: IntFieldUpdateOperationsInput | number
+    title?: NullableStringFieldUpdateOperationsInput | string | null
+    content?: StringFieldUpdateOperationsInput | string
+    summary?: NullableStringFieldUpdateOperationsInput | string | null
+    sourcePage?: NullableIntFieldUpdateOperationsInput | number | null
+    sourceSection?: NullableStringFieldUpdateOperationsInput | string | null
+    metadata?: NullableJsonNullValueInput | InputJsonValue
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type MaterialChunkUncheckedUpdateManyWithoutMaterialInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    chunkIndex?: IntFieldUpdateOperationsInput | number
+    title?: NullableStringFieldUpdateOperationsInput | string | null
+    content?: StringFieldUpdateOperationsInput | string
+    summary?: NullableStringFieldUpdateOperationsInput | string | null
+    sourcePage?: NullableIntFieldUpdateOperationsInput | number | null
+    sourceSection?: NullableStringFieldUpdateOperationsInput | string | null
+    metadata?: NullableJsonNullValueInput | InputJsonValue
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type TaskKnowledgeUnitCreateManyKnowledgeUnitInput = {
@@ -24857,11 +24857,11 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    knowledgeLinks?: TaskKnowledgeUnitUpdateManyWithoutTaskNestedInput
     sessions?: LearningSessionUpdateManyWithoutTaskNestedInput
     notes?: NoteUpdateManyWithoutTaskNestedInput
     quizzes?: QuizUpdateManyWithoutTaskNestedInput
     reviewRecords?: ReviewRecordUpdateManyWithoutTaskNestedInput
+    knowledgeLinks?: TaskKnowledgeUnitUpdateManyWithoutTaskNestedInput
   }
 
   export type TaskUncheckedUpdateWithoutStudyPlanInput = {
@@ -24879,11 +24879,11 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    knowledgeLinks?: TaskKnowledgeUnitUncheckedUpdateManyWithoutTaskNestedInput
     sessions?: LearningSessionUncheckedUpdateManyWithoutTaskNestedInput
     notes?: NoteUncheckedUpdateManyWithoutTaskNestedInput
     quizzes?: QuizUncheckedUpdateManyWithoutTaskNestedInput
     reviewRecords?: ReviewRecordUncheckedUpdateManyWithoutTaskNestedInput
+    knowledgeLinks?: TaskKnowledgeUnitUncheckedUpdateManyWithoutTaskNestedInput
   }
 
   export type TaskUncheckedUpdateManyWithoutStudyPlanInput = {
@@ -24901,11 +24901,6 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  }
-
-  export type TaskKnowledgeUnitCreateManyTaskInput = {
-    id?: string
-    knowledgeUnitId: string
   }
 
   export type LearningSessionCreateManyTaskInput = {
@@ -24949,19 +24944,9 @@ export namespace Prisma {
     createdAt?: Date | string
   }
 
-  export type TaskKnowledgeUnitUpdateWithoutTaskInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    knowledgeUnit?: KnowledgeUnitUpdateOneRequiredWithoutTaskLinksNestedInput
-  }
-
-  export type TaskKnowledgeUnitUncheckedUpdateWithoutTaskInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    knowledgeUnitId?: StringFieldUpdateOperationsInput | string
-  }
-
-  export type TaskKnowledgeUnitUncheckedUpdateManyWithoutTaskInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    knowledgeUnitId?: StringFieldUpdateOperationsInput | string
+  export type TaskKnowledgeUnitCreateManyTaskInput = {
+    id?: string
+    knowledgeUnitId: string
   }
 
   export type LearningSessionUpdateWithoutTaskInput = {
@@ -25087,6 +25072,21 @@ export namespace Prisma {
     nextReviewDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     notes?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type TaskKnowledgeUnitUpdateWithoutTaskInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    knowledgeUnit?: KnowledgeUnitUpdateOneRequiredWithoutTaskLinksNestedInput
+  }
+
+  export type TaskKnowledgeUnitUncheckedUpdateWithoutTaskInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    knowledgeUnitId?: StringFieldUpdateOperationsInput | string
+  }
+
+  export type TaskKnowledgeUnitUncheckedUpdateManyWithoutTaskInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    knowledgeUnitId?: StringFieldUpdateOperationsInput | string
   }
 
   export type QuizAnswerCreateManyQuizInput = {

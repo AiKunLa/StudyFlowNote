@@ -1,14 +1,237 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
 generator client {
-  provider = "prisma-client-js"
-  output   = "../src/generated/prisma"
+  provider   = "prisma-client-js"
+  output     = "../src/generated/prisma"
   engineType = "binary"
 }
 
 datasource db {
   provider = "postgresql"
+}
+
+model User {
+  id        String    @id @default(cuid())
+  email     String    @unique
+  password  String
+  name      String?
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  projects  Project[]
+}
+
+model Project {
+  id              String      @id @default(cuid())
+  userId          String
+  name            String
+  description     String?
+  goal            String?
+  examDate        DateTime?
+  dailyTimeBudget Int?
+  mode            String?
+  createdAt       DateTime    @default(now())
+  updatedAt       DateTime    @updatedAt
+  materials       Material[]
+  user            User        @relation(fields: [userId], references: [id], onDelete: Cascade)
+  studyPlans      StudyPlan[]
+
+  @@index([userId])
+}
+
+model Material {
+  id             String          @id @default(cuid())
+  projectId      String
+  title          String
+  type           MaterialType
+  sourcePath     String?
+  rawText        String?
+  status         MaterialStatus  @default(UPLOADING)
+  parseError     String?
+  metadata       Json?
+  createdAt      DateTime        @default(now())
+  updatedAt      DateTime        @updatedAt
+  knowledgeUnits KnowledgeUnit[]
+  project        Project         @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  chunks         MaterialChunk[]
+
+  @@index([projectId])
+  @@index([status])
+}
+
+model MaterialChunk {
+  id            String                 @id @default(cuid())
+  materialId    String
+  chunkIndex    Int
+  title         String?
+  content       String
+  summary       String?
+  sourcePage    Int?
+  sourceSection String?
+  metadata      Json?
+  embedding     Unsupported("vector")?
+  createdAt     DateTime               @default(now())
+  material      Material               @relation(fields: [materialId], references: [id], onDelete: Cascade)
+
+  @@unique([materialId, chunkIndex])
+  @@index([materialId])
+}
+
+model KnowledgeUnit {
+  id               String              @id @default(cuid())
+  materialId       String
+  title            String
+  summary          String?
+  topic            String?
+  difficulty       Int?
+  importance       Int?
+  estimatedMinutes Int?
+  prerequisiteIds  String[]
+  sourceRefs       Json?
+  createdAt        DateTime            @default(now())
+  updatedAt        DateTime            @updatedAt
+  material         Material            @relation(fields: [materialId], references: [id], onDelete: Cascade)
+  taskLinks        TaskKnowledgeUnit[]
+
+  @@index([materialId])
+  @@index([topic])
+}
+
+model StudyPlan {
+  id        String     @id @default(cuid())
+  projectId String
+  title     String
+  startDate DateTime
+  endDate   DateTime
+  totalDays Int
+  status    PlanStatus @default(DRAFT)
+  config    Json?
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @updatedAt
+  project   Project    @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  tasks     Task[]
+
+  @@index([projectId])
+  @@index([status])
+}
+
+model Task {
+  id               String              @id @default(cuid())
+  studyPlanId      String
+  title            String
+  description      String?
+  taskType         TaskType
+  status           TaskStatus          @default(TODO)
+  scheduledDate    DateTime
+  estimatedMinutes Int?
+  difficulty       Int?
+  priority         Int?
+  masteryScore     Float?
+  nextReviewDate   DateTime?
+  createdAt        DateTime            @default(now())
+  updatedAt        DateTime            @updatedAt
+  completedAt      DateTime?
+  sessions         LearningSession[]
+  notes            Note[]
+  quizzes          Quiz[]
+  reviewRecords    ReviewRecord[]
+  studyPlan        StudyPlan           @relation(fields: [studyPlanId], references: [id], onDelete: Cascade)
+  knowledgeLinks   TaskKnowledgeUnit[]
+
+  @@index([studyPlanId])
+  @@index([scheduledDate])
+  @@index([status])
+  @@index([taskType])
+  @@index([nextReviewDate])
+}
+
+model TaskKnowledgeUnit {
+  id              String        @id @default(cuid())
+  taskId          String
+  knowledgeUnitId String
+  knowledgeUnit   KnowledgeUnit @relation(fields: [knowledgeUnitId], references: [id], onDelete: Cascade)
+  task            Task          @relation(fields: [taskId], references: [id], onDelete: Cascade)
+
+  @@unique([taskId, knowledgeUnitId])
+  @@index([knowledgeUnitId])
+}
+
+model LearningSession {
+  id              String        @id @default(cuid())
+  taskId          String
+  startedAt       DateTime      @default(now())
+  endedAt         DateTime?
+  durationSeconds Int?
+  questionCount   Int           @default(0)
+  status          SessionStatus @default(STARTED)
+  createdAt       DateTime      @default(now())
+  task            Task          @relation(fields: [taskId], references: [id], onDelete: Cascade)
+
+  @@index([taskId])
+  @@index([status])
+}
+
+model Note {
+  id          String   @id @default(cuid())
+  taskId      String
+  content     String
+  isImportant Boolean  @default(false)
+  isConfusing Boolean  @default(false)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  task        Task     @relation(fields: [taskId], references: [id], onDelete: Cascade)
+
+  @@index([taskId])
+}
+
+model Quiz {
+  id          String       @id @default(cuid())
+  taskId      String
+  title       String?
+  status      QuizStatus   @default(GENERATED)
+  score       Float?
+  feedback    Json?
+  generatedAt DateTime     @default(now())
+  submittedAt DateTime?
+  gradedAt    DateTime?
+  task        Task         @relation(fields: [taskId], references: [id], onDelete: Cascade)
+  answers     QuizAnswer[]
+
+  @@index([taskId])
+  @@index([status])
+}
+
+model QuizAnswer {
+  id              String   @id @default(cuid())
+  quizId          String
+  questionIndex   Int
+  questionType    String
+  questionText    String
+  referenceAnswer String?
+  userAnswer      String?
+  isCorrect       Boolean?
+  score           Float?
+  analysis        String?
+  errorType       String?
+  createdAt       DateTime @default(now())
+  quiz            Quiz     @relation(fields: [quizId], references: [id], onDelete: Cascade)
+
+  @@unique([quizId, questionIndex])
+  @@index([quizId])
+}
+
+model ReviewRecord {
+  id             String       @id @default(cuid())
+  taskId         String
+  reviewDate     DateTime     @default(now())
+  result         ReviewResult
+  score          Float?
+  intervalDays   Int?
+  nextReviewDate DateTime?
+  notes          String?
+  createdAt      DateTime     @default(now())
+  task           Task         @relation(fields: [taskId], references: [id], onDelete: Cascade)
+
+  @@index([taskId])
+  @@index([reviewDate])
+  @@index([nextReviewDate])
 }
 
 enum MaterialType {
@@ -63,243 +286,4 @@ enum ReviewResult {
   FAIR
   GOOD
   EXCELLENT
-}
-
-model User {
-  id          String    @id @default(cuid())
-  email       String    @unique
-  password    String
-  name        String?
-  createdAt   DateTime  @default(now())
-  updatedAt   DateTime  @updatedAt
-
-  projects    Project[]
-}
-
-model Project {
-  id               String       @id @default(cuid())
-  userId           String
-  name             String
-  description      String?
-  goal             String?
-  examDate         DateTime?
-  dailyTimeBudget  Int?         // 单位：分钟
-  mode             String?      // 例如: steady / sprint / light
-  createdAt        DateTime     @default(now())
-  updatedAt        DateTime     @updatedAt
-
-  user             User         @relation(fields: [userId], references: [id], onDelete: Cascade)
-  materials        Material[]
-  studyPlans       StudyPlan[]
-
-  @@index([userId])
-}
-
-model Material {
-  id               String          @id @default(cuid())
-  projectId        String
-  title            String
-  type             MaterialType
-  sourcePath       String?         // 文件路径或对象存储地址
-  rawText          String?
-  status           MaterialStatus  @default(UPLOADING)
-  parseError       String?
-  metadata         Json?
-  createdAt        DateTime        @default(now())
-  updatedAt        DateTime        @updatedAt
-
-  project          Project         @relation(fields: [projectId], references: [id], onDelete: Cascade)
-  chunks           MaterialChunk[]
-  knowledgeUnits   KnowledgeUnit[]
-
-  @@index([projectId])
-  @@index([status])
-}
-
-model MaterialChunk {
-  id               String    @id @default(cuid())
-  materialId       String
-  chunkIndex       Int
-  title            String?
-  content          String
-  summary          String?
-  sourcePage       Int?
-  sourceSection    String?
-  metadata         Json?
-  embedding        Unsupported("vector")?
-  createdAt        DateTime  @default(now())
-
-  material         Material  @relation(fields: [materialId], references: [id], onDelete: Cascade)
-
-  @@unique([materialId, chunkIndex])
-  @@index([materialId])
-}
-
-model KnowledgeUnit {
-  id                String     @id @default(cuid())
-  materialId        String
-  title             String
-  summary           String?
-  topic             String?
-  difficulty        Int?       // 1~5
-  importance        Int?       // 1~5
-  estimatedMinutes  Int?
-  prerequisiteIds   String[]   // MVP 先简单存字符串数组
-  sourceRefs        Json?      // 记录关联 chunk/page/section
-  createdAt         DateTime   @default(now())
-  updatedAt         DateTime   @updatedAt
-
-  material          Material   @relation(fields: [materialId], references: [id], onDelete: Cascade)
-  taskLinks         TaskKnowledgeUnit[]
-
-  @@index([materialId])
-  @@index([topic])
-}
-
-model StudyPlan {
-  id               String      @id @default(cuid())
-  projectId        String
-  title            String
-  startDate        DateTime
-  endDate          DateTime
-  totalDays        Int
-  status           PlanStatus  @default(DRAFT)
-  config           Json?       // 记录生成计划时使用的参数
-  createdAt        DateTime    @default(now())
-  updatedAt        DateTime    @updatedAt
-
-  project          Project     @relation(fields: [projectId], references: [id], onDelete: Cascade)
-  tasks            Task[]
-
-  @@index([projectId])
-  @@index([status])
-}
-
-model Task {
-  id                String       @id @default(cuid())
-  studyPlanId       String
-  title             String
-  description       String?
-  taskType          TaskType
-  status            TaskStatus   @default(TODO)
-  scheduledDate     DateTime
-  estimatedMinutes  Int?
-  difficulty        Int?
-  priority          Int?         // 1~5
-  masteryScore      Float?
-  nextReviewDate    DateTime?
-  createdAt         DateTime     @default(now())
-  updatedAt         DateTime     @updatedAt
-  completedAt       DateTime?
-
-  studyPlan         StudyPlan    @relation(fields: [studyPlanId], references: [id], onDelete: Cascade)
-  knowledgeLinks    TaskKnowledgeUnit[]
-  sessions          LearningSession[]
-  notes             Note[]
-  quizzes           Quiz[]
-  reviewRecords     ReviewRecord[]
-
-  @@index([studyPlanId])
-  @@index([scheduledDate])
-  @@index([status])
-  @@index([taskType])
-  @@index([nextReviewDate])
-}
-
-model TaskKnowledgeUnit {
-  id               String         @id @default(cuid())
-  taskId           String
-  knowledgeUnitId  String
-
-  task             Task           @relation(fields: [taskId], references: [id], onDelete: Cascade)
-  knowledgeUnit    KnowledgeUnit  @relation(fields: [knowledgeUnitId], references: [id], onDelete: Cascade)
-
-  @@unique([taskId, knowledgeUnitId])
-  @@index([knowledgeUnitId])
-}
-
-model LearningSession {
-  id               String         @id @default(cuid())
-  taskId           String
-  startedAt        DateTime       @default(now())
-  endedAt          DateTime?
-  durationSeconds  Int?
-  questionCount    Int            @default(0)
-  status           SessionStatus  @default(STARTED)
-  createdAt        DateTime       @default(now())
-
-  task             Task           @relation(fields: [taskId], references: [id], onDelete: Cascade)
-
-  @@index([taskId])
-  @@index([status])
-}
-
-model Note {
-  id               String    @id @default(cuid())
-  taskId           String
-  content          String
-  isImportant      Boolean   @default(false)
-  isConfusing      Boolean   @default(false)
-  createdAt        DateTime  @default(now())
-  updatedAt        DateTime  @updatedAt
-
-  task             Task      @relation(fields: [taskId], references: [id], onDelete: Cascade)
-
-  @@index([taskId])
-}
-
-model Quiz {
-  id               String      @id @default(cuid())
-  taskId           String
-  title            String?
-  status           QuizStatus  @default(GENERATED)
-  score            Float?
-  feedback         Json?
-  generatedAt      DateTime    @default(now())
-  submittedAt      DateTime?
-  gradedAt         DateTime?
-
-  task             Task        @relation(fields: [taskId], references: [id], onDelete: Cascade)
-  answers          QuizAnswer[]
-
-  @@index([taskId])
-  @@index([status])
-}
-
-model QuizAnswer {
-  id               String    @id @default(cuid())
-  quizId           String
-  questionIndex    Int
-  questionType     String    // recall / understanding / application / transfer
-  questionText     String
-  referenceAnswer  String?
-  userAnswer       String?
-  isCorrect        Boolean?
-  score            Float?
-  analysis         String?
-  errorType        String?   // memory / confusion / understanding / application
-  createdAt        DateTime  @default(now())
-
-  quiz             Quiz      @relation(fields: [quizId], references: [id], onDelete: Cascade)
-
-  @@unique([quizId, questionIndex])
-  @@index([quizId])
-}
-
-model ReviewRecord {
-  id               String        @id @default(cuid())
-  taskId           String
-  reviewDate       DateTime      @default(now())
-  result           ReviewResult
-  score            Float?
-  intervalDays     Int?
-  nextReviewDate   DateTime?
-  notes            String?
-  createdAt        DateTime      @default(now())
-
-  task             Task          @relation(fields: [taskId], references: [id], onDelete: Cascade)
-
-  @@index([taskId])
-  @@index([reviewDate])
-  @@index([nextReviewDate])
 }
