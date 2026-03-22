@@ -12,13 +12,17 @@ export class PrismaService extends PrismaClient implements OnModuleInit, OnModul
     if (!connectionString) {
       throw new Error('DATABASE_URL is not set');
     }
-    const pool = new Pool({ connectionString });
+    const pool = new Pool({
+      connectionString,
+    });
     // Prisma v7 "client" engine requires an adapter or accelerateUrl.
     super({ adapter: new PrismaPg(pool) });
     this.pool = pool;
   }
 
   async onModuleInit() {
+    // 在连接前设置 schema
+    await this.pool.query('SET search_path TO studyflownote');
     await this.$connect();
   }
 
