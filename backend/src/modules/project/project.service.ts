@@ -28,15 +28,16 @@ export class ProjectService {
   /**
    * 创建项目
    * @param dto - 创建项目的数据传输对象
+   * @param userId - 当前登录用户ID（从 JWT 获取）
    * @returns 创建成功后的项目对象
    * @throws BadRequestException 用户不存在时抛出
    */
-  async create(dto: CreateProjectDto) {
-    this.logger.log(`Creating project: ${dto.name} for user: ${dto.userId}`);
-    await this.ensureUserExists(dto.userId);
+  async create(dto: CreateProjectDto, userId: string) {
+    this.logger.log(`Creating project: ${dto.name} for user: ${userId}`);
+    await this.ensureUserExists(userId);
     const project = await this.prisma.project.create({
       data: {
-        userId: dto.userId,
+        userId,
         name: dto.name,
         description: dto.description ?? null,
         goal: dto.goal ?? null,

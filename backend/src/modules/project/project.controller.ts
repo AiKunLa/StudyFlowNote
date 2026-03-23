@@ -15,6 +15,8 @@ import { UpdateProjectDto } from './dto/update-project.dto';
 import { ProjectService } from './project.service';
 import { ResponseDto } from '../../common/dto/response.dto';
 import { Public } from '../auth/decorators/public.decorator';
+import { CurrentUser } from '../auth/decorators/current-user.decorator';
+import { JwtPayload } from '../auth/interfaces/jwt-payload.interface';
 
 /**
  * Project Controller
@@ -33,25 +35,28 @@ export class ProjectController {
    */
   @Post()
   @ApiOperation({ summary: 'Create project' })
-  async create(@Body() dto: CreateProjectDto): Promise<ResponseDto> {
-    // 输出日志以便调试
-    console.log('Creating project with data:', dto);
-    const data = await this.projectService.create(dto);
+  async create(
+    @Body() dto: CreateProjectDto,
+    @CurrentUser() user: JwtPayload,
+  ): Promise<ResponseDto> {
+    const data = await this.projectService.create(dto, user.sub);
     return ResponseDto.success(data);
   }
 
   /**
    * 获取项目列表
    * GET /projects
-   * @param query - 查询参数（userId, page, pageSize）
+   * @param query - 查询参数（page, pageSize）
    * @returns 分页后的项目列表
    */
   @Get()
-  @Public()
   @ApiOperation({ summary: 'List projects' })
-  async list(@Query() query: ListProjectQueryDto): Promise<ResponseDto> {
+  async list(
+    @CurrentUser() user: JwtPayload,
+    @Query() query: ListProjectQueryDto,
+  ): Promise<ResponseDto> {
     const data = await this.projectService.list(
-      query.userId,
+      user.sub,
       query.page,
       query.pageSize,
     );

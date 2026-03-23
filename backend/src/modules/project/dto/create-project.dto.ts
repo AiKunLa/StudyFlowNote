@@ -3,10 +3,6 @@ import { IsDateString, IsInt, IsNotEmpty, IsOptional, IsString, Min } from 'clas
 export class CreateProjectDto {
   @IsString()
   @IsNotEmpty()
-  userId!: string;
-
-  @IsString()
-  @IsNotEmpty()
   name!: string;
 
   @IsString()
