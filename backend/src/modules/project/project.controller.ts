@@ -14,6 +14,7 @@ import { ListProjectQueryDto } from './dto/list-project-query.dto';
 import { UpdateProjectDto } from './dto/update-project.dto';
 import { ProjectService } from './project.service';
 import { ResponseDto } from '../../common/dto/response.dto';
+import { Public } from '../auth/decorators/public.decorator';
 
 /**
  * Project Controller
@@ -46,6 +47,7 @@ export class ProjectController {
    * @returns 分页后的项目列表
    */
   @Get()
+  @Public()
   @ApiOperation({ summary: 'List projects' })
   async list(@Query() query: ListProjectQueryDto): Promise<ResponseDto> {
     const data = await this.projectService.list(
@@ -63,6 +65,7 @@ export class ProjectController {
    * @returns 项目详细信息
    */
   @Get(':projectId')
+  @Public()
   @ApiOperation({ summary: 'Get project detail' })
   async detail(@Param('projectId') projectId: string): Promise<ResponseDto> {
     const data = await this.projectService.findOne(projectId);
