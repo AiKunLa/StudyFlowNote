@@ -15,8 +15,11 @@
  * - 使用单层布局结构，所有页面共享 AppLayout
  * - 动态路由参数使用 :paramName 语法（如 :id）
  * - index: true 表示该路径是父路由的默认页面
+ * - 登录/注册页面为独立路由，不使用 AppLayout
  *
  * 路由列表：
+ * /login              - 登录页（独立）
+ * /register           - 注册页（独立）
  * /                    - 首页/仪表盘
  * /projects            - 项目列表
  * /projects/new        - 创建项目
@@ -48,6 +51,10 @@ function lazyNamedImport<T>(importer: () => Promise<T>, name: keyof T) {
 // ============================================================
 // 懒加载页面组件
 // ============================================================
+
+// 认证页面（独立路由，不使用 AppLayout）
+const LoginPage = lazyNamedImport(() => import('@/pages/login'), 'LoginPage');
+const RegisterPage = lazyNamedImport(() => import('@/pages/register'), 'RegisterPage');
 
 // 首页
 const DashboardPage = lazyNamedImport(() => import('@/pages/dashboard'), 'DashboardPage');
@@ -83,14 +90,23 @@ const ReviewCenterPage = lazyNamedImport(() => import('@/pages/review'), 'Review
 /**
  * 应用路由配置数组
  *
- * 所有路由都嵌套在 AppLayout 下，实现统一的页面布局
+ * 结构：
+ * - 独立路由（登录/注册）- 不使用布局组件
+ * - 主应用路由 - 嵌套在 AppLayout 下
  */
 export const routes: RouteObject[] = [
+  // ========================================
+  // 独立路由（不需要 AppLayout）
+  // ========================================
+  { path: '/login', Component: LoginPage },
+  { path: '/register', Component: RegisterPage },
+
+  // ========================================
+  // 主应用路由（使用 AppLayout）
+  // ========================================
   {
-    // 根路径使用 AppLayout 作为布局组件
     path: '/',
     Component: AppLayout,
-    // 子路由通过 <Outlet /> 在布局中渲染
     children: [
       // 首页 - 使用 index: true 表示默认子路由
       { index: true, Component: DashboardPage },
