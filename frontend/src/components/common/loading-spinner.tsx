@@ -52,17 +52,17 @@ const sizeClasses = {
  */
 export function LoadingSpinner({ className, size = 'md' }: LoadingSpinnerProps) {
   return (
-    <Loader2
-      className={cn(
-        // 旋转动画
-        'animate-spin',
-        // 默认颜色
-        'text-muted-foreground',
-        // 尺寸
-        sizeClasses[size],
-        // 自定义样式
-        className
-      )}
-    />
+    <div className={cn('flex items-center justify-center', className)}>
+      <Loader2
+        className={cn(
+          // 旋转动画
+          'animate-spin',
+          // 默认颜色
+          'text-muted-foreground',
+          // 尺寸
+          sizeClasses[size]
+        )}
+      />
+    </div>
   );
 }

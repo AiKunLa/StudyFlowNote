@@ -6,6 +6,11 @@
  * - 关联页面组件与路由路径
  * - 配置布局组件（Layout Routes）
  *
+ * 路由懒加载：
+ * - 所有页面组件使用 lazy() 进行懒加载
+ * - 每个页面会独立打包，实现代码分割
+ * - 用户访问时才加载对应页面的代码
+ *
  * 路由结构设计说明：
  * - 使用单层布局结构，所有页面共享 AppLayout
  * - 动态路由参数使用 :paramName 语法（如 :id）
@@ -27,21 +32,53 @@
  * /review              - 复习中心
  */
 
+import React, { lazy } from 'react';
 import { type RouteObject } from 'react-router';
 import { AppLayout } from '@/components/layout/app-layout';
-import { DashboardPage } from '@/pages/dashboard';
-import { ProjectListPage } from '@/pages/projects';
-import { CreateProjectPage } from '@/pages/projects/new';
-import { ProjectDetailPage } from '@/pages/projects/[id]';
-import { EditProjectPage } from '@/pages/projects/[id]/edit';
-import { MaterialListPage } from '@/pages/materials';
-import { PlanDetailPage } from '@/pages/plan/[id]';
-import { TodayTasksPage } from '@/pages/tasks';
-import { TaskDetailPage } from '@/pages/tasks/[id]';
-import { TaskLearnPage } from '@/pages/tasks/[id]/learn';
-import { TaskQuizPage } from '@/pages/tasks/[id]/quiz';
-import { QuizResultPage } from '@/pages/quiz/[id]/result';
-import { ReviewCenterPage } from '@/pages/review';
+
+/**
+ * 懒加载函数 - 处理命名导出的页面组件
+ *
+ * 由于页面组件使用命名导出（export function），需要通过 .then() 提取
+ */
+function lazyNamedImport<T>(importer: () => Promise<T>, name: keyof T) {
+  return lazy(() => importer().then((m) => ({ default: m[name] as React.ComponentType })));
+}
+
+// ============================================================
+// 懒加载页面组件
+// ============================================================
+
+// 首页
+const DashboardPage = lazyNamedImport(() => import('@/pages/dashboard'), 'DashboardPage');
+
+// 项目管理
+const ProjectListPage = lazyNamedImport(() => import('@/pages/projects'), 'ProjectListPage');
+const CreateProjectPage = lazyNamedImport(() => import('@/pages/projects/new'), 'CreateProjectPage');
+const ProjectDetailPage = lazyNamedImport(() => import('@/pages/projects/[id]'), 'ProjectDetailPage');
+const EditProjectPage = lazyNamedImport(() => import('@/pages/projects/[id]/edit'), 'EditProjectPage');
+
+// 资料中心
+const MaterialListPage = lazyNamedImport(() => import('@/pages/materials'), 'MaterialListPage');
+
+// 学习计划
+const PlanDetailPage = lazyNamedImport(() => import('@/pages/plan/[id]'), 'PlanDetailPage');
+
+// 任务
+const TodayTasksPage = lazyNamedImport(() => import('@/pages/tasks'), 'TodayTasksPage');
+const TaskDetailPage = lazyNamedImport(() => import('@/pages/tasks/[id]'), 'TaskDetailPage');
+const TaskLearnPage = lazyNamedImport(() => import('@/pages/tasks/[id]/learn'), 'TaskLearnPage');
+const TaskQuizPage = lazyNamedImport(() => import('@/pages/tasks/[id]/quiz'), 'TaskQuizPage');
+
+// 测验结果
+const QuizResultPage = lazyNamedImport(() => import('@/pages/quiz/[id]/result'), 'QuizResultPage');
+
+// 复习中心
+const ReviewCenterPage = lazyNamedImport(() => import('@/pages/review'), 'ReviewCenterPage');
+
+// ============================================================
+// 路由配置
+// ============================================================
 
 /**
  * 应用路由配置数组

@@ -11,7 +11,9 @@
  * <div>                      # flex 容器，全屏布局
  *   <Sidebar />              # 左侧固定侧边栏
  *   <main>                   # 主内容区域
- *     <Outlet />             # 子页面在这里渲染
+ *     <Suspense>            # 懒加载 Suspense 边界
+ *       <Outlet />           # 子页面在这里渲染
+ *     </Suspense>
  *   </main>
  * </div>
  * ```
@@ -20,12 +22,15 @@
  * - 主内容区域根据侧边栏状态调整左边距
  * - 内容区域可以滚动（overflow-auto）
  * - 使用容器类确保内容居中和适当间距
+ * - Suspense 处理懒加载页面的加载状态
  */
 
+import { Suspense } from 'react';
 import { Outlet } from 'react-router';
 import { Sidebar } from './sidebar';
 import { useUIStore } from '@/stores/ui.store';
 import { cn } from '@/lib/utils';
+import { LoadingSpinner } from '@/components/common/loading-spinner';
 
 /**
  * AppLayout 组件
@@ -57,11 +62,12 @@ export function AppLayout() {
         {/* 内容容器 - 居中显示，添加内边距 */}
         <div className="container mx-auto p-6">
           {/*
-            Outlet 是 React Router 的组件
-            它会在这个位置渲染当前路由匹配的子路由组件
-            例如访问 /projects 时，这里会渲染 ProjectListPage
+            Suspense 边界处理懒加载页面的加载状态
+            当用户访问新路由时，对应的懒加载组件会显示 fallback UI
           */}
-          <Outlet />
+          <Suspense fallback={<LoadingSpinner className="h-full" />}>
+            <Outlet />
+          </Suspense>
         </div>
       </main>
     </div>
