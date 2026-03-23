@@ -29,8 +29,10 @@ import {
   ClipboardList,    // 复习图标
   ChevronLeft,      // 展开时显示-收起按钮
   ChevronRight,     // 折叠时显示-展开按钮
+  LogOut,           // 登出图标
 } from 'lucide-react';
 import { useUIStore } from '@/stores/ui.store';
+import { useAuthStore } from '@/stores/auth.store';
 import { cn } from '@/lib/utils';
 
 /** 导航项配置类型 */
@@ -66,6 +68,8 @@ const navItems: NavItem[] = [
 export function Sidebar() {
   // 从 Zustand store 获取侧边栏状态和切换方法
   const { sidebarCollapsed, toggleSidebar } = useUIStore();
+  // 获取登出方法
+  const { logout } = useAuthStore();
 
   return (
     <aside
@@ -130,6 +134,20 @@ export function Sidebar() {
             </NavLink>
           ))}
         </nav>
+
+        {/* 登出按钮 */}
+        <div className="border-t p-2">
+          <button
+            onClick={logout}
+            className={cn(
+              'flex w-full items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium',
+              'text-muted-foreground hover:bg-muted hover:text-foreground'
+            )}
+          >
+            <LogOut size={20} />
+            {!sidebarCollapsed && <span>登出</span>}
+          </button>
+        </div>
       </div>
     </aside>
   );
