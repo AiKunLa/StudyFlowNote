@@ -13,14 +13,8 @@
  */
 
 import { create } from 'zustand';
-import { setAuthToken, clearAuthToken, getAuthToken } from '@/services/http';
-
-/** 用户信息类型 */
-export interface User {
-  id: string;
-  email: string;
-  name?: string;
-}
+import { setAuthToken, clearAuthToken, getAuthToken, HttpError } from '@/services/http';
+import { authService, type User } from '@/services/auth.service';
 
 /** Auth Store 状态类型 */
 interface AuthState {
@@ -43,7 +37,7 @@ interface AuthActions {
   /** 登出 */
   logout: () => void;
   /** 初始化 - 从 localStorage 恢复会话 */
-  initialize: () => void;
+  initialize: () => Promise<void>;
 }
 
 /** Auth Store 类型 */
@@ -67,37 +61,50 @@ export const useAuthStore = create<AuthStore>((set) => ({
       isAuthenticated: !!user,
     }),
 
-  /** 登录 - TODO: 对接后端登录接口 */
-  login: async (email: string, _password: string) => {
+  /** 登录 */
+  login: async (email: string, password: string) => {
     set({ isLoading: true });
     try {
-      // TODO: 调用后端登录 API
-      // const response = await authService.login(email, password);
-      // setAuthToken(response.data.token);
-      // setUser(response.data.user);
+      const response = await authService.login({ email, password });
+      const { accessToken, user } = response.data.data;
 
-      // Mock 数据用于测试 UI
-      const mockUser: User = { id: '1', email, name: '测试用户' };
-      setAuthToken('mock-token');
-      set({ user: mockUser, isAuthenticated: true });
+      // 保存 token 到 localStorage
+      setAuthToken(accessToken);
+
+      // 设置用户信息
+      set({ user, isAuthenticated: true });
+    } catch (error) {
+      if (error instanceof HttpError) {
+        throw new Error(error.apiMessage || '登录失败');
+      }
+      throw error;
     } finally {
       set({ isLoading: false });
     }
   },
 
-  /** 注册 - TODO: 对接后端注册接口 */
-  register: async (email: string, _password: string, name?: string) => {
+  /** 注册 */
+  register: async (email: string, password: string, name?: string) => {
     set({ isLoading: true });
     try {
-      // TODO: 调用后端注册 API
-      // const response = await authService.register(email, password, name);
-      // setAuthToken(response.data.token);
-      // setUser(response.data.user);
+      // 注册成功后自动登录
+      const response = await authService.register({ email, password, name });
+      const userData = response.data.data;
 
-      // Mock 数据用于测试 UI
-      const mockUser: User = { id: '1', email, name };
-      setAuthToken('mock-token');
-      set({ user: mockUser, isAuthenticated: true });
+      // 注册后使用 email 作为密码进行登录，获取 token
+      const loginResponse = await authService.login({ email, password });
+      const { accessToken } = loginResponse.data.data;
+
+      // 保存 token 到 localStorage
+      setAuthToken(accessToken);
+
+      // 设置用户信息
+      set({ user: userData, isAuthenticated: true });
+    } catch (error) {
+      if (error instanceof HttpError) {
+        throw new Error(error.apiMessage || '注册失败');
+      }
+      throw error;
     } finally {
       set({ isLoading: false });
     }
@@ -110,15 +117,23 @@ export const useAuthStore = create<AuthStore>((set) => ({
   },
 
   /** 初始化 - 从 localStorage 恢复会话 */
-  initialize: () => {
+  initialize: async () => {
     const token = getAuthToken();
-    if (token) {
-      // TODO: 验证 token 有效性，获取用户信息
-      // const response = await authService.getCurrentUser();
-      // setUser(response.data.user);
+    if (!token) {
+      return;
+    }
 
-      // Mock: 假设有 token 就认为已登录
-      set({ isAuthenticated: true });
+    set({ isLoading: true });
+    try {
+      // 验证 token 有效性，获取用户信息
+      const response = await authService.getCurrentUser();
+      set({ user: response.data.data, isAuthenticated: true });
+    } catch (error) {
+      // token 无效或已过期，清除并保持未登录状态
+      clearAuthToken();
+      set({ user: null, isAuthenticated: false });
+    } finally {
+      set({ isLoading: false });
     }
   },
 }));

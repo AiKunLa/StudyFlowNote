@@ -31,7 +31,7 @@ import axios, {
 // ============================================================
 
 /** API 基础路径 - 从环境变量读取，默认使用本地后端 */
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:3000';
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:3001';
 
 /** 请求超时时间（毫秒） */
 const REQUEST_TIMEOUT = 10000;

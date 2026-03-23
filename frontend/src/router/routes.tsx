@@ -35,9 +35,10 @@
  * /review              - 复习中心
  */
 
-import React, { lazy } from 'react';
+import { lazy } from 'react';
 import { type RouteObject } from 'react-router';
 import { AppLayout } from '@/components/layout/app-layout';
+import { ProtectedRoute, AuthRoute } from '@/components/auth';
 
 /**
  * 懒加载函数 - 处理命名导出的页面组件
@@ -96,44 +97,149 @@ const ReviewCenterPage = lazyNamedImport(() => import('@/pages/review'), 'Review
  */
 export const routes: RouteObject[] = [
   // ========================================
-  // 独立路由（不需要 AppLayout）
+  // 独立路由（使用 AuthRoute 保护）
   // ========================================
-  { path: '/login', Component: LoginPage },
-  { path: '/register', Component: RegisterPage },
+  {
+    path: '/login',
+    Component: () => (
+      <AuthRoute>
+        <LoginPage />
+      </AuthRoute>
+    ),
+  },
+  {
+    path: '/register',
+    Component: () => (
+      <AuthRoute>
+        <RegisterPage />
+      </AuthRoute>
+    ),
+  },
 
   // ========================================
-  // 主应用路由（使用 AppLayout）
+  // 主应用路由（使用 ProtectedRoute 保护）
   // ========================================
   {
     path: '/',
     Component: AppLayout,
     children: [
       // 首页 - 使用 index: true 表示默认子路由
-      { index: true, Component: DashboardPage },
+      {
+        index: true,
+        Component: () => (
+          <ProtectedRoute>
+            <DashboardPage />
+          </ProtectedRoute>
+        ),
+      },
 
       // 项目管理路由组
-      { path: 'projects', Component: ProjectListPage },
-      { path: 'projects/new', Component: CreateProjectPage },
-      { path: 'projects/:id', Component: ProjectDetailPage },
-      { path: 'projects/:id/edit', Component: EditProjectPage },
+      {
+        path: 'projects',
+        Component: () => (
+          <ProtectedRoute>
+            <ProjectListPage />
+          </ProtectedRoute>
+        ),
+      },
+      {
+        path: 'projects/new',
+        Component: () => (
+          <ProtectedRoute>
+            <CreateProjectPage />
+          </ProtectedRoute>
+        ),
+      },
+      {
+        path: 'projects/:id',
+        Component: () => (
+          <ProtectedRoute>
+            <ProjectDetailPage />
+          </ProtectedRoute>
+        ),
+      },
+      {
+        path: 'projects/:id/edit',
+        Component: () => (
+          <ProtectedRoute>
+            <EditProjectPage />
+          </ProtectedRoute>
+        ),
+      },
 
       // 资料中心
-      { path: 'materials', Component: MaterialListPage },
+      {
+        path: 'materials',
+        Component: () => (
+          <ProtectedRoute>
+            <MaterialListPage />
+          </ProtectedRoute>
+        ),
+      },
 
       // 学习计划
-      { path: 'plan/:id', Component: PlanDetailPage },
+      {
+        path: 'plan/:id',
+        Component: () => (
+          <ProtectedRoute>
+            <PlanDetailPage />
+          </ProtectedRoute>
+        ),
+      },
 
       // 任务路由组
-      { path: 'tasks', Component: TodayTasksPage },
-      { path: 'tasks/:id', Component: TaskDetailPage },
-      { path: 'tasks/:id/learn', Component: TaskLearnPage },
-      { path: 'tasks/:id/quiz', Component: TaskQuizPage },
+      {
+        path: 'tasks',
+        Component: () => (
+          <ProtectedRoute>
+            <TodayTasksPage />
+          </ProtectedRoute>
+        ),
+      },
+      {
+        path: 'tasks/:id',
+        Component: () => (
+          <ProtectedRoute>
+            <TaskDetailPage />
+          </ProtectedRoute>
+        ),
+      },
+      {
+        path: 'tasks/:id/learn',
+        Component: () => (
+          <ProtectedRoute>
+            <TaskLearnPage />
+          </ProtectedRoute>
+        ),
+      },
+      {
+        path: 'tasks/:id/quiz',
+        Component: () => (
+          <ProtectedRoute>
+            <TaskQuizPage />
+          </ProtectedRoute>
+        ),
+      },
 
       // 测验结果（独立页面）
-      { path: 'quiz/:id/result', Component: QuizResultPage },
+      {
+        path: 'quiz/:id/result',
+        Component: () => (
+          <ProtectedRoute>
+            <QuizResultPage />
+          </ProtectedRoute>
+        ),
+      },
 
       // 复习中心
-      { path: 'review', Component: ReviewCenterPage },
+      {
+        path: 'review',
+        Component: () => (
+          <ProtectedRoute>
+            <ReviewCenterPage />
+          </ProtectedRoute>
+        ),
+      },
     ],
   },
 ];

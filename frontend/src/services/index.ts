@@ -22,6 +22,9 @@ export { http, setAuthToken, clearAuthToken, getAuthToken, HttpError, ErrorCode 
 // API 通用类型
 export * from './api.types';
 
+// 认证
+export * from './auth.service';
+
 // 项目管理
 export * from './project.service';
 
