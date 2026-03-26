@@ -1,4 +1,4 @@
-import { BadRequestException, Injectable, Logger, NotFoundException } from '@nestjs/common';
+import { BadRequestException, ForbiddenException, Injectable, Logger, NotFoundException } from '@nestjs/common';
 import { PrismaService } from '../../prisma/prisma.service';
 import { CreateProjectDto } from './dto/create-project.dto';
 import { UpdateProjectDto } from './dto/update-project.dto';
@@ -95,13 +95,22 @@ export class ProjectService {
    * 更新项目
    * @param projectId - 项目ID
    * @param dto - 更新项目的数据传输对象
+   * @param userId - 当前登录用户ID
    * @returns 更新后的项目对象
    * @throws NotFoundException 项目不存在时抛出
+   * @throws ForbiddenException 无权限更新时抛出
    */
-  async update(projectId: string, dto: UpdateProjectDto) {
-    this.logger.log(`Updating project: ${projectId}`);
-    await this.findOne(projectId);
-    const project = await this.prisma.project.update({
+  async update(projectId: string, dto: UpdateProjectDto, userId: string) {
+    this.logger.log(`Updating project: ${projectId} by user: ${userId}`);
+    const project = await this.findOne(projectId);
+
+    // 权限校验：检查是否为项目所有者
+    if (project.userId !== userId) {
+      this.logger.warn(`Unauthorized update attempt: project ${projectId} by user ${userId}`);
+      throw new ForbiddenException('No permission to update this project');
+    }
+
+    const updated = await this.prisma.project.update({
       where: { id: projectId },
       data: {
         name: dto.name,
@@ -112,19 +121,28 @@ export class ProjectService {
         mode: dto.mode ?? null,
       },
     });
-    this.logger.log(`Project updated: ${project.id}`);
-    return project;
+    this.logger.log(`Project updated: ${updated.id}`);
+    return updated;
   }
 
   /**
    * 删除项目
    * @param projectId - 项目ID
+   * @param userId - 当前登录用户ID
    * @returns 删除结果（true）
    * @throws NotFoundException 项目不存在时抛出
+   * @throws ForbiddenException 无权限删除时抛出
    */
-  async remove(projectId: string) {
-    this.logger.log(`Deleting project: ${projectId}`);
-    await this.findOne(projectId);
+  async remove(projectId: string, userId: string) {
+    this.logger.log(`Deleting project: ${projectId} by user: ${userId}`);
+    const project = await this.findOne(projectId);
+
+    // 权限校验：检查是否为项目所有者
+    if (project.userId !== userId) {
+      this.logger.warn(`Unauthorized delete attempt: project ${projectId} by user ${userId}`);
+      throw new ForbiddenException('No permission to delete this project');
+    }
+
     await this.prisma.project.delete({ where: { id: projectId } });
     this.logger.log(`Project deleted: ${projectId}`);
     return true;

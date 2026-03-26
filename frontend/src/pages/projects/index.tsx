@@ -2,7 +2,7 @@
  * ProjectListPage - 项目列表页面
  */
 
-import { useState, useEffect } from 'react';
+import { useEffect } from 'react';
 import { Plus, Loader2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import {
@@ -13,40 +13,24 @@ import {
   DialogTrigger,
 } from '@/components/ui/dialog';
 import { ProjectForm, ProjectCard } from '@/components/project';
-import { projectService } from '@/services';
+import { useProjectStore } from '@/stores/project.store';
 import type { Project } from '@/services/project.service';
 
 export function ProjectListPage() {
-  const [isOpen, setIsOpen] = useState(false);
-  const [projects, setProjects] = useState<Project[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
-  const [error, setError] = useState('');
+  const {
+    projects,
+    isLoading,
+    error,
+    fetchProjects,
+    deleteProject,
+  } = useProjectStore();
 
   useEffect(() => {
-    loadProjects();
-  }, []);
+    fetchProjects();
+  }, [fetchProjects]);
 
-  const loadProjects = async () => {
-    setIsLoading(true);
-    setError('');
-    try {
-      const response = await projectService.list();
-      setProjects(response.data.data.items);
-    } catch (err) {
-      setError('加载项目失败');
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
-  const handleDelete = async (project: Project) => {
-    if (!confirm(`确定要删除项目 "${project.name}" 吗？`)) return;
-    try {
-      await projectService.delete(project.id);
-      setProjects((prev) => prev.filter((p) => p.id !== project.id));
-    } catch (err) {
-      alert('删除失败');
-    }
+  const handleDelete = (project: Project) => {
+    deleteProject(project.id);
   };
 
   return (
@@ -56,26 +40,7 @@ export function ProjectListPage() {
           <h1 className="text-3xl font-bold">项目列表</h1>
           <p className="text-muted-foreground">管理您的学习项目</p>
         </div>
-        <Dialog open={isOpen} onOpenChange={setIsOpen}>
-          <DialogTrigger asChild>
-            <Button>
-              <Plus className="mr-2 h-4 w-4" />
-              创建项目
-            </Button>
-          </DialogTrigger>
-          <DialogContent>
-            <DialogHeader>
-              <DialogTitle>创建新项目</DialogTitle>
-            </DialogHeader>
-            <ProjectForm
-              onSuccess={() => {
-                setIsOpen(false);
-                loadProjects();
-              }}
-              onCancel={() => setIsOpen(false)}
-            />
-          </DialogContent>
-        </Dialog>
+        <DialogCreateProject />
       </div>
 
       {isLoading && (
@@ -108,3 +73,39 @@ export function ProjectListPage() {
     </div>
   );
 }
+
+/**
+ * 创建项目对话框组件
+ * 状态保持在组件内部（UI 私有状态）
+ */
+function DialogCreateProject() {
+  const [isOpen, setIsOpen] = useState(false);
+  const { fetchProjects } = useProjectStore();
+
+  const handleSuccess = async () => {
+    setIsOpen(false);
+    await fetchProjects();
+  };
+
+  return (
+    <Dialog open={isOpen} onOpenChange={setIsOpen}>
+      <DialogTrigger asChild>
+        <Button>
+          <Plus className="mr-2 h-4 w-4" />
+          创建项目
+        </Button>
+      </DialogTrigger>
+      <DialogContent>
+        <DialogHeader>
+          <DialogTitle>创建新项目</DialogTitle>
+        </DialogHeader>
+        <ProjectForm
+          onSuccess={handleSuccess}
+          onCancel={() => setIsOpen(false)}
+        />
+      </DialogContent>
+    </Dialog>
+  );
+}
+
+import { useState } from 'react';

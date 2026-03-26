@@ -89,8 +89,9 @@ export class ProjectController {
   async update(
     @Param('projectId') projectId: string,
     @Body() dto: UpdateProjectDto,
+    @CurrentUser() user: JwtPayload,
   ): Promise<ResponseDto> {
-    const data = await this.projectService.update(projectId, dto);
+    const data = await this.projectService.update(projectId, dto, user.sub);
     return ResponseDto.success(data);
   }
 
@@ -102,8 +103,11 @@ export class ProjectController {
    */
   @Delete(':projectId')
   @ApiOperation({ summary: 'Delete project' })
-  async remove(@Param('projectId') projectId: string): Promise<ResponseDto> {
-    const data = await this.projectService.remove(projectId);
+  async remove(
+    @Param('projectId') projectId: string,
+    @CurrentUser() user: JwtPayload,
+  ): Promise<ResponseDto> {
+    const data = await this.projectService.remove(projectId, user.sub);
     return ResponseDto.success(data);
   }
 }
