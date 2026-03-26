@@ -106,8 +106,9 @@ export function ProjectCard({ project, onClick, onDelete, onEdit: _onEdit }: Pro
     <>
       <div
         className={cn(
-          "group relative cursor-pointer rounded-2xl border border-gray-100 bg-white p-5 transition-all duration-300",
-          "hover:shadow-md hover:border-gray-200",
+          "group relative cursor-pointer rounded-2xl border border-gray-300 bg-white p-5 transition-all duration-300 min-h-[180px]",
+          "hover:-translate-y-1 hover:shadow-xl hover:border-gray-200",
+          !isHovered && "shadow-md",
           isDeleting && "opacity-0 scale-95"
         )}
         onClick={handleClick}
@@ -157,13 +158,13 @@ export function ProjectCard({ project, onClick, onDelete, onEdit: _onEdit }: Pro
         )}
 
         {/* 标题 */}
-        <h3 className="pr-8 text-base font-semibold text-gray-900 truncate">
+        <h3 className="pr-8 text-lg font-semibold text-gray-900 truncate">
           {project.name}
         </h3>
 
         {/* 目标/描述 */}
         {project.goal && (
-          <p className="mt-2 text-sm text-gray-500 line-clamp-2">
+          <p className="mt-3 text-sm text-gray-500 line-clamp-3 leading-relaxed">
             {project.goal}
           </p>
         )}
@@ -180,9 +181,9 @@ export function ProjectCard({ project, onClick, onDelete, onEdit: _onEdit }: Pro
           )}
         </div>
 
-        {/* 底部时间 */}
-        <div className="mt-3 text-xs text-gray-300">
-          创建于 {formatDate(project.createdAt)}
+        {/* 创建日期 - 右下角 */}
+        <div className="absolute bottom-4 right-4 text-xs text-gray-300">
+          {formatDate(project.createdAt)}
         </div>
       </div>
 
