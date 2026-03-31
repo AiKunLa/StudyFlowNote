@@ -23,6 +23,12 @@ import { useNavigate } from 'react-router';
 import { MoreHorizontal, Archive, Trash2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+} from '@/components/ui/dialog';
+import {
   AlertDialog,
   AlertDialogAction,
   AlertDialogCancel,
@@ -32,6 +38,8 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from '@/components/ui/alert-dialog';
+import { ProjectForm } from './project-form';
+import { useProjectStore } from '@/stores/project.store';
 import { cn } from '@/lib/utils';
 import type { Project } from '@/services/project.service';
 
@@ -39,7 +47,6 @@ interface ProjectCardProps {
   project: Project;
   onClick?: (project: Project) => void;
   onDelete?: (project: Project) => void;
-  onEdit?: (project: Project) => void;
 }
 
 function formatDate(dateString: string): string {
@@ -51,17 +58,30 @@ function formatDate(dateString: string): string {
   });
 }
 
-export function ProjectCard({ project, onClick, onDelete, onEdit: _onEdit }: ProjectCardProps) {
-  // 导航实例
+export function ProjectCard({ project, onClick, onDelete }: ProjectCardProps) {
   const navigate = useNavigate();
-  // isHovered 用于控制更多按钮的显示，menuOpen 控制浮出菜单的显示，showDeleteDialog 控制删除确认对话框的显示，isDeleting 用于删除动画效果
+
+  /** 卡片悬停状态 - 控制更多按钮的显示 */
   const [isHovered, setIsHovered] = useState(false);
+  /** 浮出菜单展开状态 */
   const [menuOpen, setMenuOpen] = useState(false);
+  /** 删除确认对话框显示状态 */
   const [showDeleteDialog, setShowDeleteDialog] = useState(false);
+  /** 编辑对话框显示状态 */
+  const [showEditDialog, setShowEditDialog] = useState(false);
+  /** 删除动画状态 - 触发淡出效果 */
   const [isDeleting, setIsDeleting] = useState(false);
+
+  /** 浮出菜单的 DOM 引用，用于检测外部点击 */
   const menuRef = useRef<HTMLDivElement>(null);
 
-  // 点击外部关闭菜单
+  /** 项目 Store - 用于刷新项目列表 */
+  const { fetchProjects } = useProjectStore();
+
+  /**
+   * 外部点击检测
+   * 当菜单展开时，点击菜单外部会关闭菜单
+   */
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       if (menuRef.current && !menuRef.current.contains(event.target as Node)) {
@@ -74,6 +94,7 @@ export function ProjectCard({ project, onClick, onDelete, onEdit: _onEdit }: Pro
     }
   }, [menuOpen]);
 
+  /** 卡片点击处理 - 跳转到项目详情或触发 onClick 回调 */
   const handleClick = () => {
     if (onClick) {
       onClick(project);
@@ -82,24 +103,45 @@ export function ProjectCard({ project, onClick, onDelete, onEdit: _onEdit }: Pro
     }
   };
 
+  /** 更多按钮点击 - 展开/收起浮出菜单 */
   const handleMoreClick = (e: React.MouseEvent) => {
     e.stopPropagation();
     setMenuOpen(!menuOpen);
   };
 
+  /** 修改按钮点击 - 关闭菜单并打开编辑对话框 */
+  const handleEditClick = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    setMenuOpen(false);
+    setShowEditDialog(true);
+  };
+
+  /** 删除按钮点击 - 关闭菜单并打开删除确认对话框 */
   const handleDeleteClick = (e: React.MouseEvent) => {
     e.stopPropagation();
     setMenuOpen(false);
     setShowDeleteDialog(true);
   };
 
+  /** 确认删除 - 触发删除动画后调用 onDelete 回调 */
   const confirmDelete = () => {
     setShowDeleteDialog(false);
     setIsDeleting(true);
-    // 等待动画完成后调用 onDelete
+    // 等待动画完成后执行删除
     setTimeout(() => {
       onDelete?.(project);
     }, 300);
+  };
+
+  /**
+   * 编辑成功处理
+   * 关闭对话框并刷新项目列表
+   * 注意：编辑逻辑已在 ProjectForm 中完成，这里只需要刷新列表
+   */
+  const handleEditSuccess = async () => {
+    setShowEditDialog(false);
+    await fetchProjects();
+    // 不再调用 onEdit，避免重复更新导致数据被覆盖
   };
 
   return (
@@ -140,12 +182,10 @@ export function ProjectCard({ project, onClick, onDelete, onEdit: _onEdit }: Pro
           >
             <button
               className="flex w-full items-center gap-2 px-3 py-2 text-sm text-gray-700 hover:bg-gray-50"
-              onClick={() => {
-                setMenuOpen(false);
-              }}
+              onClick={handleEditClick}
             >
               <Archive className="h-4 w-4 text-gray-400" />
-              归档
+              修改
             </button>
             <button
               className="flex w-full items-center gap-2 px-3 py-2 text-sm text-red-500 hover:bg-red-50"
@@ -186,6 +226,20 @@ export function ProjectCard({ project, onClick, onDelete, onEdit: _onEdit }: Pro
           {formatDate(project.createdAt)}
         </div>
       </div>
+
+      {/* 编辑对话框 */}
+      <Dialog open={showEditDialog} onOpenChange={setShowEditDialog}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>编辑项目</DialogTitle>
+          </DialogHeader>
+          <ProjectForm
+            project={project}
+            onSuccess={handleEditSuccess}
+            onCancel={() => setShowEditDialog(false)}
+          />
+        </DialogContent>
+      </Dialog>
 
       {/* 删除确认对话框 */}
       <AlertDialog open={showDeleteDialog} onOpenChange={setShowDeleteDialog}>

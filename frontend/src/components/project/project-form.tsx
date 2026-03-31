@@ -3,27 +3,35 @@
  *
  * 作用：
  * - 创建新项目表单
- * - 编辑已有项目表单（复用此组件）
+ * - 编辑已有项目表单
  *
  * 使用方式：
  * ```tsx
+ * // 创建模式
+ * <ProjectForm onSuccess={() => setIsOpen(false)} />
+ *
+ * // 编辑模式
  * <ProjectForm
+ *   project={existingProject}
  *   onSuccess={() => setIsOpen(false)}
  *   onCancel={() => setIsOpen(false)}
  * />
  * ```
  */
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { projectService } from '@/services';
 import { HttpError } from '@/services/http';
+import type { Project } from '@/services/project.service';
 
 interface ProjectFormProps {
-  /** 创建成功后的回调 */
+  /** 要编辑的项目（不传则为创建模式） */
+  project?: Project;
+  /** 创建/编辑成功后的回调 */
   onSuccess?: () => void;
   /** 取消按钮的回调 */
   onCancel?: () => void;
@@ -31,13 +39,23 @@ interface ProjectFormProps {
 
 /**
  * 项目表单组件
+ * 支持创建和编辑两种模式
  */
-export function ProjectForm({ onSuccess, onCancel }: ProjectFormProps) {
-  const [name, setName] = useState('');
-  const [goal, setGoal] = useState('');
+export function ProjectForm({ project, onSuccess, onCancel }: ProjectFormProps) {
+  const isEditMode = !!project;
+  const [name, setName] = useState(project?.name || '');
+  const [goal, setGoal] = useState(project?.goal || '');
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');
   const navigate = useNavigate();
+
+  // 当 project prop 变化时更新表单
+  useEffect(() => {
+    if (project) {
+      setName(project.name);
+      setGoal(project.goal || '');
+    }
+  }, [project]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -46,15 +64,22 @@ export function ProjectForm({ onSuccess, onCancel }: ProjectFormProps) {
     setIsLoading(true);
     setError('');
     try {
-      const response = await projectService.create({ name, goal });
-      const project = response.data.data;
-      navigate(`/projects/${project.id}`);
-      onSuccess?.();
+      if (isEditMode && project) {
+        // 编辑模式
+        await projectService.update(project.id, { name, goal });
+        onSuccess?.();
+      } else {
+        // 创建模式
+        const response = await projectService.create({ name, goal });
+        const newProject = response.data.data;
+        navigate(`/projects/${newProject.id}`);
+        onSuccess?.();
+      }
     } catch (err) {
       if (err instanceof HttpError) {
-        setError(err.apiMessage || '创建项目失败');
+        setError(err.apiMessage || (isEditMode ? '更新项目失败' : '创建项目失败'));
       } else {
-        setError('创建项目失败');
+        setError(isEditMode ? '更新项目失败' : '创建项目失败');
       }
     } finally {
       setIsLoading(false);
@@ -96,7 +121,7 @@ export function ProjectForm({ onSuccess, onCancel }: ProjectFormProps) {
           </Button>
         )}
         <Button type="submit" disabled={isLoading || !name.trim()}>
-          {isLoading ? '创建中...' : '创建'}
+          {isLoading ? (isEditMode ? '更新中...' : '创建中...') : (isEditMode ? '更新' : '创建')}
         </Button>
       </div>
     </form>
