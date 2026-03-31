@@ -24,8 +24,7 @@ import { useNavigate } from 'react-router';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { projectService } from '@/services';
-import { HttpError } from '@/services/http';
+import { useProjectStore } from '@/stores/project.store';
 import type { Project } from '@/services/project.service';
 
 interface ProjectFormProps {
@@ -49,6 +48,9 @@ export function ProjectForm({ project, onSuccess, onCancel }: ProjectFormProps) 
   const [error, setError] = useState('');
   const navigate = useNavigate();
 
+  /** 使用 store 的方法，数据会自动同步到 store */
+  const { createProject, updateProject } = useProjectStore();
+
   // 当 project prop 变化时更新表单
   useEffect(() => {
     if (project) {
@@ -65,22 +67,19 @@ export function ProjectForm({ project, onSuccess, onCancel }: ProjectFormProps) 
     setError('');
     try {
       if (isEditMode && project) {
-        // 编辑模式
-        await projectService.update(project.id, { name, goal });
+        // 编辑模式 - 使用 store 方法，会自动更新列表
+        await updateProject(project.id, { name, goal });
         onSuccess?.();
       } else {
-        // 创建模式
-        const response = await projectService.create({ name, goal });
-        const newProject = response.data.data;
-        navigate(`/projects/${newProject.id}`);
+        // 创建模式 - 使用 store 方法，会自动添加到列表
+        const newProject = await createProject({ name, goal });
         onSuccess?.();
+        // 跳转到新创建的项目详情页
+        navigate(`/projects/${newProject.id}`);
       }
     } catch (err) {
-      if (err instanceof HttpError) {
-        setError(err.apiMessage || (isEditMode ? '更新项目失败' : '创建项目失败'));
-      } else {
-        setError(isEditMode ? '更新项目失败' : '创建项目失败');
-      }
+      const errorMessage = err instanceof Error ? err.message : (isEditMode ? '更新项目失败' : '创建项目失败');
+      setError(errorMessage);
     } finally {
       setIsLoading(false);
     }

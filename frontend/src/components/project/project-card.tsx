@@ -39,7 +39,6 @@ import {
   AlertDialogTitle,
 } from '@/components/ui/alert-dialog';
 import { ProjectForm } from './project-form';
-import { useProjectStore } from '@/stores/project.store';
 import { cn } from '@/lib/utils';
 import type { Project } from '@/services/project.service';
 
@@ -47,6 +46,8 @@ interface ProjectCardProps {
   project: Project;
   onClick?: (project: Project) => void;
   onDelete?: (project: Project) => void;
+  /** 编辑成功后的回调 */
+  onSuccess?: () => void;
 }
 
 function formatDate(dateString: string): string {
@@ -58,7 +59,7 @@ function formatDate(dateString: string): string {
   });
 }
 
-export function ProjectCard({ project, onClick, onDelete }: ProjectCardProps) {
+export function ProjectCard({ project, onClick, onDelete, onSuccess }: ProjectCardProps) {
   const navigate = useNavigate();
 
   /** 卡片悬停状态 - 控制更多按钮的显示 */
@@ -74,9 +75,6 @@ export function ProjectCard({ project, onClick, onDelete }: ProjectCardProps) {
 
   /** 浮出菜单的 DOM 引用，用于检测外部点击 */
   const menuRef = useRef<HTMLDivElement>(null);
-
-  /** 项目 Store - 用于刷新项目列表 */
-  const { fetchProjects } = useProjectStore();
 
   /**
    * 外部点击检测
@@ -135,13 +133,11 @@ export function ProjectCard({ project, onClick, onDelete }: ProjectCardProps) {
 
   /**
    * 编辑成功处理
-   * 关闭对话框并刷新项目列表
-   * 注意：编辑逻辑已在 ProjectForm 中完成，这里只需要刷新列表
+   * 关闭对话框 - store 已自动更新，无需手动刷新
    */
-  const handleEditSuccess = async () => {
+  const handleEditSuccess = () => {
     setShowEditDialog(false);
-    await fetchProjects();
-    // 不再调用 onEdit，避免重复更新导致数据被覆盖
+    onSuccess?.();
   };
 
   return (
