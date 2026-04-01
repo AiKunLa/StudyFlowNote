@@ -51,16 +51,13 @@ export function AppLayout() {
       <main
         className={cn(
           // 占据剩余空间
-          'flex-1 overflow-auto',
+          'flex-1 overflow-hidden',
           // 过渡动画
-          'transition-all duration-200',
-          // 根据侧边栏状态调整左边距
-          // 侧边栏展开时 ml-64，折叠时 ml-16
-          sidebarCollapsed ? 'ml-16' : 'ml-64'
+          'transition-all duration-200'
         )}
       >
         {/* 内容容器 - 居中显示，添加内边距 */}
-        <div className="container mx-auto p-6">
+        <div className="container mx-auto p-2">
           {/*
             Suspense 边界处理懒加载页面的加载状态
             当用户访问新路由时，对应的懒加载组件会显示 fallback UI

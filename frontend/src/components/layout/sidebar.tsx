@@ -74,14 +74,14 @@ export function Sidebar() {
   return (
     <aside
       className={cn(
-        // 固定定位
-        'fixed left-0 top-0 z-40 h-screen',
+        // 高度占满
+        'h-full',
         // 背景和边框
         'bg-card border-r',
         // 过渡动画
         'transition-all duration-200',
         // 宽度根据状态变化
-        sidebarCollapsed ? 'w-16' : 'w-64'
+        sidebarCollapsed ? 'w-16 shrink-0' : 'w-64 shrink-0'
       )}
     >
       <div className="flex h-full flex-col">
