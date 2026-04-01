@@ -29,7 +29,7 @@ export function ProjectDetailPage() {
   const project = currentProject || projects.find((p) => p.id === id);
 
   return (
-    <div className="bg-white text-gray-900 font-sans min-h-screen p-2 lg:p-4 flex flex-col">
+    <div className="bg-white text-gray-900 font-sans min-h-screen flex flex-col">
 
       <header className="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 gap-4">
         <div>
