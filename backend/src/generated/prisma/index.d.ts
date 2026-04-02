@@ -4657,8 +4657,18 @@ export namespace Prisma {
 
   export type AggregateMaterial = {
     _count: MaterialCountAggregateOutputType | null
+    _avg: MaterialAvgAggregateOutputType | null
+    _sum: MaterialSumAggregateOutputType | null
     _min: MaterialMinAggregateOutputType | null
     _max: MaterialMaxAggregateOutputType | null
+  }
+
+  export type MaterialAvgAggregateOutputType = {
+    fileSize: number | null
+  }
+
+  export type MaterialSumAggregateOutputType = {
+    fileSize: number | null
   }
 
   export type MaterialMinAggregateOutputType = {
@@ -4667,6 +4677,9 @@ export namespace Prisma {
     title: string | null
     type: $Enums.MaterialType | null
     sourcePath: string | null
+    originalFilename: string | null
+    fileSize: number | null
+    mimeType: string | null
     rawText: string | null
     status: $Enums.MaterialStatus | null
     parseError: string | null
@@ -4680,6 +4693,9 @@ export namespace Prisma {
     title: string | null
     type: $Enums.MaterialType | null
     sourcePath: string | null
+    originalFilename: string | null
+    fileSize: number | null
+    mimeType: string | null
     rawText: string | null
     status: $Enums.MaterialStatus | null
     parseError: string | null
@@ -4693,6 +4709,9 @@ export namespace Prisma {
     title: number
     type: number
     sourcePath: number
+    originalFilename: number
+    fileSize: number
+    mimeType: number
     rawText: number
     status: number
     parseError: number
@@ -4703,12 +4722,23 @@ export namespace Prisma {
   }
 
 
+  export type MaterialAvgAggregateInputType = {
+    fileSize?: true
+  }
+
+  export type MaterialSumAggregateInputType = {
+    fileSize?: true
+  }
+
   export type MaterialMinAggregateInputType = {
     id?: true
     projectId?: true
     title?: true
     type?: true
     sourcePath?: true
+    originalFilename?: true
+    fileSize?: true
+    mimeType?: true
     rawText?: true
     status?: true
     parseError?: true
@@ -4722,6 +4752,9 @@ export namespace Prisma {
     title?: true
     type?: true
     sourcePath?: true
+    originalFilename?: true
+    fileSize?: true
+    mimeType?: true
     rawText?: true
     status?: true
     parseError?: true
@@ -4735,6 +4768,9 @@ export namespace Prisma {
     title?: true
     type?: true
     sourcePath?: true
+    originalFilename?: true
+    fileSize?: true
+    mimeType?: true
     rawText?: true
     status?: true
     parseError?: true
@@ -4782,6 +4818,18 @@ export namespace Prisma {
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
      * 
+     * Select which fields to average
+    **/
+    _avg?: MaterialAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: MaterialSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
      * Select which fields to find the minimum value
     **/
     _min?: MaterialMinAggregateInputType
@@ -4812,6 +4860,8 @@ export namespace Prisma {
     take?: number
     skip?: number
     _count?: MaterialCountAggregateInputType | true
+    _avg?: MaterialAvgAggregateInputType
+    _sum?: MaterialSumAggregateInputType
     _min?: MaterialMinAggregateInputType
     _max?: MaterialMaxAggregateInputType
   }
@@ -4822,6 +4872,9 @@ export namespace Prisma {
     title: string
     type: $Enums.MaterialType
     sourcePath: string | null
+    originalFilename: string | null
+    fileSize: number | null
+    mimeType: string | null
     rawText: string | null
     status: $Enums.MaterialStatus
     parseError: string | null
@@ -4829,6 +4882,8 @@ export namespace Prisma {
     createdAt: Date
     updatedAt: Date
     _count: MaterialCountAggregateOutputType | null
+    _avg: MaterialAvgAggregateOutputType | null
+    _sum: MaterialSumAggregateOutputType | null
     _min: MaterialMinAggregateOutputType | null
     _max: MaterialMaxAggregateOutputType | null
   }
@@ -4853,6 +4908,9 @@ export namespace Prisma {
     title?: boolean
     type?: boolean
     sourcePath?: boolean
+    originalFilename?: boolean
+    fileSize?: boolean
+    mimeType?: boolean
     rawText?: boolean
     status?: boolean
     parseError?: boolean
@@ -4871,6 +4929,9 @@ export namespace Prisma {
     title?: boolean
     type?: boolean
     sourcePath?: boolean
+    originalFilename?: boolean
+    fileSize?: boolean
+    mimeType?: boolean
     rawText?: boolean
     status?: boolean
     parseError?: boolean
@@ -4886,6 +4947,9 @@ export namespace Prisma {
     title?: boolean
     type?: boolean
     sourcePath?: boolean
+    originalFilename?: boolean
+    fileSize?: boolean
+    mimeType?: boolean
     rawText?: boolean
     status?: boolean
     parseError?: boolean
@@ -4901,6 +4965,9 @@ export namespace Prisma {
     title?: boolean
     type?: boolean
     sourcePath?: boolean
+    originalFilename?: boolean
+    fileSize?: boolean
+    mimeType?: boolean
     rawText?: boolean
     status?: boolean
     parseError?: boolean
@@ -4909,7 +4976,7 @@ export namespace Prisma {
     updatedAt?: boolean
   }
 
-  export type MaterialOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "projectId" | "title" | "type" | "sourcePath" | "rawText" | "status" | "parseError" | "metadata" | "createdAt" | "updatedAt", ExtArgs["result"]["material"]>
+  export type MaterialOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "projectId" | "title" | "type" | "sourcePath" | "originalFilename" | "fileSize" | "mimeType" | "rawText" | "status" | "parseError" | "metadata" | "createdAt" | "updatedAt", ExtArgs["result"]["material"]>
   export type MaterialInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     knowledgeUnits?: boolean | Material$knowledgeUnitsArgs<ExtArgs>
     project?: boolean | ProjectDefaultArgs<ExtArgs>
@@ -4936,6 +5003,9 @@ export namespace Prisma {
       title: string
       type: $Enums.MaterialType
       sourcePath: string | null
+      originalFilename: string | null
+      fileSize: number | null
+      mimeType: string | null
       rawText: string | null
       status: $Enums.MaterialStatus
       parseError: string | null
@@ -5373,6 +5443,9 @@ export namespace Prisma {
     readonly title: FieldRef<"Material", 'String'>
     readonly type: FieldRef<"Material", 'MaterialType'>
     readonly sourcePath: FieldRef<"Material", 'String'>
+    readonly originalFilename: FieldRef<"Material", 'String'>
+    readonly fileSize: FieldRef<"Material", 'Int'>
+    readonly mimeType: FieldRef<"Material", 'String'>
     readonly rawText: FieldRef<"Material", 'String'>
     readonly status: FieldRef<"Material", 'MaterialStatus'>
     readonly parseError: FieldRef<"Material", 'String'>
@@ -17637,6 +17710,9 @@ export namespace Prisma {
     title: 'title',
     type: 'type',
     sourcePath: 'sourcePath',
+    originalFilename: 'originalFilename',
+    fileSize: 'fileSize',
+    mimeType: 'mimeType',
     rawText: 'rawText',
     status: 'status',
     parseError: 'parseError',
@@ -18198,6 +18274,9 @@ export namespace Prisma {
     title?: StringFilter<"Material"> | string
     type?: EnumMaterialTypeFilter<"Material"> | $Enums.MaterialType
     sourcePath?: StringNullableFilter<"Material"> | string | null
+    originalFilename?: StringNullableFilter<"Material"> | string | null
+    fileSize?: IntNullableFilter<"Material"> | number | null
+    mimeType?: StringNullableFilter<"Material"> | string | null
     rawText?: StringNullableFilter<"Material"> | string | null
     status?: EnumMaterialStatusFilter<"Material"> | $Enums.MaterialStatus
     parseError?: StringNullableFilter<"Material"> | string | null
@@ -18215,6 +18294,9 @@ export namespace Prisma {
     title?: SortOrder
     type?: SortOrder
     sourcePath?: SortOrderInput | SortOrder
+    originalFilename?: SortOrderInput | SortOrder
+    fileSize?: SortOrderInput | SortOrder
+    mimeType?: SortOrderInput | SortOrder
     rawText?: SortOrderInput | SortOrder
     status?: SortOrder
     parseError?: SortOrderInput | SortOrder
@@ -18235,6 +18317,9 @@ export namespace Prisma {
     title?: StringFilter<"Material"> | string
     type?: EnumMaterialTypeFilter<"Material"> | $Enums.MaterialType
     sourcePath?: StringNullableFilter<"Material"> | string | null
+    originalFilename?: StringNullableFilter<"Material"> | string | null
+    fileSize?: IntNullableFilter<"Material"> | number | null
+    mimeType?: StringNullableFilter<"Material"> | string | null
     rawText?: StringNullableFilter<"Material"> | string | null
     status?: EnumMaterialStatusFilter<"Material"> | $Enums.MaterialStatus
     parseError?: StringNullableFilter<"Material"> | string | null
@@ -18252,6 +18337,9 @@ export namespace Prisma {
     title?: SortOrder
     type?: SortOrder
     sourcePath?: SortOrderInput | SortOrder
+    originalFilename?: SortOrderInput | SortOrder
+    fileSize?: SortOrderInput | SortOrder
+    mimeType?: SortOrderInput | SortOrder
     rawText?: SortOrderInput | SortOrder
     status?: SortOrder
     parseError?: SortOrderInput | SortOrder
@@ -18259,8 +18347,10 @@ export namespace Prisma {
     createdAt?: SortOrder
     updatedAt?: SortOrder
     _count?: MaterialCountOrderByAggregateInput
+    _avg?: MaterialAvgOrderByAggregateInput
     _max?: MaterialMaxOrderByAggregateInput
     _min?: MaterialMinOrderByAggregateInput
+    _sum?: MaterialSumOrderByAggregateInput
   }
 
   export type MaterialScalarWhereWithAggregatesInput = {
@@ -18272,6 +18362,9 @@ export namespace Prisma {
     title?: StringWithAggregatesFilter<"Material"> | string
     type?: EnumMaterialTypeWithAggregatesFilter<"Material"> | $Enums.MaterialType
     sourcePath?: StringNullableWithAggregatesFilter<"Material"> | string | null
+    originalFilename?: StringNullableWithAggregatesFilter<"Material"> | string | null
+    fileSize?: IntNullableWithAggregatesFilter<"Material"> | number | null
+    mimeType?: StringNullableWithAggregatesFilter<"Material"> | string | null
     rawText?: StringNullableWithAggregatesFilter<"Material"> | string | null
     status?: EnumMaterialStatusWithAggregatesFilter<"Material"> | $Enums.MaterialStatus
     parseError?: StringNullableWithAggregatesFilter<"Material"> | string | null
@@ -19271,6 +19364,9 @@ export namespace Prisma {
     title: string
     type: $Enums.MaterialType
     sourcePath?: string | null
+    originalFilename?: string | null
+    fileSize?: number | null
+    mimeType?: string | null
     rawText?: string | null
     status?: $Enums.MaterialStatus
     parseError?: string | null
@@ -19288,6 +19384,9 @@ export namespace Prisma {
     title: string
     type: $Enums.MaterialType
     sourcePath?: string | null
+    originalFilename?: string | null
+    fileSize?: number | null
+    mimeType?: string | null
     rawText?: string | null
     status?: $Enums.MaterialStatus
     parseError?: string | null
@@ -19303,6 +19402,9 @@ export namespace Prisma {
     title?: StringFieldUpdateOperationsInput | string
     type?: EnumMaterialTypeFieldUpdateOperationsInput | $Enums.MaterialType
     sourcePath?: NullableStringFieldUpdateOperationsInput | string | null
+    originalFilename?: NullableStringFieldUpdateOperationsInput | string | null
+    fileSize?: NullableIntFieldUpdateOperationsInput | number | null
+    mimeType?: NullableStringFieldUpdateOperationsInput | string | null
     rawText?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumMaterialStatusFieldUpdateOperationsInput | $Enums.MaterialStatus
     parseError?: NullableStringFieldUpdateOperationsInput | string | null
@@ -19320,6 +19422,9 @@ export namespace Prisma {
     title?: StringFieldUpdateOperationsInput | string
     type?: EnumMaterialTypeFieldUpdateOperationsInput | $Enums.MaterialType
     sourcePath?: NullableStringFieldUpdateOperationsInput | string | null
+    originalFilename?: NullableStringFieldUpdateOperationsInput | string | null
+    fileSize?: NullableIntFieldUpdateOperationsInput | number | null
+    mimeType?: NullableStringFieldUpdateOperationsInput | string | null
     rawText?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumMaterialStatusFieldUpdateOperationsInput | $Enums.MaterialStatus
     parseError?: NullableStringFieldUpdateOperationsInput | string | null
@@ -19336,6 +19441,9 @@ export namespace Prisma {
     title: string
     type: $Enums.MaterialType
     sourcePath?: string | null
+    originalFilename?: string | null
+    fileSize?: number | null
+    mimeType?: string | null
     rawText?: string | null
     status?: $Enums.MaterialStatus
     parseError?: string | null
@@ -19349,6 +19457,9 @@ export namespace Prisma {
     title?: StringFieldUpdateOperationsInput | string
     type?: EnumMaterialTypeFieldUpdateOperationsInput | $Enums.MaterialType
     sourcePath?: NullableStringFieldUpdateOperationsInput | string | null
+    originalFilename?: NullableStringFieldUpdateOperationsInput | string | null
+    fileSize?: NullableIntFieldUpdateOperationsInput | number | null
+    mimeType?: NullableStringFieldUpdateOperationsInput | string | null
     rawText?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumMaterialStatusFieldUpdateOperationsInput | $Enums.MaterialStatus
     parseError?: NullableStringFieldUpdateOperationsInput | string | null
@@ -19363,6 +19474,9 @@ export namespace Prisma {
     title?: StringFieldUpdateOperationsInput | string
     type?: EnumMaterialTypeFieldUpdateOperationsInput | $Enums.MaterialType
     sourcePath?: NullableStringFieldUpdateOperationsInput | string | null
+    originalFilename?: NullableStringFieldUpdateOperationsInput | string | null
+    fileSize?: NullableIntFieldUpdateOperationsInput | number | null
+    mimeType?: NullableStringFieldUpdateOperationsInput | string | null
     rawText?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumMaterialStatusFieldUpdateOperationsInput | $Enums.MaterialStatus
     parseError?: NullableStringFieldUpdateOperationsInput | string | null
@@ -20592,6 +20706,9 @@ export namespace Prisma {
     title?: SortOrder
     type?: SortOrder
     sourcePath?: SortOrder
+    originalFilename?: SortOrder
+    fileSize?: SortOrder
+    mimeType?: SortOrder
     rawText?: SortOrder
     status?: SortOrder
     parseError?: SortOrder
@@ -20600,12 +20717,19 @@ export namespace Prisma {
     updatedAt?: SortOrder
   }
 
+  export type MaterialAvgOrderByAggregateInput = {
+    fileSize?: SortOrder
+  }
+
   export type MaterialMaxOrderByAggregateInput = {
     id?: SortOrder
     projectId?: SortOrder
     title?: SortOrder
     type?: SortOrder
     sourcePath?: SortOrder
+    originalFilename?: SortOrder
+    fileSize?: SortOrder
+    mimeType?: SortOrder
     rawText?: SortOrder
     status?: SortOrder
     parseError?: SortOrder
@@ -20619,11 +20743,18 @@ export namespace Prisma {
     title?: SortOrder
     type?: SortOrder
     sourcePath?: SortOrder
+    originalFilename?: SortOrder
+    fileSize?: SortOrder
+    mimeType?: SortOrder
     rawText?: SortOrder
     status?: SortOrder
     parseError?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
+  }
+
+  export type MaterialSumOrderByAggregateInput = {
+    fileSize?: SortOrder
   }
 
   export type EnumMaterialTypeWithAggregatesFilter<$PrismaModel = never> = {
@@ -22700,6 +22831,9 @@ export namespace Prisma {
     title: string
     type: $Enums.MaterialType
     sourcePath?: string | null
+    originalFilename?: string | null
+    fileSize?: number | null
+    mimeType?: string | null
     rawText?: string | null
     status?: $Enums.MaterialStatus
     parseError?: string | null
@@ -22715,6 +22849,9 @@ export namespace Prisma {
     title: string
     type: $Enums.MaterialType
     sourcePath?: string | null
+    originalFilename?: string | null
+    fileSize?: number | null
+    mimeType?: string | null
     rawText?: string | null
     status?: $Enums.MaterialStatus
     parseError?: string | null
@@ -22819,6 +22956,9 @@ export namespace Prisma {
     title?: StringFilter<"Material"> | string
     type?: EnumMaterialTypeFilter<"Material"> | $Enums.MaterialType
     sourcePath?: StringNullableFilter<"Material"> | string | null
+    originalFilename?: StringNullableFilter<"Material"> | string | null
+    fileSize?: IntNullableFilter<"Material"> | number | null
+    mimeType?: StringNullableFilter<"Material"> | string | null
     rawText?: StringNullableFilter<"Material"> | string | null
     status?: EnumMaterialStatusFilter<"Material"> | $Enums.MaterialStatus
     parseError?: StringNullableFilter<"Material"> | string | null
@@ -23105,6 +23245,9 @@ export namespace Prisma {
     title: string
     type: $Enums.MaterialType
     sourcePath?: string | null
+    originalFilename?: string | null
+    fileSize?: number | null
+    mimeType?: string | null
     rawText?: string | null
     status?: $Enums.MaterialStatus
     parseError?: string | null
@@ -23121,6 +23264,9 @@ export namespace Prisma {
     title: string
     type: $Enums.MaterialType
     sourcePath?: string | null
+    originalFilename?: string | null
+    fileSize?: number | null
+    mimeType?: string | null
     rawText?: string | null
     status?: $Enums.MaterialStatus
     parseError?: string | null
@@ -23151,6 +23297,9 @@ export namespace Prisma {
     title?: StringFieldUpdateOperationsInput | string
     type?: EnumMaterialTypeFieldUpdateOperationsInput | $Enums.MaterialType
     sourcePath?: NullableStringFieldUpdateOperationsInput | string | null
+    originalFilename?: NullableStringFieldUpdateOperationsInput | string | null
+    fileSize?: NullableIntFieldUpdateOperationsInput | number | null
+    mimeType?: NullableStringFieldUpdateOperationsInput | string | null
     rawText?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumMaterialStatusFieldUpdateOperationsInput | $Enums.MaterialStatus
     parseError?: NullableStringFieldUpdateOperationsInput | string | null
@@ -23167,6 +23316,9 @@ export namespace Prisma {
     title?: StringFieldUpdateOperationsInput | string
     type?: EnumMaterialTypeFieldUpdateOperationsInput | $Enums.MaterialType
     sourcePath?: NullableStringFieldUpdateOperationsInput | string | null
+    originalFilename?: NullableStringFieldUpdateOperationsInput | string | null
+    fileSize?: NullableIntFieldUpdateOperationsInput | number | null
+    mimeType?: NullableStringFieldUpdateOperationsInput | string | null
     rawText?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumMaterialStatusFieldUpdateOperationsInput | $Enums.MaterialStatus
     parseError?: NullableStringFieldUpdateOperationsInput | string | null
@@ -23181,6 +23333,9 @@ export namespace Prisma {
     title: string
     type: $Enums.MaterialType
     sourcePath?: string | null
+    originalFilename?: string | null
+    fileSize?: number | null
+    mimeType?: string | null
     rawText?: string | null
     status?: $Enums.MaterialStatus
     parseError?: string | null
@@ -23197,6 +23352,9 @@ export namespace Prisma {
     title: string
     type: $Enums.MaterialType
     sourcePath?: string | null
+    originalFilename?: string | null
+    fileSize?: number | null
+    mimeType?: string | null
     rawText?: string | null
     status?: $Enums.MaterialStatus
     parseError?: string | null
@@ -23247,6 +23405,9 @@ export namespace Prisma {
     title?: StringFieldUpdateOperationsInput | string
     type?: EnumMaterialTypeFieldUpdateOperationsInput | $Enums.MaterialType
     sourcePath?: NullableStringFieldUpdateOperationsInput | string | null
+    originalFilename?: NullableStringFieldUpdateOperationsInput | string | null
+    fileSize?: NullableIntFieldUpdateOperationsInput | number | null
+    mimeType?: NullableStringFieldUpdateOperationsInput | string | null
     rawText?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumMaterialStatusFieldUpdateOperationsInput | $Enums.MaterialStatus
     parseError?: NullableStringFieldUpdateOperationsInput | string | null
@@ -23263,6 +23424,9 @@ export namespace Prisma {
     title?: StringFieldUpdateOperationsInput | string
     type?: EnumMaterialTypeFieldUpdateOperationsInput | $Enums.MaterialType
     sourcePath?: NullableStringFieldUpdateOperationsInput | string | null
+    originalFilename?: NullableStringFieldUpdateOperationsInput | string | null
+    fileSize?: NullableIntFieldUpdateOperationsInput | number | null
+    mimeType?: NullableStringFieldUpdateOperationsInput | string | null
     rawText?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumMaterialStatusFieldUpdateOperationsInput | $Enums.MaterialStatus
     parseError?: NullableStringFieldUpdateOperationsInput | string | null
@@ -24598,6 +24762,9 @@ export namespace Prisma {
     title: string
     type: $Enums.MaterialType
     sourcePath?: string | null
+    originalFilename?: string | null
+    fileSize?: number | null
+    mimeType?: string | null
     rawText?: string | null
     status?: $Enums.MaterialStatus
     parseError?: string | null
@@ -24623,6 +24790,9 @@ export namespace Prisma {
     title?: StringFieldUpdateOperationsInput | string
     type?: EnumMaterialTypeFieldUpdateOperationsInput | $Enums.MaterialType
     sourcePath?: NullableStringFieldUpdateOperationsInput | string | null
+    originalFilename?: NullableStringFieldUpdateOperationsInput | string | null
+    fileSize?: NullableIntFieldUpdateOperationsInput | number | null
+    mimeType?: NullableStringFieldUpdateOperationsInput | string | null
     rawText?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumMaterialStatusFieldUpdateOperationsInput | $Enums.MaterialStatus
     parseError?: NullableStringFieldUpdateOperationsInput | string | null
@@ -24638,6 +24808,9 @@ export namespace Prisma {
     title?: StringFieldUpdateOperationsInput | string
     type?: EnumMaterialTypeFieldUpdateOperationsInput | $Enums.MaterialType
     sourcePath?: NullableStringFieldUpdateOperationsInput | string | null
+    originalFilename?: NullableStringFieldUpdateOperationsInput | string | null
+    fileSize?: NullableIntFieldUpdateOperationsInput | number | null
+    mimeType?: NullableStringFieldUpdateOperationsInput | string | null
     rawText?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumMaterialStatusFieldUpdateOperationsInput | $Enums.MaterialStatus
     parseError?: NullableStringFieldUpdateOperationsInput | string | null
@@ -24653,6 +24826,9 @@ export namespace Prisma {
     title?: StringFieldUpdateOperationsInput | string
     type?: EnumMaterialTypeFieldUpdateOperationsInput | $Enums.MaterialType
     sourcePath?: NullableStringFieldUpdateOperationsInput | string | null
+    originalFilename?: NullableStringFieldUpdateOperationsInput | string | null
+    fileSize?: NullableIntFieldUpdateOperationsInput | number | null
+    mimeType?: NullableStringFieldUpdateOperationsInput | string | null
     rawText?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumMaterialStatusFieldUpdateOperationsInput | $Enums.MaterialStatus
     parseError?: NullableStringFieldUpdateOperationsInput | string | null

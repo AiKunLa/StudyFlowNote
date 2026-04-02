@@ -37,20 +37,23 @@ model Project {
 }
 
 model Material {
-  id             String          @id @default(cuid())
-  projectId      String
-  title          String
-  type           MaterialType
-  sourcePath     String?
-  rawText        String?
-  status         MaterialStatus  @default(UPLOADING)
-  parseError     String?
-  metadata       Json?
-  createdAt      DateTime        @default(now())
-  updatedAt      DateTime        @updatedAt
-  knowledgeUnits KnowledgeUnit[]
-  project        Project         @relation(fields: [projectId], references: [id], onDelete: Cascade)
-  chunks         MaterialChunk[]
+  id               String          @id @default(cuid())
+  projectId        String
+  title            String
+  type             MaterialType
+  sourcePath       String?
+  originalFilename String?
+  fileSize         Int?
+  mimeType         String?
+  rawText          String?
+  status           MaterialStatus  @default(UPLOADING)
+  parseError       String?
+  metadata         Json?
+  createdAt        DateTime        @default(now())
+  updatedAt        DateTime        @updatedAt
+  knowledgeUnits   KnowledgeUnit[]
+  project          Project         @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  chunks           MaterialChunk[]
 
   @@index([projectId])
   @@index([status])

@@ -68,6 +68,7 @@ export class MaterialController {
         type,
       },
       user.sub,
+      file,
     );
 
     return ResponseDto.success(material);

@@ -11,6 +11,9 @@ import { PrismaService } from '../../prisma/prisma.service';
 import { MaterialStatus, MaterialType } from '@prisma/client';
 import { Queue } from 'bull';
 import { ConfigService } from '@nestjs/config';
+import * as fs from 'fs/promises';
+import * as path from 'path';
+import { randomUUID } from 'crypto';
 
 export interface CreateMaterialDto {
   projectId: string;
@@ -33,8 +36,9 @@ export class MaterialService {
 
   /**
    * 创建新的素材记录，状态为 UPLOADING
+   * 如果提供了文件，则保存文件并更新素材记录
    */
-  async create(dto: CreateMaterialDto, userId: string) {
+  async create(dto: CreateMaterialDto, userId: string, file?: Express.Multer.File) {
     const { projectId, title, type } = dto;
 
     // 验证项目存在且用户有权访问
@@ -62,6 +66,21 @@ export class MaterialService {
 
     this.logger.log(`Material created: ${material.id}`);
 
+    // 如果提供了文件，保存文件并更新记录
+    if (file) {
+      const sourcePath = await this.saveFile(material.id, file);
+      await this.prisma.material.update({
+        where: { id: material.id },
+        data: {
+          sourcePath,
+          originalFilename: file.originalname,
+          fileSize: file.size,
+          mimeType: file.mimetype,
+        },
+      });
+      this.logger.log(`File saved for material ${material.id}: ${sourcePath}`);
+    }
+
     // 添加处理任务到队列
     await this.materialQueue.add(
       'process-material',
@@ -75,7 +94,31 @@ export class MaterialService {
       },
     );
 
-    return material;
+    return this.findOne(material.id);
+  }
+
+  /**
+   * 保存文件到磁盘
+   * @param materialId 素材ID（用于创建目录）
+   * @param file 上传的文件
+   * @returns 保存后的文件路径
+   */
+  async saveFile(materialId: string, file: Express.Multer.File): Promise<string> {
+    const uploadPath = this.getUploadPath(materialId);
+
+    // 创建目录（如果不存在）
+    await fs.mkdir(uploadPath, { recursive: true });
+
+    // 生成唯一文件名，保留原始扩展名
+    const ext = path.extname(file.originalname);
+    const baseName = path.basename(file.originalname, ext);
+    const uniqueFilename = `${baseName}-${randomUUID()}${ext}`;
+    const filePath = path.join(uploadPath, uniqueFilename);
+
+    // 写入文件
+    await fs.writeFile(filePath, file.buffer);
+
+    return filePath;
   }
 
   /**
