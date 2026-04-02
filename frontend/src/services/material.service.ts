@@ -101,7 +101,7 @@ export const materialService = {
     if (data.rawText) {
       formData.append('rawText', data.rawText);
     }
-    return http.post<ApiResponse<Material>>('/materials', formData, {
+    return http.post<ApiResponse<Material>>('/materials/upload', formData, {
       headers: { 'Content-Type': 'multipart/form-data' },
     });
   },

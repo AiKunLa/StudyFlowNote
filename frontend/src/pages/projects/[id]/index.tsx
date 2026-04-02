@@ -11,8 +11,6 @@
 import { useEffect } from 'react';
 import { useParams } from 'react-router';
 import { useProjectStore } from '@/stores/project.store';
-import { Button } from '@/components/ui/button';
-import { Plus } from 'lucide-react';
 import { SourcesPanel } from './components/sources-panel';
 import { ChatPanel } from './components/chat-panel';
 import { StudioPanel } from './components/studio-panel';

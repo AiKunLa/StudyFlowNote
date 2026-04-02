@@ -12,20 +12,7 @@ import { ChevronLeft, Plus, ChevronRight } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
 
-const TOOLS = [
-  { name: '音频概览', icon: '🎧' },
-  { name: '演示文稿', icon: '📊' },
-  { name: '视频概览', icon: '🎬' },
-  // { name: '思维导图', icon: '🧠' },
-  // { name: '报告', icon: '📝' },
-  // { name: '闪卡', icon: '🃏' },
-  // { name: '测验', icon: '❓' },
-  // { name: '信息图', icon: '📈' },
-  // { name: '数据表格', icon: '📋' },
-];
-
 export function StudioPanel() {
-
   const [isCollapsed, setIsCollapsed] = useState(false);
 
   return (

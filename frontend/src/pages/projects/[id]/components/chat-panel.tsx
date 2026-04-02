@@ -7,14 +7,7 @@
  * - 底部聊天输入框
  */
 
-import { useState } from 'react';
-import { MoreHorizontal, Send, Upload } from 'lucide-react';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-
 export function ChatPanel() {
-  const [message, setMessage] = useState('');
-
   return (
     <div className="flex-1 flex flex-col bg-white border border-gray-200 rounded-2xl  overflow-hidden relative">
       <div className="p-5 flex justify-between items-center border-b border-transparent">

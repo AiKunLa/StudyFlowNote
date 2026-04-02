@@ -40,7 +40,7 @@ import { LoadingSpinner } from '@/components/common/loading-spinner';
  */
 export function AppLayout() {
   // 从 Zustand store 获取侧边栏折叠状态
-  const { sidebarCollapsed } = useUIStore();
+  useUIStore();
 
   return (
     <div className="flex h-screen overflow-hidden">
