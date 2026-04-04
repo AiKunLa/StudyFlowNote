@@ -147,6 +147,36 @@ describe('MaterialService', () => {
         expect.any(Object),
       );
     });
+
+    it('should include timeout of 60 seconds in job configuration', async () => {
+      mockPrismaService.project.findUnique.mockResolvedValue(mockProject);
+      const createdMaterial = {
+        id: 'material-123',
+        projectId,
+        title: 'Test Material',
+        type: MaterialType.PDF,
+        status: MaterialStatus.UPLOADING,
+        sourcePath: null,
+        rawText: null,
+        parseError: null,
+        metadata: null,
+        createdAt: new Date(),
+        updatedAt: new Date(),
+      };
+      mockPrismaService.material.create.mockResolvedValue(createdMaterial);
+      mockPrismaService.material.findUnique.mockResolvedValue(createdMaterial);
+
+      await service.create(createMaterialDto, userId);
+
+      expect(mockQueue.add).toHaveBeenCalledWith(
+        'process-material',
+        { materialId: 'material-123' },
+        expect.objectContaining({
+          timeout: 60000,
+          attempts: 3,
+        }),
+      );
+    });
   });
 
   describe('findOne', () => {
@@ -589,6 +619,119 @@ describe('MaterialService', () => {
       jest.spyOn(service, 'saveFile').mockRejectedValue(new Error('Failed to save file'));
 
       await expect(service.create(createMaterialDto, userId, mockFile)).rejects.toThrow('Failed to save file');
+    });
+  });
+
+  describe('updateRawText', () => {
+    const mockMaterialId = 'material-123';
+    const mockRawText = 'This is extracted text content';
+
+    it('should update rawText and status to READY', async () => {
+      const mockMaterial = {
+        id: mockMaterialId,
+        status: MaterialStatus.PARSING,
+        rawText: null,
+      };
+      mockPrismaService.material.findUnique.mockResolvedValue(mockMaterial);
+
+      const updatedMaterial = {
+        ...mockMaterial,
+        status: MaterialStatus.READY,
+        rawText: mockRawText,
+        parseError: null,
+      };
+      mockPrismaService.material.update.mockResolvedValue(updatedMaterial);
+
+      const result = await service.updateRawText(mockMaterialId, mockRawText);
+
+      expect(result.status).toBe(MaterialStatus.READY);
+      expect(result.rawText).toBe(mockRawText);
+      expect(mockPrismaService.material.update).toHaveBeenCalledWith({
+        where: { id: mockMaterialId },
+        data: {
+          rawText: mockRawText,
+          status: MaterialStatus.READY,
+          parseError: null,
+        },
+      });
+    });
+
+    it('should throw NotFoundException when material does not exist', async () => {
+      mockPrismaService.material.findUnique.mockResolvedValue(null);
+
+      await expect(
+        service.updateRawText(mockMaterialId, mockRawText),
+      ).rejects.toThrow(NotFoundException);
+    });
+
+    it('should use custom status when provided', async () => {
+      const mockMaterial = {
+        id: mockMaterialId,
+        status: MaterialStatus.PARSING,
+        rawText: null,
+      };
+      mockPrismaService.material.findUnique.mockResolvedValue(mockMaterial);
+
+      const updatedMaterial = {
+        ...mockMaterial,
+        status: MaterialStatus.UPLOADING,
+        rawText: mockRawText,
+        parseError: null,
+      };
+      mockPrismaService.material.update.mockResolvedValue(updatedMaterial);
+
+      const result = await service.updateRawText(mockMaterialId, mockRawText, MaterialStatus.UPLOADING);
+
+      expect(result.status).toBe(MaterialStatus.UPLOADING);
+      expect(mockPrismaService.material.update).toHaveBeenCalledWith({
+        where: { id: mockMaterialId },
+        data: {
+          rawText: mockRawText,
+          status: MaterialStatus.UPLOADING,
+          parseError: null,
+        },
+      });
+    });
+  });
+
+  describe('updateParseError', () => {
+    const mockMaterialId = 'material-123';
+    const mockParseError = 'Failed to parse PDF: Invalid structure';
+
+    it('should update status to FAILED and set parseError', async () => {
+      const mockMaterial = {
+        id: mockMaterialId,
+        status: MaterialStatus.PARSING,
+        parseError: null,
+      };
+      mockPrismaService.material.findUnique.mockResolvedValue(mockMaterial);
+
+      const updatedMaterial = {
+        ...mockMaterial,
+        status: MaterialStatus.FAILED,
+        parseError: mockParseError,
+      };
+      mockPrismaService.material.update.mockResolvedValue(updatedMaterial);
+
+      const result = await service.updateParseError(mockMaterialId, mockParseError);
+
+      expect(result.status).toBe(MaterialStatus.FAILED);
+      expect(result.parseError).toBe(mockParseError);
+      expect(mockPrismaService.material.update).toHaveBeenCalledWith({
+        where: { id: mockMaterialId },
+        data: {
+          status: MaterialStatus.FAILED,
+          parseError: mockParseError,
+        },
+      });
+    });
+
+    it('should throw NotFoundException when material does not exist', async () => {
+      mockPrismaService.material.findUnique.mockResolvedValue(null);
+
+      await expect(
+        service.updateParseError(mockMaterialId, mockParseError),
+      ).rejects.toThrow(NotFoundException);
     });
   });
 });

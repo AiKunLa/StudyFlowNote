@@ -87,6 +87,7 @@ export class MaterialService {
       { materialId: material.id },
       {
         attempts: 3,
+        timeout: 60000, // 60 seconds timeout to prevent stuck jobs
         backoff: {
           type: 'exponential',
           delay: 1000,
@@ -251,5 +252,53 @@ export class MaterialService {
     }
 
     return true;
+  }
+
+  /**
+   * 更新素材的原始文本内容
+   * @param materialId 素材ID
+   * @param rawText 提取的原始文本
+   * @param status 状态（默认为 READY）
+   */
+  async updateRawText(
+    materialId: string,
+    rawText: string,
+    status: MaterialStatus = MaterialStatus.READY,
+  ) {
+    await this.findOne(materialId);
+
+    const updated = await this.prisma.material.update({
+      where: { id: materialId },
+      data: {
+        rawText,
+        status,
+        parseError: null, // Clear any previous parse error
+      },
+    });
+
+    this.logger.log(`Material ${materialId} rawText updated, status: ${status}`);
+
+    return updated;
+  }
+
+  /**
+   * 更新素材的解析错误
+   * @param materialId 素材ID
+   * @param parseError 错误信息
+   */
+  async updateParseError(materialId: string, parseError: string) {
+    await this.findOne(materialId);
+
+    const updated = await this.prisma.material.update({
+      where: { id: materialId },
+      data: {
+        status: MaterialStatus.FAILED,
+        parseError,
+      },
+    });
+
+    this.logger.error(`Material ${materialId} parse error: ${parseError}`);
+
+    return updated;
   }
 }
