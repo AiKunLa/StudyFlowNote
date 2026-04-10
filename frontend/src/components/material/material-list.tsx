@@ -12,6 +12,7 @@
 import { useEffect, useState, useCallback, useMemo } from 'react';
 import { useMaterialStore } from '@/stores/material.store';
 import { MaterialCard } from './material-card';
+import { MaterialPreviewDialog } from './material-preview-dialog';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Search, RefreshCw, FileText, Plus } from 'lucide-react';
@@ -56,6 +57,7 @@ export function MaterialList({
   const [filterType, setFilterType] = useState<FilterType>('ALL');
   const [isRetrying, setIsRetrying] = useState(false);
   const [deleteTarget, setDeleteTarget] = useState<Material | null>(null);
+  const [previewMaterial, setPreviewMaterial] = useState<Material | null>(null);
 
   // 判断是否有非终态的素材
   const hasNonTerminalMaterials = materials.some(
@@ -103,6 +105,7 @@ export function MaterialList({
   const handleSelectMaterial = useCallback(
     (material: Material) => {
       setCurrentMaterial(material);
+      setPreviewMaterial(material);
       onSelectMaterial?.(material);
     },
     [setCurrentMaterial, onSelectMaterial],
@@ -254,6 +257,13 @@ return (
         confirmText="删除"
         cancelText="取消"
         onConfirm={confirmDelete}
+      />
+
+      {/* 素材预览对话框 */}
+      <MaterialPreviewDialog
+        material={previewMaterial}
+        open={!!previewMaterial}
+        onOpenChange={(open) => !open && setPreviewMaterial(null)}
       />
     </>
   );
