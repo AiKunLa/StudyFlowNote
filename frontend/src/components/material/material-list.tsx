@@ -150,7 +150,7 @@ export function MaterialList({
   }
 
   return (
-    <div className="flex flex-col gap-4">
+    <div className="flex flex-col gap-4 min-h-0 overflow-y-auto">
       {/* Search and Filter */}
       <div className="flex flex-col gap-2">
         {/* Search Input */}

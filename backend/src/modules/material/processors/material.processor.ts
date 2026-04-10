@@ -69,7 +69,12 @@ export class MaterialProcessor {
    */
   @OnGlobalQueueFailed()
   async handleFailure(job: Job<{ materialId: string }>, error: Error): Promise<void> {
-    const { materialId } = job.data;
+    const materialId = job.data?.materialId;
+    if (!materialId) {
+      this.logger.error(`Job failed with no materialId: ${error.message}`);
+      return;
+    }
+
     this.logger.error(
       `Material ${materialId} failed after ${job.attemptsMade} attempts: ${error.message}`,
     );

@@ -29,7 +29,7 @@ export function ProjectDetailPage() {
   const project = currentProject || projects.find((p) => p.id === id);
 
   return (
-    <div className="flex flex-col flex-1 min-h-0 bg-white text-gray-900 font-sans">
+    <div className="flex flex-col flex-1 min-h-0 overflow-hidden bg-white text-gray-900 font-sans">
 
       <header className="flex flex-col flex-shrink-0  pb-0 md:flex-row justify-between items-start md:items-center mb-8 gap-4">
         <div>
@@ -58,7 +58,7 @@ export function ProjectDetailPage() {
         </div>
       </header>
 
-      <main className="flex-1 flex flex-col lg:flex-row gap-6 ">
+      <main className="flex-1 flex flex-col lg:flex-row gap-6 overflow-auto">
         <SourcesPanel />
         <ChatPanel />
         <StudioPanel />

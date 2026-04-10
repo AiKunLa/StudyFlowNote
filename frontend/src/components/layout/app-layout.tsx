@@ -43,7 +43,7 @@ export function AppLayout() {
   useUIStore();
 
   return (
-    <div className="flex h-screen overflow-hidden">
+    <div className="flex h-screen">
       {/* 侧边栏组件 */}
       <Sidebar />
 
@@ -57,7 +57,7 @@ export function AppLayout() {
         )}
       >
         {/* 内容容器 - 居中显示，添加内边距 */}
-        <div className="flex-1 flex flex-col min-h-0 overflow-hidden p-2 lg:p-4">
+        <div className="flex-1 flex flex-col min-h-0  p-2 lg:p-4">
           {/*
             Suspense 边界处理懒加载页面的加载状态
             当用户访问新路由时，对应的懒加载组件会显示 fallback UI
