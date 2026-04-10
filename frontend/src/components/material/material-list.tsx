@@ -14,6 +14,16 @@ import { useMaterialStore } from '@/stores/material.store';
 import { MaterialCard } from './material-card';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from '@/components/ui/alert-dialog';
 import { Search, RefreshCw, FileText, Plus } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import type { Material, MaterialType } from '@/services/material.service';
@@ -41,25 +51,56 @@ export function MaterialList({
   const {
     materials,
     isLoading,
+    isPolling,
     error,
     fetchMaterials,
     deleteMaterial,
     setCurrentMaterial,
     clearError,
+    pollMaterialStatuses,
+    setPolling,
   } = useMaterialStore();
 
   const [searchTerm, setSearchTerm] = useState('');
   const [filterType, setFilterType] = useState<FilterType>('ALL');
   const [isRetrying, setIsRetrying] = useState(false);
+  const [deleteTarget, setDeleteTarget] = useState<Material | null>(null);
 
-  // Fetch materials on mount or projectId change
+  // 判断是否有非终态的素材
+  const hasNonTerminalMaterials = materials.some(
+    (m) => m.status === 'UPLOADING' || m.status === 'PARSING'
+  );
+
+  // 轮询：当存在非终态素材时启动轮询
+  useEffect(() => {
+    if (!projectId) return;
+
+    if (hasNonTerminalMaterials && !isPolling) {
+      setPolling(true);
+    } else if (!hasNonTerminalMaterials && isPolling) {
+      setPolling(false);
+    }
+  }, [hasNonTerminalMaterials, isPolling, projectId, setPolling]);
+
+  // 实际执行轮询的 useEffect
+  useEffect(() => {
+    if (!isPolling || !projectId) return;
+
+    const interval = setInterval(() => {
+      pollMaterialStatuses(projectId);
+    }, 3000);
+
+    return () => clearInterval(interval);
+  }, [isPolling, projectId, pollMaterialStatuses]);
+
+// 挂载时或 projectId 变化时获取素材列表
   useEffect(() => {
     if (projectId) {
       fetchMaterials(projectId);
     }
   }, [projectId, fetchMaterials]);
 
-  // Handle retry with loading state
+  // 处理重试操作
   const handleRetry = useCallback(async () => {
     setIsRetrying(true);
     clearError();
@@ -67,7 +108,7 @@ export function MaterialList({
     setIsRetrying(false);
   }, [projectId, fetchMaterials, clearError]);
 
-  // Handle material selection
+  // 处理素材选中
   const handleSelectMaterial = useCallback(
     (material: Material) => {
       setCurrentMaterial(material);
@@ -76,15 +117,23 @@ export function MaterialList({
     [setCurrentMaterial, onSelectMaterial],
   );
 
-  // Handle material deletion
+  // 处理素材删除 - 打开确认对话框
   const handleDeleteMaterial = useCallback(
-    async (materialId: string) => {
-      await deleteMaterial(materialId);
+    (material: Material) => {
+      setDeleteTarget(material);
     },
-    [deleteMaterial],
+    [],
   );
 
-  // Filter materials based on search term and type
+  // 确认删除
+  const confirmDelete = useCallback(async () => {
+    if (deleteTarget) {
+      await deleteMaterial(deleteTarget.id);
+      setDeleteTarget(null);
+    }
+  }, [deleteTarget, deleteMaterial]);
+
+  // 根据搜索词和类型过滤素材
   const filteredMaterials = useMemo(() => {
     return materials.filter((material) => {
       const matchesSearch = material.title
@@ -96,7 +145,7 @@ export function MaterialList({
     });
   }, [materials, searchTerm, filterType]);
 
-  // Loading state
+  // 加载状态
   if (isLoading) {
     return (
       <div className="flex flex-col items-center justify-center py-12">
@@ -109,7 +158,7 @@ export function MaterialList({
     );
   }
 
-  // Error state
+  // 错误状态
   if (error) {
     return (
       <div className="flex flex-col items-center justify-center py-12 text-center">
@@ -130,7 +179,7 @@ export function MaterialList({
     );
   }
 
-  // Empty state
+  // 空状态
   if (materials.length === 0) {
     return (
       <div className="flex flex-col items-center justify-center py-12 text-center">
@@ -149,59 +198,77 @@ export function MaterialList({
     );
   }
 
-  return (
-    <div className="flex flex-col gap-4 min-h-0 overflow-y-auto">
-      {/* Search and Filter */}
-      <div className="flex flex-col gap-2">
-        {/* Search Input */}
-        <div className="relative">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
-          <Input
-            type="search"
-            placeholder="搜索资料..."
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-            className="pl-9"
-          />
+return (
+    <>
+      <div className="flex flex-col gap-4 min-h-0 overflow-y-auto">
+        {/* 搜索和过滤 */}
+        <div className="flex flex-col gap-2">
+          {/* 搜索输入框 */}
+          <div className="relative">
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
+            <Input
+              type="search"
+              placeholder="搜索资料..."
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              className="pl-9"
+            />
+          </div>
+
+          {/* 过滤按钮 */}
+          <div className="flex gap-1">
+            {FILTER_OPTIONS.map((option) => (
+              <button
+                key={option.value}
+                type="button"
+                onClick={() => setFilterType(option.value)}
+                className={cn(
+                  'px-3 py-1 text-xs rounded-full transition-colors',
+                  filterType === option.value
+                    ? 'bg-blue-100 text-blue-700 font-medium'
+                    : 'bg-gray-100 text-gray-600 hover:bg-gray-200',
+                )}
+              >
+                {option.label}
+              </button>
+            ))}
+          </div>
         </div>
 
-        {/* Filter Buttons */}
-        <div className="flex gap-1">
-          {FILTER_OPTIONS.map((option) => (
-            <button
-              key={option.value}
-              type="button"
-              onClick={() => setFilterType(option.value)}
-              className={cn(
-                'px-3 py-1 text-xs rounded-full transition-colors',
-                filterType === option.value
-                  ? 'bg-blue-100 text-blue-700 font-medium'
-                  : 'bg-gray-100 text-gray-600 hover:bg-gray-200',
-              )}
-            >
-              {option.label}
-            </button>
-          ))}
-        </div>
+        {/* 素材列表 */}
+        {filteredMaterials.length === 0 ? (
+          <div className="text-center py-8">
+            <p className="text-sm text-gray-500">没有找到匹配的资料</p>
+          </div>
+        ) : (
+          <div className="grid gap-3">
+            {filteredMaterials.map((material) => (
+              <MaterialCard
+                key={material.id}
+                material={material}
+                onSelect={handleSelectMaterial}
+                onDelete={handleDeleteMaterial}
+              />
+            ))}
+          </div>
+        )}
       </div>
 
-      {/* Material List */}
-      {filteredMaterials.length === 0 ? (
-        <div className="text-center py-8">
-          <p className="text-sm text-gray-500">没有找到匹配的资料</p>
-        </div>
-      ) : (
-        <div className="grid gap-3">
-          {filteredMaterials.map((material) => (
-            <MaterialCard
-              key={material.id}
-              material={material}
-              onSelect={handleSelectMaterial}
-              onDelete={handleDeleteMaterial}
-            />
-          ))}
-        </div>
-      )}
-    </div>
+      {/* 删除确认对话框 */}
+      <AlertDialog open={!!deleteTarget} onOpenChange={() => setDeleteTarget(null)}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>确认删除</AlertDialogTitle>
+            <AlertDialogDescription>
+              确定要删除素材&quot;{deleteTarget?.title}&quot;吗？此操作无法撤销。
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel onClick={() => setDeleteTarget(null)}>取消</AlertDialogCancel>
+            <AlertDialogAction onClick={confirmDelete}>删除</AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
+    </>
   );
 }

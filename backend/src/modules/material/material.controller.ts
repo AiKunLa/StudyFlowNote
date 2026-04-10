@@ -2,6 +2,7 @@ import {
   BadRequestException,
   Body,
   Controller,
+  Delete,
   FileTypeValidator,
   ForbiddenException,
   Get,
@@ -19,6 +20,7 @@ import { MaterialService } from './material.service';
 import { ResponseDto } from '../../common/dto/response.dto';
 import { CreateMaterialDto } from './dto/create-material.dto';
 import { ListMaterialQueryDto } from './dto/list-material-query.dto';
+import { AssignMaterialDto } from './dto/assign-material.dto';
 import { JwtPayload } from '../auth/interfaces/jwt-payload.interface';
 import { CurrentUser } from '../auth/decorators/current-user.decorator';
 import { MaterialType } from '@prisma/client';
@@ -112,5 +114,52 @@ export class MaterialController {
       query.pageSize,
     );
     return ResponseDto.success(result);
+  }
+
+  /**
+   * 获取素材的结构（分块和知识单元）
+   * GET /materials/:materialId/structure
+   */
+  @Get(':materialId/structure')
+  @ApiOperation({ summary: 'Get material structure with chunks and knowledge units' })
+  async getStructure(
+    @Param('materialId') materialId: string,
+    @CurrentUser() user: JwtPayload,
+  ): Promise<ResponseDto> {
+    await this.materialService.validateOwnership(materialId, user.sub);
+    const chunks = await this.materialService.getChunksByMaterial(materialId);
+    const knowledgeUnits = await this.materialService.getKnowledgeUnitsByMaterial(materialId);
+    return ResponseDto.success({ chunks, knowledgeUnits });
+  }
+
+  /**
+   * 将素材分配到另一个项目
+   * POST /materials/:materialId/assign
+   */
+  @Post(':materialId/assign')
+  @ApiOperation({ summary: 'Assign material to another project' })
+  async assignToProject(
+    @Param('materialId') materialId: string,
+    @Body() dto: AssignMaterialDto,
+    @CurrentUser() user: JwtPayload,
+  ): Promise<ResponseDto> {
+    await this.materialService.validateOwnership(materialId, user.sub);
+    const material = await this.materialService.assignToProject(materialId, dto.projectId);
+    return ResponseDto.success(material);
+  }
+
+  /**
+   * 删除素材
+   * DELETE /materials/:materialId
+   */
+  @Delete(':materialId')
+  @ApiOperation({ summary: 'Delete material' })
+  async delete(
+    @Param('materialId') materialId: string,
+    @CurrentUser() user: JwtPayload,
+  ): Promise<ResponseDto> {
+    await this.materialService.validateOwnership(materialId, user.sub);
+    await this.materialService.delete(materialId);
+    return ResponseDto.success(null);
   }
 }

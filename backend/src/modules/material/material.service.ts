@@ -301,4 +301,76 @@ export class MaterialService {
 
     return updated;
   }
+
+  /**
+   * 获取素材的分块列表
+   * @param materialId 素材ID
+   */
+  async getChunksByMaterial(materialId: string) {
+    await this.findOne(materialId);
+    return this.prisma.materialChunk.findMany({
+      where: { materialId },
+      orderBy: { chunkIndex: 'asc' },
+    });
+  }
+
+  /**
+   * 获取素材的知识单元列表
+   * @param materialId 素材ID
+   */
+  async getKnowledgeUnitsByMaterial(materialId: string) {
+    await this.findOne(materialId);
+    return this.prisma.knowledgeUnit.findMany({
+      where: { materialId },
+    });
+  }
+
+  /**
+   * 将素材分配到另一个项目
+   * @param materialId 素材ID
+   * @param projectId 目标项目ID
+   */
+  async assignToProject(materialId: string, projectId: string) {
+    // 验证素材存在
+    await this.findOne(materialId);
+
+    // 验证目标项目存在且用户有权访问
+    const project = await this.prisma.project.findUnique({
+      where: { id: projectId },
+    });
+
+    if (!project) {
+      throw new BadRequestException('Target project not found');
+    }
+
+    // 更新素材的项目归属
+    return this.prisma.material.update({
+      where: { id: materialId },
+      data: { projectId },
+    });
+  }
+
+  /**
+   * 删除素材及其关联数据
+   * @param materialId 素材ID
+   */
+  async delete(materialId: string): Promise<void> {
+    // 验证素材存在
+    const material = await this.findOne(materialId);
+
+    // 删除关联文件（如果存在）
+    if (material.sourcePath) {
+      try {
+        const dirPath = path.dirname(material.sourcePath);
+        await fs.rm(dirPath, { recursive: true });
+        this.logger.log(`Deleted file directory: ${dirPath}`);
+      } catch (error) {
+        this.logger.warn(`Failed to delete file directory: ${material.sourcePath}`);
+      }
+    }
+
+    // Prisma cascade delete 会自动删除关联的 chunks, knowledgeUnits
+    await this.prisma.material.delete({ where: { id: materialId } });
+    this.logger.log(`Material deleted: ${materialId}`);
+  }
 }

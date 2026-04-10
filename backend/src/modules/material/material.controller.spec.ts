@@ -18,6 +18,10 @@ describe('MaterialController', () => {
     getUploadPath: jest.fn(),
     validateProjectAccess: jest.fn(),
     validateOwnership: jest.fn(),
+    getChunksByMaterial: jest.fn(),
+    getKnowledgeUnitsByMaterial: jest.fn(),
+    assignToProject: jest.fn(),
+    delete: jest.fn(),
   };
 
   const mockUser: JwtPayload = {
@@ -171,6 +175,133 @@ describe('MaterialController', () => {
           { projectId: 'project-123', page: 1, pageSize: 20 },
           mockUser,
         ),
+      ).rejects.toThrow(ForbiddenException);
+    });
+  });
+
+  describe('getStructure', () => {
+    it('should return material structure with chunks and knowledgeUnits', async () => {
+      const mockChunks = [
+        {
+          id: 'chunk-1',
+          materialId: 'material-123',
+          chunkIndex: 0,
+          title: 'Introduction',
+          content: 'This is the introduction...',
+          summary: null,
+          sourcePage: 1,
+          sourceSection: null,
+          metadata: null,
+          createdAt: new Date(),
+        },
+      ];
+      const mockKnowledgeUnits = [
+        {
+          id: 'ku-1',
+          materialId: 'material-123',
+          title: 'Key Concept',
+          summary: 'A key concept...',
+          topic: 'Fundamentals',
+          difficulty: 3,
+          importance: 5,
+          estimatedMinutes: 15,
+          prerequisiteIds: [],
+          sourceRefs: null,
+          createdAt: new Date(),
+          updatedAt: new Date(),
+        },
+      ];
+      mockMaterialService.validateOwnership.mockResolvedValue(true);
+      mockMaterialService.getChunksByMaterial.mockResolvedValue(mockChunks);
+      mockMaterialService.getKnowledgeUnitsByMaterial.mockResolvedValue(mockKnowledgeUnits);
+
+      const result = await controller.getStructure('material-123', mockUser);
+
+      expect(result.code).toBe(0);
+      expect((result.data as any).chunks).toHaveLength(1);
+      expect((result.data as any).chunks[0].title).toBe('Introduction');
+      expect((result.data as any).knowledgeUnits).toHaveLength(1);
+      expect((result.data as any).knowledgeUnits[0].title).toBe('Key Concept');
+    });
+
+    it('should return empty arrays when no chunks or knowledgeUnits exist', async () => {
+      mockMaterialService.validateOwnership.mockResolvedValue(true);
+      mockMaterialService.getChunksByMaterial.mockResolvedValue([]);
+      mockMaterialService.getKnowledgeUnitsByMaterial.mockResolvedValue([]);
+
+      const result = await controller.getStructure('material-123', mockUser);
+
+      expect(result.code).toBe(0);
+      expect((result.data as any).chunks).toHaveLength(0);
+      expect((result.data as any).knowledgeUnits).toHaveLength(0);
+    });
+
+    it('should throw ForbiddenException when user does not own the material', async () => {
+      mockMaterialService.validateOwnership.mockRejectedValue(
+        new ForbiddenException('Not authorized to access this material'),
+      );
+
+      await expect(
+        controller.getStructure('material-123', mockUser),
+      ).rejects.toThrow(ForbiddenException);
+    });
+  });
+
+  describe('assign', () => {
+    it('should assign material to another project', async () => {
+      const mockMaterial = {
+        id: 'material-123',
+        projectId: 'new-project-456',
+        title: 'Test Material',
+        type: MaterialType.PDF,
+        status: MaterialStatus.READY,
+      };
+      mockMaterialService.validateOwnership.mockResolvedValue(true);
+      mockMaterialService.assignToProject.mockResolvedValue(mockMaterial);
+
+      const result = await controller.assignToProject(
+        'material-123',
+        { projectId: 'new-project-456' },
+        mockUser,
+      );
+
+      expect(result.code).toBe(0);
+      expect((result.data as any).projectId).toBe('new-project-456');
+    });
+
+    it('should throw ForbiddenException when user does not own the material', async () => {
+      mockMaterialService.validateOwnership.mockRejectedValue(
+        new ForbiddenException('Not authorized to access this material'),
+      );
+
+      await expect(
+        controller.assignToProject(
+          'material-123',
+          { projectId: 'new-project-456' },
+          mockUser,
+        ),
+      ).rejects.toThrow(ForbiddenException);
+    });
+  });
+
+  describe('delete', () => {
+    it('should delete material when user owns it', async () => {
+      mockMaterialService.validateOwnership.mockResolvedValue(true);
+      mockMaterialService.delete.mockResolvedValue(undefined);
+
+      const result = await controller.delete('material-123', mockUser);
+
+      expect(result.code).toBe(0);
+      expect(mockMaterialService.delete).toHaveBeenCalledWith('material-123');
+    });
+
+    it('should throw ForbiddenException when user does not own the material', async () => {
+      mockMaterialService.validateOwnership.mockRejectedValue(
+        new ForbiddenException('Not authorized to access this material'),
+      );
+
+      await expect(
+        controller.delete('material-123', mockUser),
       ).rejects.toThrow(ForbiddenException);
     });
   });

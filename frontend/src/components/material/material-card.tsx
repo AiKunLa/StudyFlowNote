@@ -18,7 +18,7 @@ interface MaterialCardProps {
   material: Material;
   isSelected?: boolean;
   onSelect?: (material: Material) => void;
-  onDelete?: (materialId: string) => void;
+  onDelete?: (material: Material) => void;
 }
 
 const STATUS_LABELS: Record<MaterialStatus, string> = {
@@ -58,9 +58,9 @@ export const MaterialCard = memo(function MaterialCard({
   const handleDeleteClick = useCallback(
     (e: React.MouseEvent) => {
       e.stopPropagation();
-      onDelete?.(material.id);
+      onDelete?.(material);
     },
-    [material.id, onDelete],
+    [material, onDelete],
   );
 
   const statusLabel = STATUS_LABELS[material.status] || material.status;

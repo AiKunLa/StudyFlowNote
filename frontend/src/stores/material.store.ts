@@ -26,6 +26,8 @@ export interface MaterialState {
   uploading: boolean;
   /** 是否正在加载 */
   isLoading: boolean;
+  /** 是否正在轮询 */
+  isPolling: boolean;
   /** 错误信息 */
   error: string | null;
 }
@@ -41,6 +43,10 @@ export interface MaterialActions {
   setCurrentMaterial: (material: Material | null) => void;
   /** 清空错误 */
   clearError: () => void;
+  /** 轮询更新素材状态 */
+  pollMaterialStatuses: (projectId: string) => Promise<void>;
+  /** 设置轮询状态 */
+  setPolling: (isPolling: boolean) => void;
 }
 
 export type MaterialStore = MaterialState & MaterialActions;
@@ -56,6 +62,7 @@ export const useMaterialStore = create<MaterialStore>((set) => ({
   currentMaterial: null,
   uploading: false,
   isLoading: false,
+  isPolling: false,
   error: null,
 
   /** 获取项目的素材列表 */
@@ -126,4 +133,20 @@ export const useMaterialStore = create<MaterialStore>((set) => ({
 
   /** 清空错误 */
   clearError: () => set({ error: null }),
+
+  /** 轮询更新素材状态 */
+  pollMaterialStatuses: async (projectId: string) => {
+    try {
+      const response = await materialService.list({ projectId });
+      set({ materials: response.data.data.items });
+    } catch (err) {
+      // 轮询失败不更新 error 状态，避免干扰用户
+      console.error('Polling error:', err);
+    }
+  },
+
+  /** 设置轮询状态 */
+  setPolling: (isPolling: boolean) => {
+    set({ isPolling });
+  },
 }));
