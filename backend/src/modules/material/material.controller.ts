@@ -92,6 +92,21 @@ export class MaterialController {
   }
 
   /**
+   * 获取素材详情（包括 rawText）
+   * GET /materials/:materialId
+   */
+  @Get(':materialId')
+  @ApiOperation({ summary: 'Get material details with rawText' })
+  async getOne(
+    @Param('materialId') materialId: string,
+    @CurrentUser() user: JwtPayload,
+  ): Promise<ResponseDto> {
+    await this.materialService.validateOwnership(materialId, user.sub);
+    const material = await this.materialService.findOne(materialId);
+    return ResponseDto.success(material);
+  }
+
+  /**
    * 获取项目的素材列表
    * GET /materials?projectId=xxx&page=1&pageSize=20
    */

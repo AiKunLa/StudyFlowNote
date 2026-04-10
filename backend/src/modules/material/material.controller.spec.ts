@@ -284,6 +284,66 @@ describe('MaterialController', () => {
     });
   });
 
+  describe('getOne', () => {
+    it('should return material with rawText when user owns it', async () => {
+      const mockMaterial = {
+        id: 'material-123',
+        projectId: 'project-123',
+        title: 'Test Material',
+        type: MaterialType.PDF,
+        status: MaterialStatus.READY,
+        sourcePath: '/uploads/material-123/test.pdf',
+        originalFilename: 'test.pdf',
+        fileSize: 1024,
+        mimeType: 'application/pdf',
+        rawText: 'Extracted text content...',
+        parseError: null,
+        metadata: null,
+        createdAt: new Date(),
+        updatedAt: new Date(),
+      };
+      mockMaterialService.validateOwnership.mockResolvedValue(true);
+      mockMaterialService.findOne.mockResolvedValue(mockMaterial);
+
+      const result = await controller.getOne('material-123', mockUser);
+
+      expect(result.code).toBe(0);
+      expect((result.data as any).id).toBe('material-123');
+      expect((result.data as any).rawText).toBe('Extracted text content...');
+    });
+
+    it('should return material even when rawText is null', async () => {
+      const mockMaterial = {
+        id: 'material-123',
+        projectId: 'project-123',
+        title: 'Test Material',
+        type: MaterialType.PDF,
+        status: MaterialStatus.PARSING,
+        rawText: null,
+        createdAt: new Date(),
+        updatedAt: new Date(),
+      };
+      mockMaterialService.validateOwnership.mockResolvedValue(true);
+      mockMaterialService.findOne.mockResolvedValue(mockMaterial);
+
+      const result = await controller.getOne('material-123', mockUser);
+
+      expect(result.code).toBe(0);
+      expect((result.data as any).rawText).toBeNull();
+      expect((result.data as any).status).toBe(MaterialStatus.PARSING);
+    });
+
+    it('should throw ForbiddenException when user does not own the material', async () => {
+      mockMaterialService.validateOwnership.mockRejectedValue(
+        new ForbiddenException('Not authorized to access this material'),
+      );
+
+      await expect(
+        controller.getOne('material-123', mockUser),
+      ).rejects.toThrow(ForbiddenException);
+    });
+  });
+
   describe('delete', () => {
     it('should delete material when user owns it', async () => {
       mockMaterialService.validateOwnership.mockResolvedValue(true);
