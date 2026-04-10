@@ -14,17 +14,8 @@ import { useMaterialStore } from '@/stores/material.store';
 import { MaterialCard } from './material-card';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
-import {
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-} from '@/components/ui/alert-dialog';
 import { Search, RefreshCw, FileText, Plus } from 'lucide-react';
+import { ConfirmDialog } from '@/components/ui/confirm-dialog';
 import { cn } from '@/lib/utils';
 import type { Material, MaterialType } from '@/services/material.service';
 
@@ -255,20 +246,15 @@ return (
       </div>
 
       {/* 删除确认对话框 */}
-      <AlertDialog open={!!deleteTarget} onOpenChange={() => setDeleteTarget(null)}>
-        <AlertDialogContent>
-          <AlertDialogHeader>
-            <AlertDialogTitle>确认删除</AlertDialogTitle>
-            <AlertDialogDescription>
-              确定要删除素材&quot;{deleteTarget?.title}&quot;吗？此操作无法撤销。
-            </AlertDialogDescription>
-          </AlertDialogHeader>
-          <AlertDialogFooter>
-            <AlertDialogCancel onClick={() => setDeleteTarget(null)}>取消</AlertDialogCancel>
-            <AlertDialogAction onClick={confirmDelete}>删除</AlertDialogAction>
-          </AlertDialogFooter>
-        </AlertDialogContent>
-      </AlertDialog>
+      <ConfirmDialog
+        open={!!deleteTarget}
+        onOpenChange={() => setDeleteTarget(null)}
+        title="确认删除"
+        description={`确定要删除素材"${deleteTarget?.title}"吗？此操作无法撤销。`}
+        confirmText="删除"
+        cancelText="取消"
+        onConfirm={confirmDelete}
+      />
     </>
   );
 }

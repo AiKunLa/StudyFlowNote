@@ -28,16 +28,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from '@/components/ui/dialog';
-import {
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-} from '@/components/ui/alert-dialog';
+import { ConfirmDialog } from '@/components/ui/confirm-dialog';
 import { ProjectForm } from './project-form';
 import { cn } from '@/lib/utils';
 import type { Project } from '@/services/project.service';
@@ -238,28 +229,17 @@ export function ProjectCard({ project, onClick, onDelete, onSuccess }: ProjectCa
       </Dialog>
 
       {/* 删除确认对话框 */}
-      <AlertDialog open={showDeleteDialog} onOpenChange={setShowDeleteDialog}>
-        <AlertDialogContent>
-          <AlertDialogHeader>
-            <AlertDialogTitle>删除项目</AlertDialogTitle>
-            <AlertDialogDescription>
-              确定要删除项目 "{project.name}" 吗？此操作不可撤销。
-            </AlertDialogDescription>
-          </AlertDialogHeader>
-          <AlertDialogFooter>
-            <AlertDialogCancel onClick={(e) => e.stopPropagation()}>取消</AlertDialogCancel>
-            <AlertDialogAction
-              className="bg-red-500 hover:bg-red-600"
-              onClick={(e) => {
-                e.stopPropagation();
-                confirmDelete();
-              }}
-            >
-              删除
-            </AlertDialogAction>
-          </AlertDialogFooter>
-        </AlertDialogContent>
-      </AlertDialog>
+      <ConfirmDialog
+        open={showDeleteDialog}
+        onOpenChange={setShowDeleteDialog}
+        title="删除项目"
+        description={`确定要删除项目 "${project.name}" 吗？此操作不可撤销。`}
+        confirmText="删除"
+        cancelText="取消"
+        onConfirm={() => {
+          confirmDelete();
+        }}
+      />
     </>
   );
 }
