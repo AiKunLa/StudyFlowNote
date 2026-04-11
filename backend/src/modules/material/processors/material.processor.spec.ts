@@ -268,13 +268,16 @@ describe('MaterialProcessor', () => {
         status: MaterialStatus.PARSING,
       });
 
+      // Mock extract to throw since mimeType null falls back to application/octet-stream
+      mockContentExtractor.extract.mockRejectedValue(
+        new Error('Unsupported file type: application/octet-stream'),
+      );
+
       const job = createMockJob({ materialId: mockMaterialId });
 
-      // application/octet-stream is not in supportedMimeTypes, so it should fail
       await expect(processor.processMaterial(job)).rejects.toThrow(
         'Unsupported file type: application/octet-stream',
       );
-      expect(contentExtractor.extract).not.toHaveBeenCalled();
     });
 
     describe('race condition prevention', () => {
@@ -341,6 +344,11 @@ describe('MaterialProcessor', () => {
           status: MaterialStatus.PARSING,
         });
 
+        // Mock extract to throw for unsupported mimeType
+        mockContentExtractor.extract.mockRejectedValue(
+          new Error('Unsupported file type: application/x-corrupt-pdf'),
+        );
+
         const job = createMockJob({ materialId: mockMaterialId });
 
         await expect(processor.processMaterial(job)).rejects.toThrow(
@@ -352,7 +360,7 @@ describe('MaterialProcessor', () => {
         );
       });
 
-      it('should validate mimeType before calling content extractor', async () => {
+      it('should pass unsupported mimeType to contentExtractor which handles validation', async () => {
         const mockMaterial = createMockMaterial({
           mimeType: 'image/jpeg', // Not a supported type
         });
@@ -362,13 +370,18 @@ describe('MaterialProcessor', () => {
           status: MaterialStatus.PARSING,
         });
 
+        // ContentExtractor now handles mimeType validation internally
+        mockContentExtractor.extract.mockRejectedValue(
+          new Error('Unsupported file type: image/jpeg'),
+        );
+
         const job = createMockJob({ materialId: mockMaterialId });
 
         await expect(processor.processMaterial(job)).rejects.toThrow(
           'Unsupported file type: image/jpeg',
         );
-        // extract should not be called for unsupported mimeType
-        expect(contentExtractor.extract).not.toHaveBeenCalled();
+        // extract IS called - contentExtractor validates mimeType
+        expect(contentExtractor.extract).toHaveBeenCalled();
       });
     });
   });

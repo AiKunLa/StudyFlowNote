@@ -3,7 +3,6 @@ import {
   Body,
   Controller,
   Delete,
-  FileTypeValidator,
   ForbiddenException,
   Get,
   MaxFileSizeValidator,
@@ -24,6 +23,7 @@ import { AssignMaterialDto } from './dto/assign-material.dto';
 import { JwtPayload } from '../auth/interfaces/jwt-payload.interface';
 import { CurrentUser } from '../auth/decorators/current-user.decorator';
 import { MaterialType } from '@prisma/client';
+import { FileExtensionValidator } from '../../common/validators/file-extension.validator';
 
 @ApiTags('materials')
 @Controller('materials')
@@ -43,7 +43,7 @@ export class MaterialController {
       new ParseFilePipe({
         validators: [
           new MaxFileSizeValidator({ maxSize: 50 * 1024 * 1024 }), // 50MB
-          new FileTypeValidator({ fileType: /(pdf|docx|txt|md)$/ }),
+          new FileExtensionValidator({ extensions: ['pdf', 'docx', 'txt', 'md'] }),
         ],
         fileIsRequired: true,
       }),

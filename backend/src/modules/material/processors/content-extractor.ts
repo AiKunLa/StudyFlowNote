@@ -1,5 +1,6 @@
 import { Injectable, Logger } from '@nestjs/common';
 import * as fs from 'fs/promises';
+import * as path from 'path';
 
 @Injectable()
 export class ContentExtractor {
@@ -15,6 +16,40 @@ export class ContentExtractor {
     'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
   ];
 
+  // MIME type to extension mapping for fallback detection
+  private static readonly mimeTypeFromExtension: Record<string, string> = {
+    '.pdf': 'application/pdf',
+    '.txt': 'text/plain',
+    '.text': 'text/plain',
+    '.md': 'text/markdown',
+    '.markdown': 'text/markdown',
+    '.docx': 'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+  };
+
+  /**
+   * Detect MIME type from file extension when the provided mimeType is unknown
+   * @param filePath Path to the file
+   * @param mimeType Original MIME type (may be application/octet-stream)
+   * @returns Resolved MIME type
+   */
+  private resolveMimeType(filePath: string, mimeType: string): string {
+    // If mimeType is already recognized, use it
+    if (ContentExtractor.supportedMimeTypes.includes(mimeType)) {
+      return mimeType;
+    }
+
+    // Try to detect from file extension
+    const ext = path.extname(filePath).toLowerCase();
+    const resolvedMime = ContentExtractor.mimeTypeFromExtension[ext];
+    if (resolvedMime && ContentExtractor.supportedMimeTypes.includes(resolvedMime)) {
+      this.logger.debug(`Detected mime type ${resolvedMime} from extension ${ext}`);
+      return resolvedMime;
+    }
+
+    // Fallback to original mimeType if no match found
+    return mimeType;
+  }
+
   /**
    * Extract text content from a file based on its MIME type
    * @param filePath Path to the file
@@ -22,7 +57,9 @@ export class ContentExtractor {
    * @returns Extracted text content
    */
   async extract(filePath: string, mimeType: string): Promise<string> {
-    this.logger.debug(`Extracting content from ${filePath} (${mimeType})`);
+    // Resolve mime type from extension if the provided one is unknown
+    const resolvedMimeType = this.resolveMimeType(filePath, mimeType);
+    this.logger.debug(`Extracting content from ${filePath} (${resolvedMimeType})`);
 
     // Validate file exists
     try {
@@ -31,7 +68,7 @@ export class ContentExtractor {
       throw new Error(`File not found: ${filePath}`);
     }
 
-    switch (mimeType) {
+    switch (resolvedMimeType) {
       case 'application/pdf':
         return this.extractPdf(filePath);
 
@@ -44,7 +81,7 @@ export class ContentExtractor {
         return this.extractDocx(filePath);
 
       default:
-        throw new Error(`Unsupported file type: ${mimeType}`);
+        throw new Error(`Unsupported file type: ${resolvedMimeType}`);
     }
   }
 

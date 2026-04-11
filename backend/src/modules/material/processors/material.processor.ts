@@ -34,13 +34,9 @@ export class MaterialProcessor {
       // Update status to PARSING
       await this.materialService.updateStatus(materialId, MaterialStatus.PARSING);
 
-      // Validate mimeType before processing
+      // Extract content - contentExtractor will handle mimeType detection from extension
+      // if the stored mimeType is unknown (e.g., application/octet-stream)
       const mimeType = material.mimeType || 'application/octet-stream';
-      if (!ContentExtractor.supportedMimeTypes.includes(mimeType)) {
-        throw new Error(`Unsupported file type: ${mimeType}`);
-      }
-
-      // Extract content based on mime type
       const rawText = await this.contentExtractor.extract(
         material.sourcePath,
         mimeType,
